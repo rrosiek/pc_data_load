@@ -31,7 +31,7 @@ class LoadManager(object):
     def create_config(self):
         now = datetime.datetime.now()
         local_date = now.strftime("%m-%d-%Y_%H:%M")
-        self.root_directory = self.get_root_directory()
+        self.root_directory = self.get_root_directory(local_date)
         file_utils.make_directory(self.root_directory)
 
         index_item = es_utils.get_info_for_index_id(self.index_id)
@@ -80,7 +80,7 @@ class LoadManager(object):
         config = self.set_config()
         return config
 
-    def get_root_directory(self):
+    def get_root_directory(self, local_date):
         return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + self.index_id.lower() + '_' + local_date
 
     def del_config(self):

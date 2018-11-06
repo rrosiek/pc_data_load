@@ -1,19 +1,19 @@
 from data_load.base.data_mapper import DataMapper
 from config import *
-
+import json
 
 class CTDataMapper(DataMapper):
 
     @staticmethod
     def allow_doc_creation(data_source_name):
-        if data_source_name == 'ct_clinical_studies':
+        if data_source_name == 'clinical_study':
             return True
 
         return False
 
     @staticmethod
     def create_only(data_source_name):
-        if data_source_name == 'ct_clinical_studies':
+        if data_source_name == 'clinical_study':
             return True
 
         return False
@@ -30,14 +30,16 @@ class CTDataMapper(DataMapper):
     def create_doc(_id, data_source_name, data):
         doc = {}
         # if data_source_name == 'ct_clinical_studies':
-        for data_item in data:
-            if 'start_date' in data_item:
-                start_date = data_item['start_date']
-                start_date_year = start_date[-4:]
+        # for data_item in data:
+        #     print json.dumps(data_item)
+        #     if 'start_date' in data_item:
+        #         start_date = data_item['start_date']
+        #         print start_date
+        #         start_date_year = start_date[-4:]
 
-                doc['startDateYear'] = start_date_year
+        #         doc['startDateYear'] = start_date_year
 
-                break
+        #         break
 
         # if data_source_name == 'ct_clinical_studies':
         if len(data) == 1:

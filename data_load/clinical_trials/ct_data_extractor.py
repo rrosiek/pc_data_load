@@ -1,18 +1,25 @@
 from data_load.base.data_extractor import DataExtractor
 from config import *
-
+import time
+import json
 
 class CTDataExtractor(DataExtractor):
 
     @staticmethod
     def extract_id(data_source_name, row):
-        _id = row[ID_FIELD]
-        return _id
+        # print json.dumps(row)
+        # time.sleep(10)
+        if 'id_info' in row:
+            if ID_FIELD in row['id_info']:
+                _id = row['id_info'][ID_FIELD]
+                return _id
+
+        return None
 
     @staticmethod
     def extract_data(_id, data_source_name, row):
         doc = {}
-        if data_source_name == 'ct_clinical_studies':
+        if data_source_name == 'clinical_study':
             doc = row
         elif data_source_name == 'ct_references':
             # print row

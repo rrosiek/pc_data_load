@@ -17,6 +17,7 @@ import data_load.base.utils.es_utils as es_utils
 from config import *
 import sys
 import psutil
+from data_load.base.utils.log_utils import *
 
 class CTLoadManager(LoadManager):
 
@@ -99,14 +100,16 @@ class CTLoadManager(LoadManager):
         print 'processing', data_directory
 
         load_config = self.get_load_config()
-        load_config.data_source_name = 'ct_study'
+        load_config.data_source_name = 'clinical_study'
+        load_config.log_level = LOG_LEVEL_DEBUG
+ 
 
         # source_files_directory = load_config.source_files_directory()
         # data_source_file_path = source_files_directory + '/' + data_source_name + '.csv'
 
         # print 'Processing file', data_source_file_path
 
-        xml_data_directory_source = XMLDataDirectorySource(data_directory, 'clinical_trials/clinical_trials_public.xsd')
+        xml_data_directory_source = XMLDataDirectorySource(data_directory, 'data_load/clinical_trials/clinical_trials_public.xsd')
         data_processor = DataSourceProcessor(load_config, xml_data_directory_source)
         data_processor.run()
 
@@ -133,7 +136,7 @@ class CTLoadManager(LoadManager):
         data_processor.run()
 
 def start(data_directory):
-    load_manager = CTLoadManager()
+    load_manager = CTLoadManager(data_directory)
     load_manager.del_config()
     load_manager.run()
 
@@ -146,8 +149,13 @@ def run():
     for arg in sys.argv:
         if arg_index > 0:
             if arg == '-path':
-                start()
-                return
+                if (arg_index + 1) < len(sys.argv):
+                    data_directory = sys.argv[arg_index + 1]
+                    print 'Data directory', data_directory
+                    start(data_directory)
+                    return
+                else:
+                    print('Usage: ct_load_manager -path <data_directory>')     
             else: 
                 print('Usage: ct_load_manager -path <data_directory>')     
         arg_index += 1

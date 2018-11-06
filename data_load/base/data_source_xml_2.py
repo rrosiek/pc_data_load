@@ -24,3 +24,6 @@ class XMLDataDirectorySource(object):
                     if not self.process_row_method(doc, self.current_index):
                         break
                     self.current_index += 1
+
+    def initialize(self):
+        pass

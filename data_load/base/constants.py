@@ -92,7 +92,7 @@ BULK_UPDATE_RESPONSE_DIRECTORY  = 'bulk_update_response'
 DATA_SOURCE_BATCHES_FILE = 'data_source_batches.json'
 
 
-DATA_LOADING_DIRECTORY = '/data/data_loading/'
+DATA_LOADING_DIRECTORY = '/Users/robin/Desktop/data/data_loading'
 
 
 INDEX_MAPPING = {}

@@ -26,7 +26,8 @@ class DataLoaderUtils(object):
 
     def load_bulk_data(self, bulk_data):
         url = self.server + '/' + '_bulk'
-        response = self.session.post(url, data=bulk_data)
+        headers = {"content-type": "application/json"}
+        response = self.session.post(url, data=bulk_data, headers=headers)
         if response.status_code == 200 or response.status_code == 201:
             return response.text
         else:
