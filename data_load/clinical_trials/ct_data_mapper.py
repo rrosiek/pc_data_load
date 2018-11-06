@@ -29,19 +29,19 @@ class CTDataMapper(DataMapper):
     @staticmethod
     def create_doc(_id, data_source_name, data):
         doc = {}
-        if data_source_name == 'ct_clinical_studies':
-            for data_item in data:
-                if 'start_date' in data_item:
-                    start_date = data_item['start_date']
-                    start_date_year = start_date[-4:]
+        # if data_source_name == 'ct_clinical_studies':
+        for data_item in data:
+            if 'start_date' in data_item:
+                start_date = data_item['start_date']
+                start_date_year = start_date[-4:]
 
-                    doc['startDateYear'] = start_date_year
+                doc['startDateYear'] = start_date_year
 
-                    break
+                break
 
-        if data_source_name == 'ct_clinical_studies':
-            if len(data) == 1:
-                data = data[0]
+        # if data_source_name == 'ct_clinical_studies':
+        if len(data) == 1:
+            data = data[0]
 
         doc[data_source_name] = data
         return doc
@@ -53,9 +53,9 @@ class CTDataMapper(DataMapper):
         #     existing_value = existing_doc[data_source_name]
         #     data = CTDataMapper.update_dict_array(existing_value, data)
 
-        if data_source_name == 'ct_clinical_studies':
-            if len(data) == 1:
-                data = data[0]
+        # if data_source_name == 'ct_clinical_studies':
+        if len(data) == 1:
+            data = data[0]
 
         doc[data_source_name] = data
         doc = CTDataMapper.merge_dict(existing_doc, doc)
