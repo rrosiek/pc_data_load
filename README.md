@@ -4,7 +4,7 @@
 
 **data_load/DATA_LOAD_CONFIG.py**
 
-*You can configure the elasticsearch url and local directory to where the files are downloaded.*
+*You can configure the elasticsearch url and local directory to where the data source files are downloaded.*
 
 ## Setup & Usage
 
