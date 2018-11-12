@@ -80,6 +80,7 @@ class PubmedLoadManager(LoadManager):
             load_config = self.get_load_config()
             load_config.data_source_name = file_name.split('.')[0]
             load_config.log_level = LOG_LEVEL_DEBUG
+            load_config.process_count = 1
             # load_config.set_logger(self.logger)
 
             # self.logger.info('Processing file ' + str(update_file))
@@ -123,5 +124,6 @@ def run():
 
     resume()
 
-run()
+if __name__ == '__main__':
+    run()
 
