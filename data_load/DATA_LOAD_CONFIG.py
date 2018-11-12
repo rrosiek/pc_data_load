@@ -10,7 +10,7 @@ POSTGRES_DATABASE_NAME = 'pardi'
 
 # Elasticsearch server URL
 
-ELASTICSEARCH_SERVER = 'http://ocat-dev.altum.com:9200'
+ELASTICSEARCH_SERVER = 'http://localhost:9200'
 
 # Django backend API URL
 
