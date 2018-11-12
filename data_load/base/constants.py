@@ -66,6 +66,8 @@ LOCAL_SERVER = DATA_LOAD_CONFIG.ELASTICSEARCH_SERVER
 # API_URL = "https://ocat-dev.altum.com/api/v1/"
 API_URL = DATA_LOAD_CONFIG.API_URL
 
+DATA_LOADING_DIRECTORY = DATA_LOAD_CONFIG.DATA_DIRECTORY
+
 # Batch Size & Process Count
 DATA_LOADER_BATCH_SIZE = 5000
 DATA_SOURCE_BATCH_SIZE = 10000000
@@ -90,9 +92,6 @@ LOADED_DOCS_DIRECTORY  = 'loaded_docs'
 BULK_UPDATE_RESPONSE_DIRECTORY  = 'bulk_update_response'
 
 DATA_SOURCE_BATCHES_FILE = 'data_source_batches.json'
-
-
-DATA_LOADING_DIRECTORY = '/Users/robin/Desktop/data/data_loading'
 
 
 INDEX_MAPPING = {}

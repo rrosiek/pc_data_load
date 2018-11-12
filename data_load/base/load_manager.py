@@ -28,48 +28,58 @@ class LoadManager(object):
         self.src_data_exists = False
         self.config_file = self.index_id + '_CONFIG.json'
 
+ 
+    def get_next_index_version(self, index):
+        index_comps = index.split('_')
+        index_version = ''
+        if len(index_comps) > 1:
+            index_version = index_comps[-1]
+            index_comps = index_comps[:-1]
+            if index_version.startswith('v'):
+                index_version = index_version.replace('v', '')
+                try:
+                    index_version_number = int(index_version)
+                    index_version_number += 1
+                    index_version = str(index_version_number)
+                except Exception as e:
+                    print e
+                index_version = 'v' + index_version
+            else:
+                version = 'v2'
+                if len(index_version) > 0:
+                    version = '_' + version
+                
+                index_version = index_version + version
+        else:
+            version = 'v2'
+            if len(index_version) > 0:
+                version = '_' + version
+                
+            index_version = index_version + version
+
+        index = '_'.join(index_comps)
+
+        if len(index_version) > 0:
+            index += '_' + index_version
+
+        return index
+
+    def get_info_for_index_id(self, index_id): 
+        index_item = es_utils.get_info_for_index_id(index_id)
+        return index_item
+
     def create_config(self):
         now = datetime.datetime.now()
         local_date = now.strftime("%m-%d-%Y_%H:%M")
         self.root_directory = self.get_root_directory(local_date)
         file_utils.make_directory(self.root_directory)
 
-        index_item = es_utils.get_info_for_index_id(self.index_id)
+        index_item = self.get_info_for_index_id(self.index_id)
         self.index = index_item['index']
         self.type = index_item['index_type']
 
         if self.should_reload():
-            index_comps = self.index.split('_')
-            index_version = ''
-            if len(index_comps) > 1:
-                index_version = index_comps[-1]
-                index_comps = index_comps[:-1]
-                if index_version.startswith('v'):
-                    index_version = index_version.replace('v', '')
-                    try:
-                        index_version_number = int(index_version)
-                        index_version_number += 1
-                        index_version = str(index_version_number)
-                    except Exception as e:
-                        print e
-                    index_version = 'v' + index_version
-                else:
-                    version = 'v2'
-                    if len(index_version) > 0:
-                        version = '_' + version
-                    
-                    index_version = index_version + version
-            else:
-                version = 'v2'
-                if len(index_version) > 0:
-                    version = '_' + version
-                    
-                index_version = index_version + version
-   
-            self.index = '_'.join(index_comps)
-
-            if len(index_version) > 0:
-                self.index += '_' + index_version
+            self.index = self.get_next_index_version(self.index)
 
         print 'root directory:', self.root_directory
         print 'index_id:', self.index_id
@@ -81,12 +91,14 @@ class LoadManager(object):
         return config
 
     def get_root_directory(self, local_date):
-        return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + self.index_id.lower() + '_' + local_date
+        return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + self.index_id.lower() + '_' + local_date.replace(':', '')
 
     def del_config(self):
+        file_utils.make_directory(DATA_LOADING_DIRECTORY)
         file_utils.save_file(DATA_LOADING_DIRECTORY, self.config_file, {})
 
     def get_config(self):
+        file_utils.make_directory(DATA_LOADING_DIRECTORY)
         config = file_utils.load_file(DATA_LOADING_DIRECTORY, self.config_file)
         if len(config) == 0:
             config = self.create_config()
@@ -160,12 +172,11 @@ class LoadManager(object):
         self.get_config()
 
         # Create index
-        print 'Creating index...'
         self.check_and_create_index()
 
         # Download data
         if not self.src_data_exists:
-            print 'Downloading data...'
+            # print 'Downloading data...'
 
             self.download_data()
             self.src_data_exists = True
@@ -198,6 +209,7 @@ class LoadManager(object):
     def check_and_create_index(self):
         data_loader_utils = DataLoaderUtils(self.server, self.index, self.type)
         mapping_file_path = self.mapping_file_path()
+        print 'Checking index...'
         if not data_loader_utils.index_exists() and mapping_file_path is not None:
             data_loader_utils.create_index(mapping_file_path)
 
@@ -249,11 +261,11 @@ class LoadManager(object):
         return tasks_list
 
     def save_tasks_list(self, tasks_list):
-        print 'Saving tasks list', self.root_directory
+        # print 'Saving tasks list', self.root_directory
         file_utils.save_file(self.root_directory, 'tasks_list.json', tasks_list)
 
     def load_tasks_list(self):
-        print 'Loading tasks list', self.root_directory
+        # print 'Loading tasks list', self.root_directory
         tasks_list = file_utils.load_file(self.root_directory, 'tasks_list.json')
         return tasks_list
 
@@ -280,7 +292,7 @@ class LoadManager(object):
         load_config = self.get_load_config()
         server = load_config.server
 
-        index_item = es_utils.get_info_for_index_id(self.index_id)
+        index_item = self.get_info_for_index_id(self.index_id)
         src_index = index_item['index']
         src_type = index_item['index_type']
 

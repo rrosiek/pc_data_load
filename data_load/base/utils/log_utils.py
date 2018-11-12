@@ -12,7 +12,7 @@ LOG_LEVEL_TRACE = 3
 
 def create_logger(logger_name, log_files_directory):
     now = datetime.datetime.now()
-    local_date = now.strftime("%m-%d-%Y_%H:%M:%S")
+    local_date = now.strftime("%m-%d-%Y_%H%M_%S")
 
     # create logger
     logger = logging.getLogger(logger_name)

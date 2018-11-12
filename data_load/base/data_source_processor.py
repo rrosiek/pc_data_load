@@ -207,7 +207,7 @@ class DataSourceProcessor(object):
             self.load_config.data_source_name, row, current_index)
         if _id is not None:
             self.load_config.log(
-                LOG_LEVEL_DEBUG, 'Counting rows', current_index, len(self.data_source_batch))
+                LOG_LEVEL_DEBUG, 'Counting rows', current_index + 1, len(self.data_source_batch))
 
             if self.mode == self.MODE_NORMAL_LOAD and _id in self.processed_indices:
                 return True
@@ -238,7 +238,7 @@ class DataSourceProcessor(object):
                         LOG_LEVEL_INFO, 'Processing from', current_index)
 
                 self.load_config.log(
-                    LOG_LEVEL_DEBUG, 'Processed rows', current_index, self.total_rows)
+                    LOG_LEVEL_DEBUG, 'Processed rows', current_index + 1, self.total_rows)
 
                 if self.mode == self.MODE_NORMAL_LOAD and current_index in self.processed_indices:
                     return True

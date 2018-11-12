@@ -86,16 +86,12 @@ def run(auto_update=False, new_update_files=None):
 def get_batch_update_files(load_config, no_of_files_in_batch):
     total_new_update_files = get_new_update_files(load_config)
 
-    if DEBUG:
-        new_update_files = [total_new_update_files[
-            0], total_new_update_files[1]]
-    else:
-        new_update_files = []
-        max_length = min(len(total_new_update_files), no_of_files_in_batch)
-        # print max_length, 'max_length'
-        for i in range(0, max_length):
-            new_update_file = total_new_update_files[i]
-            new_update_files.append(new_update_file)
+    new_update_files = []
+    max_length = min(len(total_new_update_files), no_of_files_in_batch)
+    # print max_length, 'max_length'
+    for i in range(0, max_length):
+        new_update_file = total_new_update_files[i]
+        new_update_files.append(new_update_file)
     
     return new_update_files
 
@@ -128,18 +124,18 @@ def process_update_files(is_auto_update, load_config, new_update_files):
         logger.info('Saving update summary...')
         save_update_record_for_date(load_config, local_date, update_data, docs_with_new_citations)
         
-        all_prospects = send_prospective_citations_notifications(logger, docs_with_new_citations)
+        # all_prospects = send_prospective_citations_notifications(logger, docs_with_new_citations)
 
-        # Send update notification
-        logger.info('Sending update status mail...')
-        email_client.send_update_notifications(local_date, update_data, all_prospects)
+        # # Send update notification
+        # logger.info('Sending update status mail...')
+        # email_client.send_update_notifications(local_date, update_data, all_prospects)
 
         # Save existing pmids to file
         logger.info('Saving new pmids...')
         pubmed_updater.save_new_pmids()
 
         # Update processed files list
-        pubmed_updater.update_processed_update_files()
+        update_processed_update_files(new_update_files)
     else:
         if is_auto_update:
             # Send update notification
@@ -246,8 +242,7 @@ def send_prospective_citations_notifications(logger, docs_with_new_citations):
     return find_prospective_citations.run()
 
 def get_new_update_files(load_config):
-    processed_update_files = PubmedUpdater.get_processed_update_files(
-        load_config)
+    processed_update_files = get_processed_update_files(load_config)
     new_update_files = []
 
     source_files = get_all_update_files(load_config)
@@ -273,6 +268,29 @@ def get_all_update_files(load_config):
 
     return source_file_paths
 
+
+def get_processed_update_files(load_config):
+    other_files_directory = load_config.other_files_directory()
+    processed_file_urls = file_utils.load_file(
+        other_files_directory, PROCESSED_UPDATE_FILES)
+    if len(processed_file_urls) == 0:
+        return []
+
+    return processed_file_urls
+
+
+def set_processed_update_files(load_config, processed_file_urls):
+    other_files_directory = load_config.other_files_directory()
+    file_utils.save_file(other_files_directory,
+                            PROCESSED_UPDATE_FILES, processed_file_urls)
+
+
+def update_processed_update_files(update_files):
+    # Update processed update files
+    load_config = pubmed_load_config.get_load_config()
+    processed_update_files = self.get_processed_update_files(load_config)
+    processed_update_files.extend(update_files)
+    set_processed_update_files(load_config, processed_update_files)
 
 def verify_citations():
     load_config = pubmed_load_config.get_load_config()
