@@ -14,6 +14,7 @@ from constants import FAILED_DOCS_DIRECTORY
 
 from load_config import *
 
+
 class DataLoadBatcher(object):
     def __init__(self, load_config, _index, _type):
         self.load_config = load_config
@@ -28,13 +29,14 @@ class DataLoadBatcher(object):
         self.type = _type
 
         self.load_relationships = False
-        
+
         self.retry_count = 0
 
     def process_data_rows(self, data_source_batch_name, data_source_batch):
         self.data_source_batch = data_source_batch
         self.data_source_batch_name = data_source_batch_name
-        self.data_source_batch_directory = self.load_config.data_source_batch_directory(data_source_batch_name)
+        self.data_source_batch_directory = self.load_config.data_source_batch_directory(
+            data_source_batch_name)
 
         ids_to_load = data_source_batch.keys()
 
@@ -85,7 +87,8 @@ class DataLoadBatcher(object):
         for name in os.listdir(data_source_batch_directory):
             file_path = os.path.join(data_source_batch_directory, name)
             if os.path.isfile(file_path) and name.startswith("failed_docs_"):
-                failed_docs = file_utils.load_file(data_source_batch_directory, name)
+                failed_docs = file_utils.load_file(
+                    data_source_batch_directory, name)
                 print file_path, '- Failed docs', len(failed_docs)
                 if len(failed_docs) > 0:
                     a = raw_input('List docs? (y/n)')
@@ -101,12 +104,14 @@ class DataLoadBatcher(object):
     def rename_failed_ids_directory(self):
         # data_source_batch_name = os.path.basename(self.data_source_batch_directory)
         # data_source_directory = os.path.dirname(self.data_source_batch_directory)
-        failed_docs_directory = self.load_config.failed_docs_directory(self.data_source_batch_name)
+        failed_docs_directory = self.load_config.failed_docs_directory(
+            self.data_source_batch_name)
         failed_docs_directory_path = os.path.dirname(failed_docs_directory)
         failed_docs_directory_name = os.path.basename(failed_docs_directory)
-        
+
         batch_id = str(int(round(time.time() * 1000)))
-        old_failed_docs_directory = failed_docs_directory_path + '/' + 'old_' + batch_id + '_' + failed_docs_directory_name
+        old_failed_docs_directory = failed_docs_directory_path + \
+            '/' + 'old_' + batch_id + '_' + failed_docs_directory_name
         os.rename(failed_docs_directory, old_failed_docs_directory)
 
         file_utils.make_directory(failed_docs_directory)
@@ -127,7 +132,8 @@ class DataLoadBatcher(object):
 
             if count % self.load_config.data_loader_batch_size == 0:
                 percentage_progress = (count / float(len(ids))) * 100
-                self.load_config.log(LOG_LEVEL_INFO, 'Processing ids', count, '/', len(ids), percentage_progress, '%')
+                self.load_config.log(
+                    LOG_LEVEL_INFO, 'Processing ids', count, '/', len(ids), percentage_progress, '%')
                 self.start_load_process(batch, self.data_source_batch_name)
                 batch = {}
 
@@ -141,18 +147,21 @@ class DataLoadBatcher(object):
 
     def join_processes(self):
         while len(self.processes) > 0:
-            self.load_config.log(LOG_LEVEL_DEBUG, 'Joining process', len(self.processes))
+            self.load_config.log(
+                LOG_LEVEL_DEBUG, 'Joining process', len(self.processes))
             old_process = self.processes.pop(0)
             old_process.join()
 
     def get_loaded_ids(self, data_source_batch_name):
-        loaded_docs_directory = self.load_config.loaded_docs_directory(data_source_batch_name)
+        loaded_docs_directory = self.load_config.loaded_docs_directory(
+            data_source_batch_name)
 
         loaded_ids = {}
         for name in os.listdir(loaded_docs_directory):
             file_path = os.path.join(loaded_docs_directory, name)
             if os.path.isfile(file_path) and name.startswith(DATA_LOADER_BATCH_PREFIX):
-                self.load_config.log(LOG_LEVEL_TRACE, 'processing file:', file_path)
+                self.load_config.log(
+                    LOG_LEVEL_TRACE, 'processing file:', file_path)
                 batch_data = file_utils.load_file(loaded_docs_directory, name)
                 updated_ids = batch_data['updated_ids']
                 indexed_ids = batch_data['indexed_ids']
@@ -168,14 +177,17 @@ class DataLoadBatcher(object):
         return loaded_ids
 
     def get_failed_ids(self, data_source_batch_name):
-        failed_docs_directory = self.load_config.failed_docs_directory(data_source_batch_name)
+        failed_docs_directory = self.load_config.failed_docs_directory(
+            data_source_batch_name)
 
         failed_ids = {}
         for name in os.listdir(failed_docs_directory):
             file_path = os.path.join(failed_docs_directory, name)
             if os.path.isfile(file_path) and name.startswith(DATA_LOADER_BATCH_PREFIX):
-                self.load_config.log(LOG_LEVEL_TRACE, 'processing file:', file_path)
-                batch_failed_docs = file_utils.load_file(failed_docs_directory, name)
+                self.load_config.log(
+                    LOG_LEVEL_TRACE, 'processing file:', file_path)
+                batch_failed_docs = file_utils.load_file(
+                    failed_docs_directory, name)
 
                 for _id in batch_failed_docs:
                     failed_ids[_id] = 0
@@ -192,17 +204,18 @@ class DataLoadBatcher(object):
         required_in_percentage = (required / float(total_memory)) * 100
 
         max_memory_percent = 100 - required_in_percentage
-        
-        self.load_config.log(LOG_LEVEL_INFO, 'Processes:', len(self.processes), ", Memory Used:", self.get_memory_percent(), ", Memory Max:", max_memory_percent)
+
+        self.load_config.log(LOG_LEVEL_INFO, 'Processes:', len(
+            self.processes), ", Memory Used:", self.get_memory_percent(), ", Memory Max:", max_memory_percent)
 
         if self.get_memory_percent() <= max_memory_percent:
             return True
 
         return False
-    
+
     def get_memory_percent(self):
         memory_details = psutil.virtual_memory()
-        memory_percent = memory_details.percent 
+        memory_percent = memory_details.percent
         return memory_percent
 
     def join_proceses(self):
@@ -212,27 +225,40 @@ class DataLoadBatcher(object):
 
     def start_load_process(self, data_loader_batch, data_source_batch_name):
         while not self.is_memory_available():
-            self.load_config.log(LOG_LEVEL_INFO, 'data load batcher waiting...')
+            self.load_config.log(
+                LOG_LEVEL_INFO, 'data load batcher waiting...')
             # time.sleep(3)
             self.join_proceses()
 
         if len(self.processes) >= self.load_config.process_count:
             self.join_proceses()
 
-        self.load_config.log(LOG_LEVEL_INFO, 'Creating process for', len(data_loader_batch), 'docs')
+        self.load_config.log(
+            LOG_LEVEL_INFO, 'Creating process for', len(data_loader_batch), 'docs')
 
         if self.load_relationships:
-            process = Process(target=start_relationship_load, args=(self.load_config,
-                                                                    data_loader_batch,
-                                                                    self.index,
-                                                                    self.type,
-                                                                    data_source_batch_name))
+            start_relationship_load(self.load_config,
+                                    data_loader_batch,
+                                    self.index,
+                                    self.type,
+                                    data_source_batch_name)
+
+            # process = Process(target=start_relationship_load, args=(self.load_config,
+            #                                                         data_loader_batch,
+            #                                                         self.index,
+            #                                                         self.type,
+            #                                                         data_source_batch_name))
         else:
-            process = Process(target=start_load, args=(self.load_config,
-                                                       data_loader_batch,
-                                                       self.index,
-                                                       self.type,
-                                                       data_source_batch_name))
+            start_load(self.load_config,
+                       data_loader_batch,
+                       self.index,
+                       self.type,
+                       data_source_batch_name)
+            # process = Process(target=start_load, args=(self.load_config,
+            #                                            data_loader_batch,
+            #                                            self.index,
+            #                                            self.type,
+            #                                            data_source_batch_name))
 
         process.start()
         self.processes.append(process)
