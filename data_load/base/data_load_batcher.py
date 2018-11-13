@@ -260,10 +260,10 @@ class DataLoadBatcher(object):
             #                                            self.type,
             #                                            data_source_batch_name))
 
-        process.start()
-        self.processes.append(process)
+        # process.start()
+        # self.processes.append(process)
 
-        time.sleep(self.load_config.process_spawn_delay)
+        # time.sleep(self.load_config.process_spawn_delay)
 
 
 def start_relationship_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
