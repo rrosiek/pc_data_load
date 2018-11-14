@@ -18,7 +18,6 @@ import os
 class LoadManager(object):
 
     def __init__(self, index_id):
-        self.tasks_list = self.get_tasks_list()
         self.index_id = index_id
         self.server = LOCAL_SERVER
         self.index = None
@@ -28,6 +27,7 @@ class LoadManager(object):
         self.src_data_exists = False
         self.config_file = self.index_id + '_CONFIG.json'
 
+        # self.get_config()
  
     def get_next_index_version(self, index):
         index_comps = index.split('_')
@@ -253,11 +253,31 @@ class LoadManager(object):
     def create_tasks_list(self):
         tasks_list = self.load_tasks_list()
         if len(tasks_list) == 0:
-            tasks_list = self.get_tasks_list()
-            for task in tasks_list:
-                self.set_status(task, TASK_STATUS_NOT_STARTED)
+            tasks_list = []
+        
+        new_tasks_list = self.get_tasks_list()
+        for task in new_tasks_list:
+            self.set_status(task, TASK_STATUS_NOT_STARTED)
+
+        tasks_list = self.update_task_list(tasks_list, new_tasks_list)
 
         self.save_tasks_list(tasks_list)
+        return tasks_list
+
+    def update_task_list(self, tasks_list, new_tasks_list):
+        tasks_to_add = []
+        for new_task in new_tasks_list:
+            task_exists = False
+            for task in tasks_list:
+                if task['name'] == new_task['name']:
+                    task_exists = True
+                    break
+            
+            if not task_exists:
+                tasks_to_add.append(new_task)
+
+        tasks_list.extend(tasks_to_add)
+
         return tasks_list
 
     def save_tasks_list(self, tasks_list):

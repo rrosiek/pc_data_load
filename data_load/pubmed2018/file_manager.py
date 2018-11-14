@@ -43,3 +43,17 @@ def get_processed_files(load_config):
         return []
 
     return processed_file_urls
+
+def set_processed_files(load_config, processed_file_urls):
+    other_files_directory = load_config.other_files_directory()
+    file_utils.save_file(other_files_directory,
+                            PROCESSED_UPDATE_FILES, processed_file_urls)
+
+
+def update_processed_files(load_config, file_urls):
+    # Update processed update files
+    processed_file_urls = get_processed_files(load_config)
+    # print processed_file_urls
+    # print file_urls
+    processed_file_urls.extend(file_urls)
+    set_processed_files(load_config, processed_file_urls)
