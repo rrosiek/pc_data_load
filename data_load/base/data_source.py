@@ -36,5 +36,5 @@ class DataSource(object):
 
     def clean_file(self, data_source_file_path):
         # Implement in subclass
-        print 'parent class clean_file'
+        # print 'parent class clean_file'
         return data_source_file_path

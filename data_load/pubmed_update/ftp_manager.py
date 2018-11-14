@@ -6,9 +6,7 @@ import os
 
 import data_load.base.utils.file_utils as file_utils
 from config import PROCESSED_UPDATE_FILES
-
-FTP_URL = 'ftp.ncbi.nlm.nih.gov'
-UPDATES_DIR = 'pubmed/updatefiles/'
+from data_load.DATA_LOAD_CONFIG import PUBMED_FTP_URL,  PUBMED_UPDATES_DIRECTORY,  PUBMED_BASELINE_DIRECTORY
 
 DOWNLOADED_UPDATE_FILES = 'downloaded_update_files.json'
 
@@ -23,19 +21,37 @@ class FTPManager(object):
         filtered_update_file_urls = self.filter_update_file_urls(update_file_urls)
         self.download_update_files(filtered_update_file_urls)
 
-    def get_update_file_urls(self):
+    def download_n_files(self, no_of_files):
+        file_urls = self.get_baseline_file_urls()
+        file_urls.extend(self.get_update_file_urls())
+        filtered_file_urls = self.filter_update_file_urls(file_urls)
+
+        if len(filtered_file_urls) > no_of_files:
+            filtered_file_urls = filtered_file_urls[:no_of_files]
+
+        self.download_update_files(filtered_file_urls[:no_of_files])
+
+    def get_xml_file_urls_from_directory(self, directory):
+        print 'Fetching files list:', PUBMED_FTP_URL + '/' + directory
         ftp = FTP()
-        ftp.connect(FTP_URL)
+        ftp.connect(PUBMED_FTP_URL)
         ftp.login()
-        files = ftp.nlst(UPDATES_DIR)
+        files = ftp.nlst(directory)
         xml_zip_files = []
         for f in files:
             if f.endswith('.xml.gz'):
-                abs_url = 'ftp://' + FTP_URL + '/' + f
+                abs_url = 'ftp://' + PUBMED_FTP_URL + '/' + f
                 xml_zip_files.append(abs_url)
-                print abs_url
+                # print abs_url
 
+        print len(xml_zip_files), 'files'
         return xml_zip_files
+
+    def get_update_file_urls(self):
+        return self.get_xml_file_urls_from_directory(PUBMED_UPDATES_DIRECTORY)
+
+    def get_baseline_file_urls(self):
+        return self.get_xml_file_urls_from_directory(PUBMED_BASELINE_DIRECTORY)
 
     def filter_update_file_urls(self, update_file_urls):
         # Filter update files list from downloaded files list
@@ -46,6 +62,7 @@ class FTPManager(object):
             if update_file_url not in downloaded_update_file_urls:
                 filtered_update_file_urls.append(update_file_url)
 
+        filtered_update_file_urls.sort()
         return filtered_update_file_urls
 
     def download_update_files(self, update_file_urls):

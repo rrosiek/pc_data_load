@@ -15,3 +15,14 @@ ELASTICSEARCH_SERVER = 'http://localhost:9200'
 # Django backend API URL
 
 API_URL = "https://ocat-dev.altum.com/api/v1/"
+
+# Pubmed data source
+
+PUBMED_FTP_URL = 'ftp.ncbi.nlm.nih.gov'
+PUBMED_UPDATES_DIRECTORY = 'pubmed/updatefiles/'
+PUBMED_BASELINE_DIRECTORY = 'pubmed/baseline/'
+
+
+# Local data load directory 
+
+DATA_DIRECTORY = '/data_loading'

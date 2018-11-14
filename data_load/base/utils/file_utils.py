@@ -44,7 +44,7 @@ def load_file(directory, file_name):
         data = json.load(data_file)
         data_file.close()
     except Exception as e:
-        print('LOAD FILE ERROR: ' + directory + ' ' + file_name)
+        # print('LOAD FILE ERROR: ' + directory + ' ' + file_name)
         pass
 
     return data

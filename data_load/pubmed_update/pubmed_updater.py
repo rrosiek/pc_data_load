@@ -111,12 +111,6 @@ class PubmedUpdater(object):
         # Process relationships
         self.process_relationships(update_file, data_source_summary)
 
-    def update_processed_update_files(self):
-        # Update processed update files
-        load_config = pubmed_load_config.get_load_config()
-        processed_update_files = PubmedUpdater.get_processed_update_files(load_config)
-        processed_update_files.extend(self.update_files)
-        PubmedUpdater.set_processed_update_files(load_config, processed_update_files)
 
     def process_relationships(self, update_file, data_source_summary):
         file_name = os.path.basename(update_file)
@@ -416,18 +410,4 @@ class PubmedUpdater(object):
 
         return prospective_cites
 
-    @staticmethod
-    def get_processed_update_files(load_config):
-        other_files_directory = load_config.other_files_directory()
-        processed_file_urls = file_utils.load_file(
-            other_files_directory, PROCESSED_UPDATE_FILES)
-        if len(processed_file_urls) == 0:
-            return []
-
-        return processed_file_urls
-
-    @staticmethod
-    def set_processed_update_files(load_config, processed_file_urls):
-        other_files_directory = load_config.other_files_directory()
-        file_utils.save_file(other_files_directory,
-                             PROCESSED_UPDATE_FILES, processed_file_urls)
+ 
