@@ -118,13 +118,12 @@ def run():
             if arg == '-n':
                 if (arg_index + 1) < len(sys.argv):
                     no_of_files = sys.argv[arg_index + 1]
-                    try:
-                        no_of_files = int(no_of_files)
-                        start(no_of_files)
-                    except Exception as e:
-                        print e.message
-                        print 'error'
-                        print('Usage: pubmed_load_manager -n <number of files to process>')     
+                    # try:
+                        # print no_of_files
+                    no_of_files = int(no_of_files)
+                    start(no_of_files)
+                    # except:
+                        # print('Usage: pubmed_load_manager -n <number of files to process>')     
                     return
                 else:
                     print('Usage: pubmed_load_manager -n <number of files to process>')     
