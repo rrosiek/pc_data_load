@@ -108,7 +108,7 @@ def start(no_of_files):
     load_manager.run()
 
 def resume():
-    load_manager = PubmedLoadManager(no_of_files)
+    load_manager = PubmedLoadManager(0)
     load_manager.run()
 
 def run():
