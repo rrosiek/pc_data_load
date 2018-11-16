@@ -20,6 +20,7 @@ class ValidateSchema(object):
         self.schema_errors = 0
         self.previous_doc = dict()
         self.index = 0
+        self.exisiting_format = {}
 
     def process(self, data_directory):
         for name in os.listdir(data_directory):
@@ -31,6 +32,7 @@ class ValidateSchema(object):
     def handle_row(self, _, row):
         root_schema = xsd_to_json_schema('data_load/clinical_trials/clinical_trials_public.xsd')
         schema = json.loads(root_schema)
+        self.existing_format = self.validate_json(self.exisiting_format, row)
         try:
             validate(row, schema)
         except Exception as e:
@@ -42,6 +44,50 @@ class ValidateSchema(object):
         self.index += 1
         print 'Docs processed:', self.index , 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
         return True
+
+
+    def validate_json(self, old_item, new_item):
+        # Determine type of old and new item
+
+        # If either is a list, iterate and normalize objects
+
+        # If both are dict, combine them
+
+        pass
+
+
+
+    # def validate_json(self, existing_format, new_json):
+    #     for key in new_json:
+    #         ef_item = {}
+    #         if key in existing_format:
+    #             ef_item = existing_format[key]
+            
+    #         new_item = new_json[key]
+    #         if isinstance(ef_item, dict) and isinstance(new_item, dict):
+    #             ef_item = self.validate_json(ef_item, new_item)
+    #         elif isinstance(new_item, list):
+    #             if isinstance(ef_item, list):
+    #                 if len(ef_item) > 0:
+    #                     ef_item = ef_item[0]
+    #                 else:
+    #                     ef_item = {}
+    #                 for item in new_item:
+    #                     ef_item = self.validate_json(ef_item, item)
+    #             elif isinstance(ef_item, dict):
+    #                  for item in new_item:
+    #                     ef_item = self.validate_json(ef_item, item)
+    #             else:
+    #                 ef_item = [new_item[0]]
+                       
+            
+            
+
+
+    #         existing_format[key] = ef_item
+
+
+
     # def process(self, data_directory):
     #     root_schema = xsd_to_json_schema('data_load/clinical_trials/clinical_trials_public.xsd')
     #     root_schema_obj = json.loads(root_schema)

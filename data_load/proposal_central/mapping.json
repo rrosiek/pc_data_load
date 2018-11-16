@@ -33,10 +33,12 @@
                     "type": "text"
                 },
                 "AwardStartDate": {
-                    "type": "text"
+                    "type": "date",
+                    "format": "MM/dd/yyyy"
                 },
                 "AwardEndDate": {
-                    "type": "text"
+                    "type": "date",
+                    "format": "MM/dd/yyyy"
                 },
                 "AwardAmount": {
                     "type": "text"
@@ -60,10 +62,12 @@
                     "type": "keyword"
                 },
                 "ProgramDeadline": {
-                    "type": "text"
+                    "type": "date",
+                    "format": "MM/dd/yyyy"
                 },
                 "ProgramOpenDate": {
-                    "type": "text"
+                    "type": "date",
+                    "format": "MM/dd/yyyy"
                 },
                 "GMName": {
                     "type": "text"

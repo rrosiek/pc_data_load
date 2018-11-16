@@ -21,17 +21,27 @@ class PCDataMapper(DataMapper):
 
     @staticmethod
     def pad_zeros(number, count):
-        number_str = str(number)
-        while len(number_str) < count:
+        while len(number) < count:
             number_str = '0' + number_str
 
         return number_str
 
     @staticmethod
+    def clean_date(date_str):
+        comps = date_str.split('/')
+        if len(comps) == 3:
+            month = PCDataMapper.pad_zeros(comps[0], 2)
+            day = PCDataMapper.pad_zeros(comps[1], 2)
+            year = comps[2]
+            return str(month) + '/' + str(day) + '/' + str(year)
+        else:
+            return None
+
+    @staticmethod
     def add_value_if_not_null(doc, data, key):
         if key in data:
             value = data[key]
-            if value != 'NULL':
+            if value != 'NULL' and len(value) > 0:
                 doc[key] = value
 
         return doc
@@ -63,6 +73,15 @@ class PCDataMapper(DataMapper):
         doc = PCDataMapper.add_value_if_not_null(doc, data, 'ProgramDeadline')
         doc = PCDataMapper.add_value_if_not_null(doc, data, 'ProgramOpenDate')
         doc = PCDataMapper.add_value_if_not_null(doc, data, 'GMName')
+
+        # if 'AwardStartDate' in doc:
+        #     doc['AwardStartDate'] = PCDataMapper.clean_date(doc['AwardStartDate'])
+        # if 'AwardEndDate' in doc:
+        #     doc['AwardEndDate'] = PCDataMapper.clean_date(doc['AwardEndDate'])
+        # if 'ProgramDeadline' in doc:
+        #     doc['ProgramDeadline'] = PCDataMapper.clean_date(doc['ProgramDeadline'])
+        # if 'ProgramOpenDate' in doc:
+        #     doc['ProgramOpenDate'] = PCDataMapper.clean_date(doc['ProgramOpenDate'])
 
         if 'AwardAmount' in data:
             award_amount = data['AwardAmount']
