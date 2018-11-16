@@ -3,7 +3,6 @@ import datetime
 import re
 
 class PCDataMapper(DataMapper):
-
     @staticmethod
     def allow_doc_creation(data_source_name):
         return True
