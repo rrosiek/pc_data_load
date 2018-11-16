@@ -5,13 +5,8 @@ class PCDataExtractor(DataExtractor):
 
     @staticmethod
     def extract_id(data_source_name, row):
-        if 'MedlineCitation' in row:
-            if 'PMID' in row['MedlineCitation']:
-                pmid_dict = row['MedlineCitation']['PMID']
-                if isinstance(pmid_dict, dict):
-                    return pmid_dict['content']
-                else:
-                    return pmid_dict
+        if 'AwardID' in row:
+            return row['AwardID']
 
         return None
 

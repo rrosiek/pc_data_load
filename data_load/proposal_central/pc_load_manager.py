@@ -83,9 +83,9 @@ def run():
                     start(data_source_file)   
                     return
                 else:
-                    print('Usage: pubmed_load_manager -n <number of files to process>')     
+                    print('Usage: pc_load_manager -path <path to csv file>')     
             else: 
-                print('Usage: pubmed_load_manager -n <number of files to process>')     
+                print('Usage: pc_load_manager -path <path to csv file>')     
         arg_index += 1
 
 if __name__ == '__main__':

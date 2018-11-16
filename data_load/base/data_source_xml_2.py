@@ -1,5 +1,4 @@
 import json
-import xmltodict
 from data_source import DataSource
 import xmlschema
 import os

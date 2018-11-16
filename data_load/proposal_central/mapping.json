@@ -1,77 +1,77 @@
 {
     "mappings": {
-        "study": {
+        "proposal": {
             "properties": {
-                "Abstract": {
+                "InstitutionName": {
                     "type": "text"
                 },
-                "Applicant": {
-                    "type": "text"
-                },
-                "ApplicantID": {
-                    "type": "long"
-                },
-                "ApplicantNameLastFirst": {
-                    "type": "text"
-                },
-                "AwardEndDate": {
-                    "type": "date"
+                "InstDUNSNum": {
+                    "type": "keyword"
                 },
                 "AwardID": {
+                    "type": "keyword"
+                },
+                "AwardIDFromGM": {
+                    "type": "keyword"
+                },
+                "AwardProposalID": {
+                    "type": "keyword"
+                },
+                "AwardeeID": {
+                    "type": "keyword"
+                },
+                "AwardeeEmail": {
+                    "type": "text"
+                },
+                "AwardeeLastName": {
+                    "type": "text"
+                },
+                "AwardeeFirstName": {
+                    "type": "text"
+                },
+                "AwardTitle": {
                     "type": "text"
                 },
                 "AwardStartDate": {
-                    "type": "date"
-                },
-                "FirstName": {
                     "type": "text"
                 },
-                "GMProgramAbbreviation": {
+                "AwardEndDate": {
                     "type": "text"
                 },
-                "GmName": {
+                "AwardAmount": {
                     "type": "text"
                 },
-                "InstCity": {
+                "GeneralSummary": {
                     "type": "text"
                 },
-                "InstCountry": {
+                "TechnicalSummary": {
                     "type": "text"
                 },
-                "InstName": {
+                "ORCID": {
+                    "type": "keyword"
+                },
+                "ProgramName": {
                     "type": "text"
                 },
-                "InstState": {
+                "ProgramCycle": {
                     "type": "text"
                 },
-                "LastName": {
+                "ProgramAbbreviation": {
+                    "type": "keyword"
+                },
+                "ProgramDeadline": {
                     "type": "text"
                 },
-                "Lay": {
+                "ProgramOpenDate": {
                     "type": "text"
                 },
-                "ORCiD": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
-                },
-                "ProjectTitle": {
+                "GMName": {
                     "type": "text"
                 },
-                "ProposalAwardStatus": {
+                "PMIDS": {
                     "type": "text"
                 },
-                "ProposalID": {
-                    "type": "long"
-                },
-                "ProposalStatus": {
-                    "type": "text"
-                },
-                "annotation": {
+                "DOIDS": {
                     "type": "text"
                 }
             }

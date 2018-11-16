@@ -1,12 +1,15 @@
 
 from data_load.base.data_source_xml_2 import XMLDataDirectorySource
-from json_schema import json_schema
-from json_schema.json_differ import diff_jsons
+# from json_schema import json_schema
+# from json_schema.json_differ import diff_jsons
 from data_load.xsdtojson.lib import xsd_to_json_schema
 
-from jsonmerge import Merger
+# from jsonmerge import Merger
+
+import xmltodict
 import json
 import time
+import os
 
 from jsonschema import validate
 
@@ -16,41 +19,63 @@ class ValidateSchema(object):
         self.schemas = []
         self.schema_errors = 0
         self.previous_doc = dict()
+        self.index = 0
 
     def process(self, data_directory):
+        for name in os.listdir(data_directory):
+            file_path = os.path.join(data_directory, name)
+            if os.path.isfile(file_path) and name.endswith('.xml'):
+                print 'Parsing file:', file_path
+                xmltodict.parse(open(file_path), item_depth=1, item_callback=self.handle_row)
+
+    def handle_row(self, _, row):
         root_schema = xsd_to_json_schema('data_load/clinical_trials/clinical_trials_public.xsd')
-        root_schema_obj = json.loads(root_schema)
-        # root_schema_string = json.dumps(root_schema_obj)
-        # root_schema_string = root_schema_string.replace('\n', '')
-        # root_schema_string = root_schema_string.replace('\"', '"')
+        schema = json.loads(root_schema)
+        try:
+            validate(row, schema)
+        except Exception as e:
+            print e.message
+            print e.args
+            print type(e)
+            self.schema_errors += 1
 
-        # print root_schema_string
-        self.schemas.append(root_schema_obj)
-        xml_data_directory_source = XMLDataDirectorySource(data_directory, 'data_load/clinical_trials/clinical_trials_public.xsd')
-        xml_data_directory_source.process_rows(self.process_row_method)
-
-    def process_row_method(self, doc, index):
-        if 'rank' not in doc:
-            doc['rank'] = ""
-        if 'variable_date_struct' not in doc:
-            doc['variable_date_struct'] = ""
-        doc_json_string = json.dumps(doc)
-        for schema in self.schemas:
-            # my_schema_object = json_schema.loads(schema)
-            # my_schema_object.full_check(doc_json_string)
-            # if json_schema.match(doc_json_string, schema):
-            #     match_found = True
-            # else:
-            #     self.schema_errors += 1
-            try:
-                validate(doc, schema)
-            except Exception as e:
-                print e.message
-                print e.args
-                print type(e)
-                self.schema_errors += 1
-        print 'Docs processed:', index+1, 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
+        self.index += 1
+        print 'Docs processed:', self.index , 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
         return True
+    # def process(self, data_directory):
+    #     root_schema = xsd_to_json_schema('data_load/clinical_trials/clinical_trials_public.xsd')
+    #     root_schema_obj = json.loads(root_schema)
+    #     # root_schema_string = json.dumps(root_schema_obj)
+    #     # root_schema_string = root_schema_string.replace('\n', '')
+    #     # root_schema_string = root_schema_string.replace('\"', '"')
+
+    #     # print root_schema_string
+    #     self.schemas.append(root_schema_obj)
+    #     xml_data_directory_source = XMLDataDirectorySource(data_directory, 'data_load/clinical_trials/clinical_trials_public.xsd')
+    #     xml_data_directory_source.process_rows(self.process_row_method)
+
+    # def process_row_method(self, doc, index):
+    #     if 'rank' not in doc:
+    #         doc['rank'] = ""
+    #     if 'variable_date_struct' not in doc:
+    #         doc['variable_date_struct'] = ""
+    #     doc_json_string = json.dumps(doc)
+    #     for schema in self.schemas:
+    #         # my_schema_object = json_schema.loads(schema)
+    #         # my_schema_object.full_check(doc_json_string)
+    #         # if json_schema.match(doc_json_string, schema):
+    #         #     match_found = True
+    #         # else:
+    #         #     self.schema_errors += 1
+            # try:
+            #     validate(doc, schema)
+            # except Exception as e:
+            #     print e.message
+            #     print e.args
+            #     print type(e)
+            #     self.schema_errors += 1
+    #     print 'Docs processed:', index+1, 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
+    #     return True
 
     # def process_row_method(self, doc, index):
     #     # try:
