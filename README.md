@@ -12,6 +12,10 @@
 
 ```pip install -r requirements.txt```
 
+### PubMed
+
 ```python -u -m data_load.pubmed2018.pubmed_load_manager -n <number of files to process>```
 
+### Proposal Central
 
+```python -m data_load.proposal_central.pc_load_manager -path <path to csv file>```
