@@ -1,0 +1,80 @@
+{
+    "mappings": {
+        "study": {
+            "properties": {
+                "Abstract": {
+                    "type": "text"
+                },
+                "Applicant": {
+                    "type": "text"
+                },
+                "ApplicantID": {
+                    "type": "long"
+                },
+                "ApplicantNameLastFirst": {
+                    "type": "text"
+                },
+                "AwardEndDate": {
+                    "type": "date"
+                },
+                "AwardID": {
+                    "type": "text"
+                },
+                "AwardStartDate": {
+                    "type": "date"
+                },
+                "FirstName": {
+                    "type": "text"
+                },
+                "GMProgramAbbreviation": {
+                    "type": "text"
+                },
+                "GmName": {
+                    "type": "text"
+                },
+                "InstCity": {
+                    "type": "text"
+                },
+                "InstCountry": {
+                    "type": "text"
+                },
+                "InstName": {
+                    "type": "text"
+                },
+                "InstState": {
+                    "type": "text"
+                },
+                "LastName": {
+                    "type": "text"
+                },
+                "Lay": {
+                    "type": "text"
+                },
+                "ORCiD": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "ProjectTitle": {
+                    "type": "text"
+                },
+                "ProposalAwardStatus": {
+                    "type": "text"
+                },
+                "ProposalID": {
+                    "type": "long"
+                },
+                "ProposalStatus": {
+                    "type": "text"
+                },
+                "annotation": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}
