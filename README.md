@@ -18,4 +18,4 @@
 
 ### Proposal Central
 
-```python -m data_load.proposal_central.pc_load_manager -path <path to csv file>```
+```python -u -m data_load.proposal_central.pc_load_manager -path <path to csv file>```
