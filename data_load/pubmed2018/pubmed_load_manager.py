@@ -1,6 +1,7 @@
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.base.data_source_xml import XMLDataSource
 from data_load.base.load_manager import LoadManager
+from data_load.pubmed_update.pubmed_relationship_processor import PubmedRelationshipProcessor
 
 # from config import *
 from data_load.pubmed2018.pubmed_data_extractor import PubmedDataExtractor
@@ -19,6 +20,7 @@ from data_load.base.utils.log_utils import *
 
 TASK_NAME = 'load_pubmed2018'
 
+PROCESS_COUNT = 4
 
 class PubmedLoadManager(LoadManager):
 
@@ -88,7 +90,7 @@ class PubmedLoadManager(LoadManager):
         load_config = self.get_load_config()
         load_config.data_source_name = file_name.split('.')[0]
         load_config.log_level = LOG_LEVEL_DEBUG
-        load_config.process_count = 1
+        load_config.process_count = PROCESS_COUNT
         # load_config.set_logger(self.logger)
 
         # self.logger.info('Processing file ' + str(update_file))
@@ -96,11 +98,32 @@ class PubmedLoadManager(LoadManager):
 
         data_processor = DataSourceProcessor(load_config, XMLDataSource(pubmed_data_file, 2))
         data_processor.run()
+        data_source_summary = data_processor.get_combined_data_source_summary()
 
-        file_manager.update_processed_files(load_config, [pubmed_data_file])
 
         # Process relationships
-        # self.process_relationships(update_file, data_source_summary)
+        self.process_relationships(file_name, data_source_summary)
+        
+        file_manager.update_processed_files(load_config, [pubmed_data_file])
+
+
+    def process_relationships(self, file_name, data_source_summary):
+        pubmed_data_file = self.task_file_lookup[file_name]
+
+        load_config = self.get_load_config()
+        load_config.data_source_name = file_name.split('.')[0] + '_relations'
+        load_config.log_level = LOG_LEVEL_DEBUG
+        load_config.process_count = PROCESS_COUNT
+        # print 'Processing relationships......'
+        load_config.logger().info('Processing relationships... ' + str(pubmed_data_file))
+
+        load_config.append_relations = True
+        load_config.source = ''
+
+        data_processor = PubmedRelationshipProcessor(load_config, XMLDataSource(pubmed_data_file, 2), data_source_summary)
+        data_processor.run()
+        
+        # docs_with_new_citations = data_processor.get_docs_with_new_citations()
 
 def start(no_of_files):
     load_manager = PubmedLoadManager(no_of_files)
