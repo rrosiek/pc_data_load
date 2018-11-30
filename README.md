@@ -16,6 +16,10 @@
 
 ```python -u -m data_load.pubmed2018.pubmed_load_manager -n <number of files to process>```
 
+### PubMed - Baseline + Relationships
+
+```python -u -m data_load.pubmed2018.pubmed_load_manager -baseline```
+
 ### Proposal Central
 
 ```python -u -m data_load.proposal_central.pc_load_manager -path <path to csv file>```
