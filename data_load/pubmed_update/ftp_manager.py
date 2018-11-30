@@ -29,7 +29,14 @@ class FTPManager(object):
         if len(filtered_file_urls) > no_of_files:
             filtered_file_urls = filtered_file_urls[:no_of_files]
 
-        self.download_update_files(filtered_file_urls[:no_of_files])
+        return self.download_update_files(filtered_file_urls)
+
+    def download_baseline_files(self, file_urls):
+        filtered_file_urls = self.filter_update_file_urls(file_urls)
+
+        # filtered_file_urls = []#filtered_file_urls[:2]
+
+        return self.download_update_files(filtered_file_urls)
 
     def get_xml_file_urls_from_directory(self, directory):
         print 'Fetching files list:', PUBMED_FTP_URL + '/' + directory
@@ -74,6 +81,7 @@ class FTPManager(object):
 
         # Get the downloaded files list
         downloaded_update_file_urls = self.get_downloaded_update_file_urls()
+        downloaded_update_file_paths = []
 
         # Download new update zip files, extract them and delete zip files
         for update_file_url in update_file_urls:
@@ -101,9 +109,12 @@ class FTPManager(object):
             os.remove(update_file_path)
 
             downloaded_update_file_urls.append(update_file_url)
+            downloaded_update_file_paths.append(xml_file_path)
 
         # Save the downloaded files list
         self.set_downloaded_update_file_urls(downloaded_update_file_urls)
+
+        return downloaded_update_file_paths
 
     def get_downloaded_update_file_urls(self):
         other_files_directory = self.load_config.other_files_directory()

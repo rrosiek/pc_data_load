@@ -26,3 +26,5 @@ PUBMED_BASELINE_DIRECTORY = 'pubmed/baseline/'
 # Local data load directory 
 
 DATA_DIRECTORY = '/data_loading'
+
+PROCESS_COUNT = 1

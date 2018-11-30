@@ -4,7 +4,24 @@ import os
 PROCESSED_UPDATE_FILES = 'processed_update_files.json'
 
 
+def get_baseline_files(load_config, baseline_file_urls):
+    source_files_directory = load_config.source_files_directory()
+    baseline_files = []
 
+    for baseline_file_url in baseline_file_urls:
+        file_name = os.path.basename(baseline_file_url)
+        xml_file_path = os.path.join(source_files_directory, file_name.replace('.gz', ''))
+        baseline_files.append(xml_file_path)
+
+    source_files = get_all_files(load_config)
+    new_update_files = []
+
+    for file_path in source_files:
+        if file_path in baseline_files:
+            new_update_files.append(file_path)
+
+    new_update_files.sort()
+    return new_update_files
 
 def get_new_files(load_config):
     processed_update_files = get_processed_files(load_config)

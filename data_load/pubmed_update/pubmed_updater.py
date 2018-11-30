@@ -85,7 +85,7 @@ class PubmedUpdater(object):
         data_source_summary['updated_ids'] = updated_ids
         data_source_summary['indexed_ids'] = filtered_indexed_ids
 
-        return data_source_summar
+        return data_source_summary
 
     def process_file(self, update_file):
         file_name = os.path.basename(update_file)
