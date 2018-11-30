@@ -233,3 +233,12 @@ class DataLoader(object):
         }
 
         self.failed_docs[_id] = data_for_id
+
+
+def start_data_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
+    data_loader = DataLoader(load_config=load_config,
+                             data_loader_batch=data_loader_batch,
+                             _index=_index,
+                             _type=_type,
+                             data_source_batch_name=data_source_batch_name)
+    data_loader.run()

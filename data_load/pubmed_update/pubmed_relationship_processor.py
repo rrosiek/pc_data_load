@@ -24,8 +24,14 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         return self.docs_with_new_citations
 
     def process_relationships(self, extracted_ids):
-        all_updated_ids = self.data_source_summary['updated_ids']
-        all_indexed_ids = self.data_source_summary['indexed_ids']
+        all_updated_ids = {}
+        all_indexed_ids = {}
+
+        if 'updated_ids' in self.data_source_summary:
+            all_updated_ids = self.data_source_summary['updated_ids']
+
+        if 'indexed_ids' in self.data_source_summary:
+            all_indexed_ids = self.data_source_summary['indexed_ids']
 
         pubmed_citations_pubmed = {}
         pubmed_cited_bys_pubmed = {}
@@ -103,15 +109,15 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
                 self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
 
-            elif _id in all_indexed_ids:
+            else:
                 # New doc
 
                 # Get existing cited bys (citations from other existing docs) for the new doc
                 existing_cited_bys = self.get_existing_cited_bys(_id)
-                if _id not in pubmed_cited_bys_pubmed:
-                    pubmed_cited_bys_pubmed[_id] = []
-
+       
                 for cited_by in existing_cited_bys:
+                    if _id not in pubmed_cited_bys_pubmed:
+                        pubmed_cited_bys_pubmed[_id] = []
                     if cited_by not in pubmed_cited_bys_pubmed[_id]:
                         pubmed_cited_bys_pubmed[_id].append(cited_by)
 

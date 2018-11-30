@@ -12,6 +12,9 @@ from constants import DATA_LOADER_BATCH_PREFIX
 from constants import DATA_SOURCE_BATCH_PREFIX
 from constants import FAILED_DOCS_DIRECTORY
 
+from data_load.base.data_loader import start_data_load
+from data_load.base.relationship_loader import start_relationship_load
+
 from load_config import *
 
 
@@ -236,49 +239,55 @@ class DataLoadBatcher(object):
         self.load_config.log(
             LOG_LEVEL_INFO, 'Creating process for', len(data_loader_batch), 'docs')
 
+        process = None
+
         if self.load_relationships:
-            start_relationship_load(self.load_config,
-                                    data_loader_batch,
-                                    self.index,
-                                    self.type,
-                                    data_source_batch_name)
-
-            # process = Process(target=start_relationship_load, args=(self.load_config,
-            #                                                         data_loader_batch,
-            #                                                         self.index,
-            #                                                         self.type,
-            #                                                         data_source_batch_name))
+            if self.load_config.process_count == 1:
+                start_relationship_load(self.load_config,
+                                data_loader_batch,
+                                self.index,
+                                self.type,
+                                data_source_batch_name)
+            else:
+                process = Process(target=start_relationship_load, args=(self.load_config,
+                                                                        data_loader_batch,
+                                                                        self.index,
+                                                                        self.type,
+                                                                        data_source_batch_name))
         else:
-            start_load(self.load_config,
-                       data_loader_batch,
-                       self.index,
-                       self.type,
-                       data_source_batch_name)
-            # process = Process(target=start_load, args=(self.load_config,
-            #                                            data_loader_batch,
-            #                                            self.index,
-            #                                            self.type,
-            #                                            data_source_batch_name))
+            if self.load_config.process_count == 1:
+                start_data_load(self.load_config,
+                                data_loader_batch,
+                                self.index,
+                                self.type,
+                                data_source_batch_name)
+            else:
+                process = Process(target=start_data_load, args=(self.load_config,
+                                                                data_loader_batch,
+                                                                self.index,
+                                                                self.type,
+                                                                data_source_batch_name))
 
-        # process.start()
-        # self.processes.append(process)
+        if process is not None:
+            process.start()
+            self.processes.append(process)
 
-        # time.sleep(self.load_config.process_spawn_delay)
-
-
-def start_relationship_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
-    relationship_loader = RelationshipLoader(load_config=load_config,
-                                             data_loader_batch=data_loader_batch,
-                                             _index=_index,
-                                             _type=_type,
-                                             data_source_batch_name=data_source_batch_name)
-    relationship_loader.run()
+            time.sleep(self.load_config.process_spawn_delay)
 
 
-def start_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
-    data_loader = DataLoader(load_config=load_config,
-                             data_loader_batch=data_loader_batch,
-                             _index=_index,
-                             _type=_type,
-                             data_source_batch_name=data_source_batch_name)
-    data_loader.run()
+# def start_relationship_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
+#     relationship_loader = RelationshipLoader(load_config=load_config,
+#                                              data_loader_batch=data_loader_batch,
+#                                              _index=_index,
+#                                              _type=_type,
+#                                              data_source_batch_name=data_source_batch_name)
+#     relationship_loader.run()
+
+
+# def start_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
+#     data_loader = DataLoader(load_config=load_config,
+#                              data_loader_batch=data_loader_batch,
+#                              _index=_index,
+#                              _type=_type,
+#                              data_source_batch_name=data_source_batch_name)
+#     data_loader.run()

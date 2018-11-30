@@ -124,3 +124,12 @@ class RelationshipLoader(DataLoader):
 
         if not self.load_config.test_mode:
             self.save_summary(ids_to_fetch)
+
+
+def start_relationship_load(load_config, data_loader_batch, _index, _type, data_source_batch_name):
+    relationship_loader = RelationshipLoader(load_config=load_config,
+                                             data_loader_batch=data_loader_batch,
+                                             _index=_index,
+                                             _type=_type,
+                                             data_source_batch_name=data_source_batch_name)
+    relationship_loader.run()

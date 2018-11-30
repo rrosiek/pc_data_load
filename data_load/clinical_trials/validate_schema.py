@@ -45,15 +45,68 @@ class ValidateSchema(object):
         print 'Docs processed:', self.index , 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
         return True
 
+    def combine_items(self, old_item, new_item):
+        if isinstance(old_item, list) and isinstance(new_item, list):
+            return self.combine_lists(old_item, new_item)
+        elif isinstance(old_item, dict) and isinstance(new_item, dict):
+            return self.combine_dictionary(old_item, new_item)
+        elif isinstance(old_item, dict) and isinstance(new_item, list):
+            return self.combine_lists([old_item], new_item)
+        elif isinstance(old_item, list) and isinstance(new_item, dict):
+            return self.combine_lists(old_item, [new_item])
+
+    def combine_dictionary(self, old_item, new_item):
+        combined = {}
+        for key in old_item:
+            combined[key] = old_item[key]
+
+        for key in new_item:
+            new_item_for_key = new_item[key]
+            if key in combined:
+                old_item_for_key = combined[key]
+
+                combined_item_for_key = self.combine_items(old_item_for_key, new_item_for_key)
+                combined[key] = combined_item_for_key
+            else:
+                combined[key] = new_item_for_key
+
+        return combined  
+
+    def combine_lists(self, old_item, new_item):
+        pre_combined_list = []
+        pre_combined_list.extend(old_item)
+        pre_combined_list.extend(new_item)
+
+        combined = []
+        for item in pre_combined_list:
+            if len(combined) == 0:
+                combined.append(item)
+            else:
+                first_item = combined[0]
+                combined_item = self.combine_items(first_item, item)
+                combined[0] = combined_item
+
+        return combined   
 
     def validate_json(self, old_item, new_item):
         # Determine type of old and new item
 
-        # If either is a list, iterate and normalize objects
+        # If either is a list, iterate and combine objects in each array, then combine objects with each other
+        list_one = []
+        list_two = []
+        if isinstance(old_item, list):
+            list_one = old_item
+        else:
+            list_one = [old_item]
 
+        if isinstance(new_item, list):
+            list_two = new_item
+        else:
+            list_two = [new_item]
+        
         # If both are dict, combine them
+        
 
-        pass
 
 
 
