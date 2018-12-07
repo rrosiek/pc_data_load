@@ -5,7 +5,6 @@ import gzip
 import os
 
 import data_load.base.utils.file_utils as file_utils
-from config import PROCESSED_UPDATE_FILES
 from data_load.DATA_LOAD_CONFIG import PUBMED_FTP_URL,  PUBMED_UPDATES_DIRECTORY,  PUBMED_BASELINE_DIRECTORY
 
 DOWNLOADED_UPDATE_FILES = 'downloaded_update_files.json'
@@ -18,25 +17,24 @@ class FTPManager(object):
 
     def download_new_update_files(self):
         update_file_urls = self.get_update_file_urls()
-        filtered_update_file_urls = self.filter_update_file_urls(update_file_urls)
-        self.download_update_files(filtered_update_file_urls)
+        self.download_missing_files(update_file_urls)
 
     def download_n_files(self, no_of_files):
         file_urls = self.get_baseline_file_urls()
         file_urls.extend(self.get_update_file_urls())
-        filtered_file_urls = self.filter_update_file_urls(file_urls)
+        filtered_file_urls = self.filter_file_urls(file_urls)
 
         if len(filtered_file_urls) > no_of_files:
             filtered_file_urls = filtered_file_urls[:no_of_files]
 
         return self.download_update_files(filtered_file_urls)
 
-    def download_baseline_files(self, file_urls):
-        filtered_file_urls = self.filter_update_file_urls(file_urls)
+    def download_missing_files(self, file_urls):
+        filtered_file_urls = self.filter_file_urls(file_urls)
 
         # filtered_file_urls = []#filtered_file_urls[:2]
 
-        return self.download_update_files(filtered_file_urls)
+        return self.download_files(filtered_file_urls)
 
     def get_xml_file_urls_from_directory(self, directory):
         print 'Fetching files list:', PUBMED_FTP_URL + '/' + directory
@@ -60,7 +58,7 @@ class FTPManager(object):
     def get_baseline_file_urls(self):
         return self.get_xml_file_urls_from_directory(PUBMED_BASELINE_DIRECTORY)
 
-    def filter_update_file_urls(self, update_file_urls):
+    def filter_file_urls(self, update_file_urls):
         # Filter update files list from downloaded files list
         downloaded_update_file_urls = self.get_downloaded_update_file_urls()
 
@@ -72,7 +70,7 @@ class FTPManager(object):
         filtered_update_file_urls.sort()
         return filtered_update_file_urls
 
-    def download_update_files(self, update_file_urls):
+    def download_files(self, update_file_urls):
         """
         Download new update files - update_file_urls
         Save list of downloaded file urls to file
@@ -83,6 +81,7 @@ class FTPManager(object):
         downloaded_update_file_urls = self.get_downloaded_update_file_urls()
         downloaded_update_file_paths = []
 
+        print 'Downloading', str(len(update_file_urls)), 'file(s)'
         # Download new update zip files, extract them and delete zip files
         for update_file_url in update_file_urls:
             file_name = os.path.basename(update_file_url)

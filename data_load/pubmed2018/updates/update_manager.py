@@ -124,11 +124,11 @@ def process_update_files(is_auto_update, load_config, new_update_files):
         logger.info('Saving update summary...')
         save_update_record_for_date(load_config, local_date, update_data, docs_with_new_citations)
         
-        # all_prospects = send_prospective_citations_notifications(logger, docs_with_new_citations)
+        all_prospects = send_prospective_citations_notifications(logger, docs_with_new_citations)
 
         # # Send update notification
-        # logger.info('Sending update status mail...')
-        # email_client.send_update_notifications(local_date, update_data, all_prospects)
+        logger.info('Sending update status mail...')
+        email_client.send_update_notifications(local_date, update_data, all_prospects)
 
         # Save existing pmids to file
         logger.info('Saving new pmids...')
