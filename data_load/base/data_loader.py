@@ -37,7 +37,7 @@ class DataLoader(object):
 
     def get_es_id(self, doc_id):
         return self.load_config.data_mapper.get_es_id(doc_id)
-    
+
     def get_doc_id(self, es_id):
         return self.load_config.data_mapper.get_doc_id(es_id)
 
@@ -52,7 +52,9 @@ class DataLoader(object):
     def run(self):
         self.data_loader_utils = DataLoaderUtils(self.load_config.server,
                                                  self.index,
-                                                 self.type)
+                                                 self.type,
+                                                 self.load_config.server_username,
+                                                 self.load_config.server_password)
 
         count = 0
         bulk_data = ''
@@ -74,7 +76,9 @@ class DataLoader(object):
                                                 self.index,
                                                 self.type,
                                                 self.docs_fetched,
-                                                self.load_config.doc_fetch_batch_size)
+                                                self.load_config.doc_fetch_batch_size,
+                                                self.load_config.server_username,
+                                                self.load_config.server_password)
 
         for _id in ids_to_load:
             data_for_id = self.data_loader_batch[_id]
@@ -204,7 +208,7 @@ class DataLoader(object):
         # Save failed docs
         if len(self.failed_docs) > 0:
             file_utils.save_file(self.failed_docs_directory, data_loader_batch_name + '.json', self.failed_docs)
-      
+
         # Save batch summary
         summary = {
             'indexed_ids': self.indexed_ids.keys(),
@@ -218,6 +222,7 @@ class DataLoader(object):
                         '---------------------------------------------------------------------------------------------')
         self.load_config.log(LOG_LEVEL_INFO,
                         self.load_config.server,
+                        self.load_config.server_username,
                         self.load_config.index,
                         self.load_config.type,
                         ' Updated docs:',

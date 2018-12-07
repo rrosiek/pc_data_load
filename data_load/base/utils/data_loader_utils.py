@@ -6,11 +6,12 @@ from pprint import pprint
 
 class DataLoaderUtils(object):
 
-    def __init__(self, server, index, type):
+    def __init__(self, server, index, type, username='', password=''):
         self.server = server
         self.index = index
         self.type = type
         self.session = requests.Session()
+        self.auth = (username, password)
 
     def set_server(self, server):
         self.server = server
@@ -27,7 +28,7 @@ class DataLoaderUtils(object):
     def load_bulk_data(self, bulk_data):
         url = self.server + '/' + '_bulk'
         headers = {"content-type": "application/json"}
-        response = self.session.post(url, data=bulk_data, headers=headers)
+        response = self.session.post(url, data=bulk_data, headers=headers, auth=self.auth)
         if response.status_code == 200 or response.status_code == 201:
             return response.text
         else:
@@ -63,11 +64,11 @@ class DataLoaderUtils(object):
         url = self.server + '/' + self.index + '/' + self.type + '/_search'
 
         print('Checking index ' + url)
-        response = self.session.get(url)
+        response = self.session.get(url, auth=self.auth)
         print(str(response.status_code))
         if response.status_code == 200 or response.status_code == 201:
             return True
-    
+
         return False
 
     def load_mapping_from_file(self, mapping_file_path):
@@ -83,7 +84,7 @@ class DataLoaderUtils(object):
         print('Adding mapping to index ' + str(self.index))
         url = self.server + '/' + self.index + '/' + '_mapping' + '/' + self.type
         print(url)
-        response = self.session.put(url, json=mapping)
+        response = self.session.put(url, json=mapping, auth=self.auth)
         print(str(response.text))
         if response.status_code == 200 or response.status_code == 201:
             print('Mapping added to index ' + str(self.index))
@@ -91,7 +92,7 @@ class DataLoaderUtils(object):
     def put_mapping(self, mapping):
         print('Creating index "' + self.index + '" with type "' + self.type + '"')
         url = self.server + '/' + self.index
-        response = self.session.put(url, json=mapping)
+        response = self.session.put(url, json=mapping, auth=self.auth)
         print(str(response.text))
         if response.status_code == 200:
             print('Index created and mapping added')
@@ -100,7 +101,7 @@ class DataLoaderUtils(object):
         # print('Indexing doc: ' + _id)
         url = self.server + '/' + self.index + '/' + self.type + '/' + str(_id)
         # print(url)
-        response = self.session.put(url, json=doc)
+        response = self.session.put(url, json=doc, auth=self.auth)
         # print(str(response.status_code))
         # print(str(response.text))
         if response.status_code == 200 or response.status_code == 201:
@@ -113,7 +114,7 @@ class DataLoaderUtils(object):
         # print('Updating doc: ' + _id)
         url = self.server + '/' + self.index + '/' + self.type + '/' + str(_id) + '/_update'
         # print(url)
-        response = self.session.post(url, json=doc)
+        response = self.session.post(url, json=doc, auth=self.auth)
         # print(str(response.status_code))
         # print(str(response.text))
         if response.status_code == 200 or response.status_code == 201:
@@ -122,7 +123,7 @@ class DataLoaderUtils(object):
         else:
             print(str(response.status_code))
             print(str(response.text))
-            
+
         return False
 
     def fetch_doc(self, _id, field=None):
@@ -132,7 +133,7 @@ class DataLoaderUtils(object):
             url += '?_source=' + field
 
         # print 'Fetching doc', url
-        response = self.session.get(url)
+        response = self.session.get(url, auth=self.auth)
         # print(str(response.status_code))
         # print(str(response.text))
         if response.status_code == 200 or response.status_code == 201:
@@ -147,7 +148,7 @@ class DataLoaderUtils(object):
         url = self.server + '/' + self.index + '/' + self.type + '/_mapping'
 
         print('Fetching mapping ' + url)
-        response = self.session.get(url)
+        response = self.session.get(url, auth=self.auth)
         print(str(response.status_code))
         if response.status_code == 200 or response.status_code == 201:
             mapping = json.loads(response.text)
@@ -202,7 +203,7 @@ class DataLoaderUtils(object):
         print 'Deleting index', self.index
         url = self.server + '/' + self.index
 
-        response = self.session.delete(url)
+        response = self.session.delete(url, auth=self.auth)
         print(str(response.status_code))
         if response.status_code == 200 or response.status_code == 201:
             print(str(response.text))

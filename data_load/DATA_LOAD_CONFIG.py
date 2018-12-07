@@ -8,9 +8,11 @@ POSTGRES_SERVER_PORT = '5432'
 
 POSTGRES_DATABASE_NAME = 'pardi'
 
-# Elasticsearch server URL
+# Elasticsearch server URL and auth
 
 ELASTICSEARCH_SERVER = 'http://localhost:9200'
+ELASTICSEARCH_USERNAME = ''
+ELASTICSEARCH_PASSWORD = ''
 
 # Django backend API URL
 
@@ -23,7 +25,7 @@ PUBMED_UPDATES_DIRECTORY = 'pubmed/updatefiles/'
 PUBMED_BASELINE_DIRECTORY = 'pubmed/baseline/'
 
 
-# Local data load directory 
+# Local data load directory
 
 DATA_DIRECTORY = '/data_loading'
 

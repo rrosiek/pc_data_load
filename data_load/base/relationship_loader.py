@@ -30,14 +30,16 @@ class RelationshipLoader(DataLoader):
 
     def get_es_id(self, doc_id):
         return doc_id
-    
+
     def get_doc_id(self, es_id):
         return es_id
 
     def run(self):
         self.data_loader_utils = DataLoaderUtils(self.load_config.server,
                                                  self.index,
-                                                 self.type)
+                                                 self.type,
+                                                 self.load_config.server_username,
+                                                 self.load_config.server_password)
 
         count = 0
         bulk_data = ''
@@ -50,7 +52,9 @@ class RelationshipLoader(DataLoader):
                                             self.index,
                                             self.type,
                                             self.docs_fetched,
-                                            self.load_config.doc_fetch_batch_size)
+                                            self.load_config.doc_fetch_batch_size,
+                                            self.load_config.server_username,
+                                            self.load_config.server_password)
 
         for _id in self.existing_docs:
             relations = self.data_loader_batch[_id]
