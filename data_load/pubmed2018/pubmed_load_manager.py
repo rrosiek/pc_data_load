@@ -322,19 +322,19 @@ class PubmedLoadManager(LoadManager):
         # docs_with_new_citations = data_processor.get_docs_with_new_citations()
 
 def start(no_of_files):
-    load_manager = PubmedLoadManager(no_of_files)
+    load_manager = PubmedLoadManager(MODE_FILE, no_of_files)
     load_manager.mode = MODE_FILE
     load_manager.del_config()
     load_manager.run()
 
 def process_baseline():
-    load_manager = PubmedLoadManager(0)
+    load_manager = PubmedLoadManager(MODE_BASELINE, 0)
     load_manager.mode = MODE_BASELINE
     load_manager.del_config()
     load_manager.run()
 
 def process_updates():
-    load_manager = PubmedLoadManager(0)
+    load_manager = PubmedLoadManager(MODE_UPDATE, 0)
     load_manager.mode = MODE_UPDATE
     load_manager.no_of_files = 2
     # load_manager.del_config()
