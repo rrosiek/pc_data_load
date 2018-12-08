@@ -255,6 +255,8 @@ class PubmedLoadManager(LoadManager):
         ftp_manager = FTPManager(load_config)
         print 'Downloading data...'
 
+        print 'Mode:', self.mode
+
         if self.mode == MODE_BASELINE:
             baseline_file_urls = ftp_manager.get_baseline_file_urls()
             print 'baseline_file_urls', len(baseline_file_urls)
