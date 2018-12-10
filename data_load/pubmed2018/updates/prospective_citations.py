@@ -4,10 +4,8 @@ import json
 import time
 import requests
 
-from config import *
 from data_load.base.constants import API_URL
 import email_client
-import pubmed_load_config
 import data_load.base.utils.file_utils as file_utils
 
 
@@ -74,28 +72,11 @@ class FindProspectiveCitations(object):
 
     def run(self):
         prospects = self.find_prospects()
-        self.send_notifications(prospects)
+        # self.send_notifications(prospects)
 
         return prospects
 
-    def send_notifications(self, prospects):
-        # print 'Prospects', all_prospects
-        self.logger.info('Prospects ' + str(prospects))
-        failed_prospects = []
-
-        # Send email notifications
-        for prospect in prospects:
-            problems = email_client.send_notification_for_prospect(prospect)
-            if len(problems) > 0:
-                failed_prospects.append({
-                    'problems': problems,
-                    'prospect': prospect
-                })
-
-        # Dump failed prospects to file
-        if len(failed_prospects) > 0:
-            file_utils.save_file(
-                ROOT_DIRECTORY, 'failed_prospects.json', failed_prospects)
+  
 
     def find_prospects(self):
         # Get the subscribed users
@@ -114,8 +95,7 @@ class FindProspectiveCitations(object):
 
             docs_with_matching_citations = []
 
-            prospective_docs_for_user = self.get_prospective_docs_for_user(
-                email, client_id)
+            prospective_docs_for_user = self.get_prospective_docs_for_user(email, client_id)
             prospective_docs_for_user_str = {}
             for pmid in prospective_docs_for_user:
                 prospective_docs_for_user_str[str(pmid)] = 0
@@ -147,6 +127,8 @@ class FindProspectiveCitations(object):
                     'docs_with_matching_citations'] = docs_with_matching_citations
 
                 all_prospects.append(new_prospect)
+
+            break
 
         return all_prospects
 
