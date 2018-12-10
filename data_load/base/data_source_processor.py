@@ -24,7 +24,6 @@ class DataSourceProcessor(object):
         self.data_source_batch = {}
 
         self.start_index = 0
-        self.total_rows = 0
         self.previous_id = None
 
         self.processed_indices = {}
@@ -34,6 +33,9 @@ class DataSourceProcessor(object):
         self.load_relationships = False
 
         self.process_ids_method = self.default_process_ids_method
+
+        self.total_rows = 0
+        self.total_ids = 0
 
     def load_data_source_batches(self):
         data_source_directory = self.load_config.data_source_directory()
@@ -93,6 +95,7 @@ class DataSourceProcessor(object):
         self.start_index = 0
         self.previous_id = None
         self.clear_data_source_batch()
+        self.load_stats()
 
         if self.mode == self.MODE_NORMAL_LOAD:
             self.processed_indices = self.get_processed_indices()
@@ -108,6 +111,8 @@ class DataSourceProcessor(object):
         if len(self.data_source_batch) > 0:
             self.process_batch()
 
+        self.save_stats()
+
     def load_stats(self):
         self.load_config.log(LOG_LEVEL_INFO, 'Loading stats...')
         data_source_directory = self.load_config.data_source_directory()
@@ -115,21 +120,23 @@ class DataSourceProcessor(object):
 
         if 'total_rows' in stats:
             self.total_rows = stats['total_rows']
-  
 
+        if 'total_ids' in stats:
+            self.total_ids = stats['total_ids']
+
+        return stats
+        
     def save_stats(self):
         self.load_config.log(LOG_LEVEL_INFO, 'Saving stats...')
 
         stats = {
             'total_rows': self.total_rows,
-            'total_ids': len(self.data_source_batch)
+            'total_ids': self.total_ids
         }
 
         self.load_config.log(LOG_LEVEL_INFO, stats)
 
         data_source_directory = self.load_config.data_source_directory()
-        file_utils.save_file(data_source_directory,
-                             'unique_ids.json', self.data_source_batch)
         file_utils.save_file(data_source_directory, 'stats.json', stats)
 
     def run(self, process_ids_method=None):
@@ -141,16 +148,15 @@ class DataSourceProcessor(object):
             self.delete_history()
 
         self.data_source.initialize()
-        self.load_stats()
+        # self.load_stats()
 
-
-        if self.total_rows == 0:
-            self.load_config.log(
-                LOG_LEVEL_INFO, 'data source batch size is zero, counting rows...')
-            # Count rows
-            self.data_source.process_rows(self.count_row)
-            # Save stats
-            self.save_stats()
+        # if self.total_rows == 0:
+        #     self.load_config.log(
+        #         LOG_LEVEL_INFO, 'data source batch size is zero, counting rows...')
+        #     # Count rows
+        #     self.data_source.process_rows(self.count_row)
+        #     # Save stats
+        #     self.save_stats()
 
         # raw_input('Continue?')
 
@@ -202,30 +208,32 @@ class DataSourceProcessor(object):
 
         return failed_ids
 
-    def count_row(self, row, current_index):
-        _id = self.extract_id(
-            self.load_config.data_source_name, row, current_index)
-        if _id is not None:
-            self.load_config.log(
-                LOG_LEVEL_DEBUG, 'Counting rows', current_index, len(self.data_source_batch))
+    # def count_row(self, row, current_index):
+    #     _id = self.extract_id(
+    #         self.load_config.data_source_name, row, current_index)
+    #     if _id is not None:
+    #         self.load_config.log(
+    #             LOG_LEVEL_DEBUG, 'Counting rows', current_index, len(self.data_source_batch))
 
-            if self.mode == self.MODE_NORMAL_LOAD and _id in self.processed_indices:
-                return True
+    #         if self.mode == self.MODE_NORMAL_LOAD and _id in self.processed_indices:
+    #             return True
 
-            if self.mode == self.MODE_RETRY_FAILED_DOCS and _id not in self.failed_ids:
-                return True
+    #         if self.mode == self.MODE_RETRY_FAILED_DOCS and _id not in self.failed_ids:
+    #             return True
 
-            if _id not in self.data_source_batch:
-                self.data_source_batch[_id] = []
+    #         if _id not in self.data_source_batch:
+    #             self.data_source_batch[_id] = []
 
-        self.total_rows = current_index
-        return True
+    #     self.total_rows = current_index
+    #     return True
 
     def process_row(self, row, current_index):
         if current_index >= self.start_index:
+            total_rows = current_index
             _id = self.extract_id(
                 self.load_config.data_source_name, row, current_index)
             if _id is not None:
+                self.total_ids += 1
                 # Check and split batch
                 if self.should_split_batch(current_index, _id, self.previous_id):
                     self.process_batch()
@@ -238,7 +246,7 @@ class DataSourceProcessor(object):
                         LOG_LEVEL_INFO, 'Processing from', current_index)
 
                 self.load_config.log(
-                    LOG_LEVEL_DEBUG, 'Processed rows', current_index, self.total_rows)
+                    LOG_LEVEL_DEBUG, 'Processed rows', current_index)
 
                 if self.mode == self.MODE_NORMAL_LOAD and current_index in self.processed_indices:
                     return True
