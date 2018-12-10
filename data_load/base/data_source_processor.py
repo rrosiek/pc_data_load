@@ -229,7 +229,7 @@ class DataSourceProcessor(object):
 
     def process_row(self, row, current_index):
         if current_index >= self.start_index:
-            total_rows = current_index
+            self.total_rows = current_index
             _id = self.extract_id(
                 self.load_config.data_source_name, row, current_index)
             if _id is not None:
