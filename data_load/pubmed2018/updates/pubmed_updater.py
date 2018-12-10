@@ -62,6 +62,7 @@ class PubmedUpdater(object):
         load_config.data_source_name = file_name.split('.')[0]
 
         load_config.logger().info('Processing file: ' + str(file_name))
+        load_config.process_count = 4
 
         data_processor = DataSourceProcessor(
             load_config, XMLDataSource(update_file, 2))
@@ -88,7 +89,7 @@ class PubmedUpdater(object):
       
         load_config = self.load_manager.get_load_config()
         load_config.data_source_name = file_name.split('.')[0] + '_relations'
-        load_config.process_count = 1
+        load_config.process_count = 4
 
         load_config.append_relations = True
         load_config.source = ''
