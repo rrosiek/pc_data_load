@@ -169,11 +169,11 @@ def process_response(response):
     return scroll_id, hits, size
 
 
-def fetch_docs_for_query(url, query):
+def fetch_docs_for_query(url, query, username='', password=''):
     global session
     if session is None:
         session = requests.session()
-    response = session.post(url, json=query)
+    response = session.post(url, json=query, auth=(username, password))
     # print response
 
     if response.status_code == 200:

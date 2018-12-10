@@ -210,7 +210,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
             ]
         }
 
-        response = data_utils.fetch_docs_for_query(url, query)
+        response = data_utils.fetch_docs_for_query(url, query, self.load_config.server_username, self.load_config.server_password)
         if response is not None:
             hits = response['hits']
             hits = hits['hits']
