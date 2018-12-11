@@ -12,7 +12,7 @@ GRANTS_DOWNLOADED_FILES = 'GRANTS_DOWNLOADED_FILES.json'
 
 # GrantsDBExtract20181203v2.zip
 
-def get_available_files_list():
+def get_available_files_to_download():
     urls = []
     file_names = get_filenames_for_last_seven_days()
     for file_name in file_names:
@@ -21,10 +21,21 @@ def get_available_files_list():
 
     return urls   
 
+def get_available_files_to_process(load_config):
+    source_files_directory = load_config.source_files_directory()
+
+    source_files = []
+    for name in os.listdir(source_files_directory):
+        file_path = os.path.join(source_files_directory, name)
+        source_files.append(file_path)
+
+    return source_files
 
 def get_downloaded_files(load_config):
     other_files_directory = load_config.other_files_directory()
     downloaded_files = file_utils.load_file(other_files_directory, GRANTS_DOWNLOADED_FILES)
+    if len(downloaded_files) == 0:
+        downloaded_files = []
     return downloaded_files
 
 def set_downloaded_files(load_config, downloaded_files):
@@ -41,7 +52,7 @@ def set_processed_files(load_config, processed_files):
     file_utils.save_file(other_files_directory, GRANTS_PROCESSED_FILES, processed_files)
 
 def get_files_to_process(load_config):
-    available_files = get_available_files_list()
+    available_files = get_available_files_to_process(load_config)
     processed_files = get_processed_files(load_config)
 
     filtered_files = []
@@ -49,10 +60,11 @@ def get_files_to_process(load_config):
         if available_file not in processed_files:
             filtered_files.append(available_file)
 
+    filtered_files.sort()
     return filtered_files
 
 def get_files_to_download(load_config):
-    available_files = get_available_files_list()
+    available_files = get_available_files_to_download()
     downloaded_files = get_downloaded_files(load_config)
 
     filtered_files = []
@@ -60,6 +72,7 @@ def get_files_to_download(load_config):
         if available_file not in downloaded_files:
             filtered_files.append(available_file)
 
+    filtered_files.sort()
     return filtered_files
 
 
@@ -87,9 +100,11 @@ def download_files(load_config):
         # Extract update zip file
 
         print 'Unzipping file', update_file_path
-
-        with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
-            zip_ref.extractall(source_files_directory)
+        try:
+            with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
+                zip_ref.extractall(source_files_directory)
+        except Exception as e:
+            print e
 
 
         # f = gzip.open(update_file_path, 'rb')
@@ -105,7 +120,7 @@ def download_files(load_config):
         downloaded_update_file_paths.append(xml_file_path)
 
     # Save the downloaded files list
-    self.set_downloaded_files(downloaded_update_file_urls)
+    set_downloaded_files(load_config, downloaded_update_file_urls)
 
     return downloaded_update_file_paths
 
