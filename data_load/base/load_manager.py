@@ -265,13 +265,8 @@ class LoadManager(object):
 
     def create_tasks_list(self):
         tasks_list = self.load_tasks_list()
-<<<<<<< HEAD
         if len(tasks_list) == 0:
             tasks_list = []
-
-=======
-        
->>>>>>> e9d9dddd8679901656b71f17d70299d504cee232
         new_tasks_list = self.get_tasks_list()
         for task in new_tasks_list:
             self.set_status(task, TASK_STATUS_NOT_STARTED)
