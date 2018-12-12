@@ -15,6 +15,8 @@ from constants import BULK_DATA_SIZE
 
 from constants import INDEX_MAPPING
 from constants import LOCAL_SERVER
+from constants import SERVER_USERNAME
+from constants import SERVER_PASSWORD
 
 from constants import PROCESS_SPAWN_DELAY
 from constants import PROCESS_COUNT
@@ -53,6 +55,8 @@ class LoadConfig(object):
 
         # Constants
         self.server = LOCAL_SERVER
+        self.server_username = SERVER_USERNAME
+        self.server_password = SERVER_PASSWORD
 
         self.data_source_batch_size = DATA_SOURCE_BATCH_SIZE
         self.data_loader_batch_size = DATA_LOADER_BATCH_SIZE
@@ -159,7 +163,7 @@ class LoadConfig(object):
     def failed_docs_directory(self, data_source_batch_name):
         data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name)
         failed_docs_directory = data_source_batch_directory + '/' + FAILED_DOCS_DIRECTORY
-    
+
         file_utils.make_directory(failed_docs_directory)
         return failed_docs_directory
 

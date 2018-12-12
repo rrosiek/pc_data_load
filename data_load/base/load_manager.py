@@ -20,6 +20,8 @@ class LoadManager(object):
     def __init__(self, index_id):
         self.index_id = index_id
         self.server = LOCAL_SERVER
+        self.server_username = SERVER_USERNAME
+        self.server_password = SERVER_PASSWORD
         self.index = None
         self.type = None
         self.root_directory = None
@@ -28,7 +30,7 @@ class LoadManager(object):
         self.config_file = self.index_id + '_CONFIG.json'
 
         # self.get_config()
- 
+
     def get_next_index_version(self, index):
         index_comps = index.split('_')
         index_version = ''
@@ -48,13 +50,13 @@ class LoadManager(object):
                 version = 'v2'
                 if len(index_version) > 0:
                     version = '_' + version
-                
+
                 index_version = index_version + version
         else:
             version = 'v2'
             if len(index_version) > 0:
                 version = '_' + version
-                
+
             index_version = index_version + version
 
         index = '_'.join(index_comps)
@@ -64,7 +66,7 @@ class LoadManager(object):
 
         return index
 
-    def get_info_for_index_id(self, index_id): 
+    def get_info_for_index_id(self, index_id):
         index_item = es_utils.get_info_for_index_id(index_id)
         return index_item
 
@@ -84,6 +86,7 @@ class LoadManager(object):
         print 'root directory:', self.root_directory
         print 'index_id:', self.index_id
         print 'server:', self.server
+        print 'server_username', self.server_username
         print 'index:', self.index
         print 'type:', self.type
 
@@ -106,24 +109,28 @@ class LoadManager(object):
         self.root_directory = config['root_directory']
         self.index_id = config['index_id']
         self.server = config['server']
+        self.server_username = config['server_username']
+        self.server_password = config['server_password']
         self.index = config['index']
-        self.type = config['type'] 
+        self.type = config['type']
         self.src_data_exists = config['src_data_exists']
         if 'src_data_directory' in config:
             self.src_data_directory = config['src_data_directory']
 
         return config
-  
+
     def set_config(self):
         config = {}
         config['root_directory'] = self.root_directory
         config['index_id'] = self.index_id
         config['server'] = self.server
+        config['server_username'] = self.server_username
+        config['server_password'] = self.server_password
         config['index'] = self.index
         config['type'] = self.type
         config['src_data_exists'] = self.src_data_exists
         config['src_data_directory'] = self.src_data_directory
-        
+
         file_utils.save_file(DATA_LOADING_DIRECTORY, self.config_file, config)
         return config
 
@@ -133,6 +140,8 @@ class LoadManager(object):
         load_config.process_count = psutil.cpu_count()
 
         load_config.server = self.server
+        load_config.server_username = self.server_username
+        load_config.server_password = self.server_password
         load_config.index = self.index
         load_config.type = self.type
 
@@ -207,7 +216,7 @@ class LoadManager(object):
                 print task['name'], 'completed'
 
     def check_and_create_index(self):
-        data_loader_utils = DataLoaderUtils(self.server, self.index, self.type)
+        data_loader_utils = DataLoaderUtils(self.server, self.index, self.type, self.server_username, self.server_password)
         mapping_file_path = self.mapping_file_path()
         print 'Checking index...'
         if not data_loader_utils.index_exists() and mapping_file_path is not None:
@@ -240,7 +249,7 @@ class LoadManager(object):
         task_list = self.load_tasks_list()
         self.update_status_from_task_list(task_name, task_list, status)
         self.save_tasks_list(task_list)
-            
+
     def update_status_from_task_list(self, task_name, task_list, status):
         for task in task_list:
             if task_name == task['name']:
@@ -254,7 +263,7 @@ class LoadManager(object):
         tasks_list = self.load_tasks_list()
         if len(tasks_list) == 0:
             tasks_list = []
-        
+
         new_tasks_list = self.get_tasks_list()
         for task in new_tasks_list:
             self.set_status(task, TASK_STATUS_NOT_STARTED)
@@ -272,7 +281,7 @@ class LoadManager(object):
                 if task['name'] == new_task['name']:
                     task_exists = True
                     break
-            
+
             if not task_exists:
                 tasks_to_add.append(new_task)
 
@@ -293,18 +302,18 @@ class LoadManager(object):
         task['status'] = status
         if 'sub_tasks' in task:
             for sub_task in task['sub_tasks']:
-                self.set_status(sub_task, status)   
+                self.set_status(sub_task, status)
 
     def get_status(self, task):
         if 'status' in task:
             return task['status']
-        
+
         return TASK_STATUS_NOT_STARTED
 
     def get_sub_tasks(self, task):
         if 'sub_tasks' in task:
             return task['sub_tasks']
-        
+
         return []
 
     def copy_tags_and_annotations(self):
@@ -326,4 +335,4 @@ class LoadManager(object):
                                         dest_index=load_config.index,
                                         dest_type=load_config.type)
 
-        copier.run()    
+        copier.run()

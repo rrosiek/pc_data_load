@@ -53,7 +53,7 @@ def extract_ids_from_docs(docs):
     return ids
 
 
-def batch_process_docs_for_ids(base_url, ids, index, type, process_doc, batch_size=PROCESS_IDS_BATCH_SIZE):
+def batch_process_docs_for_ids(base_url, ids, index, type, process_doc, batch_size=PROCESS_IDS_BATCH_SIZE, username='', password=''):
     size = len(ids)
 
     start_index = 0
@@ -63,7 +63,7 @@ def batch_process_docs_for_ids(base_url, ids, index, type, process_doc, batch_si
 
     while start_index < size:
         ids_slice = ids[start_index: start_index + page_size]
-        docs = fetch_docs_for_ids(base_url, ids_slice, index, type)
+        docs = fetch_docs_for_ids(base_url, ids_slice, index, type, username, password)
 
         for doc in docs:
             processed_docs.append(process_doc(doc, index, type))
@@ -74,7 +74,7 @@ def batch_process_docs_for_ids(base_url, ids, index, type, process_doc, batch_si
     return processed_docs
 
 
-def batch_fetch_docs_for_ids(base_url, ids, index, type, docs_fetched=None, batch_size=PROCESS_IDS_BATCH_SIZE):
+def batch_fetch_docs_for_ids(base_url, ids, index, type, docs_fetched=None, batch_size=PROCESS_IDS_BATCH_SIZE, username='', password=''):
     size = len(ids)
 
     start_index = 0
@@ -84,7 +84,7 @@ def batch_fetch_docs_for_ids(base_url, ids, index, type, docs_fetched=None, batc
 
     while start_index < size:
         ids_slice = ids[start_index: start_index + page_size]
-        docs = fetch_docs_for_ids(base_url, ids_slice, index, type)
+        docs = fetch_docs_for_ids(base_url, ids_slice, index, type, username, password)
 
         # all_docs.extend(docs)
         if docs_fetched is not None:
@@ -169,11 +169,11 @@ def process_response(response):
     return scroll_id, hits, size
 
 
-def fetch_docs_for_query(url, query):
+def fetch_docs_for_query(url, query, username='', password=''):
     global session
     if session is None:
         session = requests.session()
-    response = session.post(url, json=query)
+    response = session.post(url, json=query, auth=(username, password))
     # print response
 
     if response.status_code == 200:
@@ -207,7 +207,7 @@ def scroll_request_url(base_url):
     return url
 
 
-def fetch_docs_for_ids(base_url, ids, index, type):
+def fetch_docs_for_ids(base_url, ids, index, type, username='', password=''):
     global session
     if session is None:
         session = requests.session()
@@ -221,7 +221,7 @@ def fetch_docs_for_ids(base_url, ids, index, type):
     # print len(ids)
     # print data
     try:
-        response = session.post(url, json=data)
+        response = session.post(url, json=data, auth=(username, password))
         # print(response)
 
         if response.status_code == 200:
@@ -244,7 +244,7 @@ def get_total_doc_count(base_url, index, type):
         session = requests.session()
 
     url = base_url + '/' + index + '/' + type + "/_search?size=0"
-    # print url 
+    # print url
 
     try:
         response = session.get(url)

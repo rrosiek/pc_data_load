@@ -15,7 +15,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
     def __init__(self, load_config, data_source, data_source_summary):
         super(PubmedRelationshipProcessor, self).__init__(load_config, data_source)
         self.data_source_summary = data_source_summary
-        self.data_loader_utils = DataLoaderUtils(self.load_config.server, self.load_config.index, self.load_config.type)
+        self.data_loader_utils = DataLoaderUtils(self.load_config.server, self.load_config.index, self.load_config.type, self.load_config.server_username, self.load_config.server_password)
         self.load_relationships = True
 
         self.docs_with_new_citations = {}
@@ -90,7 +90,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     if _id not in pubmed_cited_bys_pubmed[citation]:
                         pubmed_cited_bys_pubmed[citation].append(_id)
 
-            
+
                 # if len(citations_to_update) < len(existing_citations) and self.has_multiple_citations(existing_doc):
                 #     print 'Existing doc', _id
                 #     print 'Existing citations', len(existing_citations)
@@ -114,7 +114,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
                 # Get existing cited bys (citations from other existing docs) for the new doc
                 existing_cited_bys = self.get_existing_cited_bys(_id)
-       
+
                 for cited_by in existing_cited_bys:
                     if _id not in pubmed_cited_bys_pubmed:
                         pubmed_cited_bys_pubmed[_id] = []
@@ -210,7 +210,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
             ]
         }
 
-        response = data_utils.fetch_docs_for_query(url, query)
+        response = data_utils.fetch_docs_for_query(url, query, self.load_config.server_username, self.load_config.server_password)
         if response is not None:
             hits = response['hits']
             hits = hits['hits']
