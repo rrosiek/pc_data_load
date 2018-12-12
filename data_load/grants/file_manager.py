@@ -103,9 +103,11 @@ def download_files(load_config):
         try:
             with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
                 zip_ref.extractall(source_files_directory)
+
+            downloaded_update_file_urls.append(update_file_url)
+            downloaded_update_file_paths.append(xml_file_path)
         except Exception as e:
             print e
-
 
         # f = gzip.open(update_file_path, 'rb')
         # with open(xml_file_path, 'w') as xml_file:
@@ -115,9 +117,6 @@ def download_files(load_config):
         # Delete update zip file
         print 'Deleting file', update_file_path
         os.remove(update_file_path)
-
-        downloaded_update_file_urls.append(update_file_url)
-        downloaded_update_file_paths.append(xml_file_path)
 
     # Save the downloaded files list
     set_downloaded_files(load_config, downloaded_update_file_urls)

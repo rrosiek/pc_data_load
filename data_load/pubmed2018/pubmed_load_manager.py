@@ -281,46 +281,6 @@ class PubmedLoadManager(LoadManager):
             
             self.files_to_process = file_manager.get_new_files(load_config)
 
-
-
-    # def process_file(self, file_name):
-    #     pubmed_data_file = self.file_path_lookup[file_name]
-
-    #     load_config = self.get_load_config()
-    #     load_config.data_source_name = file_name.split('.')[0]
-    #     load_config.log_level = LOG_LEVEL_DEBUG
-    #     load_config.process_count = PROCESS_COUNT
-      
-    #     data_processor = DataSourceProcessor(load_config, XMLDataSource(pubmed_data_file, 2))
-    #     data_processor.run()
-
-    #     # Get data load summary
-    #     data_source_summary = data_processor.get_combined_data_source_summary()
-    #     # Clean up updated vs indexed ids
-    #     data_source_summary = self.clean_up_data_source_summary(data_source_summary)
-
-    #     self.file_summaries[update_file] = data_source_summary
-
-    #     # file_manager.update_processed_files(load_config, [pubmed_data_file])
-
-    # def process_relationships(self, file_name):
-    #     pubmed_data_file = self.file_path_lookup[file_name]
-
-    #     load_config = self.get_load_config()
-    #     load_config.data_source_name = file_name.split('.')[0] + '_relations'
-    #     load_config.log_level = LOG_LEVEL_DEBUG
-    #     load_config.process_count = PROCESS_COUNT
-    #     # print 'Processing relationships......'
-    #     load_config.logger().info('Processing relationships... ' + str(pubmed_data_file))
-
-    #     load_config.append_relations = True
-    #     load_config.source = ''
-
-    #     data_processor = PubmedRelationshipProcessor(load_config, XMLDataSource(pubmed_data_file, 2), {})
-    #     data_processor.run()
-        
-        # docs_with_new_citations = data_processor.get_docs_with_new_citations()
-
 def start(no_of_files):
     load_manager = PubmedLoadManager(MODE_FILE, no_of_files)
     load_manager.mode = MODE_FILE
