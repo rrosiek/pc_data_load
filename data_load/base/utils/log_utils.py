@@ -11,6 +11,9 @@ LOG_LEVEL_TRACE = 3
 
 
 def create_logger(logger_name, log_files_directory):
+    if logger_name is None:
+        logger_name = 'DEFAULT'
+
     now = datetime.datetime.now()
     local_date = now.strftime("%m-%d-%Y_%H%M_%S")
 

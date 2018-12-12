@@ -1,0 +1,130 @@
+{
+    "mappings": {
+        "opportunity": {
+            "properties": {
+                "OpportunityTitle": {
+                    "type": "text"
+                },
+                "OpportunityID": {
+                    "type": "keyword"
+                },
+                "OpportunityNumber": {
+                    "type": "keyword"
+                },
+                "OpportunityCategory": {
+                    "type": "keyword"
+                },
+                "OpportunityCategoryExplanation": {
+                    "type": "text"
+                },
+                "FundingInstrumentType": {
+                    "type": "keyword"
+                },
+                "CategoryOfFundingActivity": {
+                    "type": "keyword"
+                },
+                "CategoryExplanation": {
+                    "type": "text"
+                },
+                "CFDANumbers": {
+                    "type": "text"
+                },
+                "EligibleApplicants": {
+                    "type": "keyword"
+                },
+                "AdditionalInformationOnEligibility": {
+                    "type": "text"
+                },
+                "AgencyCode": {
+                    "type": "text"
+                },
+                "AgencyName": {
+                    "type": "text"
+                },
+                "PostDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "CloseDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "CloseDateExplanation": {
+                    "type": "text"
+                },
+                "ExpectedNumberOfAwards": {
+                    "type": "text"
+                },
+                "EstimatedTotalProgramFunding": {
+                    "type": "text"
+                },
+                "AwardCeiling": {
+                    "type": "text"
+                },
+                "AwardFloor": {
+                    "type": "text"
+                },
+                "LastUpdatedDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "EstimatedSynopsisPostDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "FiscalYear": {
+                    "type": "text"
+                },
+                "EstimatedSynopsisCloseDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "EstimatedSynopsisCloseDateExplanation": {
+                    "type": "text"
+                },
+                "EstimatedAwardDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "EstimatedProjectStartDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "ArchiveDate": {
+                    "type": "date",
+                    "format": "MMddyyyy"
+                },
+                "Description": {
+                    "type": "text"
+                },
+                "CostSharingOrMatchingRequirement": {
+                    "type": "text"
+                },
+                "AdditionalInformationText": {
+                    "type": "text"
+                },
+                "AdditionalInformationURL": {
+                    "type": "text"
+                },
+                "GrantorContactText": {
+                    "type": "text"
+                },
+                "GrantorContactEmailDescription": {
+                    "type": "text"
+                },
+                "GrantorContactEmail": {
+                    "type": "text"
+                },
+                "GrantorContactName": {
+                    "type": "text"
+                },
+                "GrantorContactPhoneNumber": {
+                    "type": "text"
+                },
+                "Version": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}

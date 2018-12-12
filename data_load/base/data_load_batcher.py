@@ -236,8 +236,8 @@ class DataLoadBatcher(object):
         if len(self.processes) >= self.load_config.process_count:
             self.join_proceses()
 
-        self.load_config.log(
-            LOG_LEVEL_INFO, 'Creating process for', len(data_loader_batch), 'docs')
+        self.load_config.log(LOG_LEVEL_DEBUG, 'Process count:' + str(self.load_config.process_count))
+        self.load_config.log(LOG_LEVEL_INFO, 'Creating process for', len(data_loader_batch), 'docs')
 
         process = None
 

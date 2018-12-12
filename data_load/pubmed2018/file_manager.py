@@ -14,13 +14,40 @@ def get_baseline_files(load_config, baseline_file_urls):
         baseline_files.append(xml_file_path)
 
     source_files = get_all_files(load_config)
-    new_update_files = []
+    available_files = []
 
     for file_path in source_files:
         if file_path in baseline_files:
-            new_update_files.append(file_path)
+            available_files.append(file_path)
 
-    new_update_files.sort()
+    available_files.sort()
+    return available_files
+
+def get_new_update_files(load_config, update_file_urls, count=0):
+    source_files_directory = load_config.source_files_directory()
+
+    update_files = []
+    for update_file_url in update_file_urls:
+        file_name = os.path.basename(update_file_url)
+        xml_file_path = os.path.join(source_files_directory, file_name.replace('.gz', ''))
+        update_files.append(xml_file_path)
+
+    new_files = get_new_files(load_config)
+    available_files = []
+
+    for file_path in new_files:
+        if file_path in update_files:
+            available_files.append(file_path)
+
+    available_files.sort()
+
+    new_update_files = []
+    max_length = min(len(available_files), count)
+    # print max_length, 'max_length'
+    for i in range(0, max_length):
+        new_update_file = available_files[i]
+        new_update_files.append(new_update_file)
+
     return new_update_files
 
 def get_new_files(load_config):
