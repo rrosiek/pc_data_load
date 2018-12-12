@@ -25,6 +25,7 @@ class LoadManager(object):
         self.root_directory = None
         self.src_data_directory = None
         self.src_data_exists = False
+        self.local_date_time = None
         self.config_file = self.index_id + '_CONFIG.json'
 
         # self.get_config()
@@ -70,8 +71,8 @@ class LoadManager(object):
 
     def create_config(self):
         now = datetime.datetime.now()
-        local_date = now.strftime("%m-%d-%Y_%H:%M")
-        self.root_directory = self.get_root_directory(local_date)
+        self.local_date_time = now.strftime("%m-%d-%Y %H:%M:%S")
+        self.root_directory = self.get_root_directory(self.local_date_time)
         file_utils.make_directory(self.root_directory)
 
         index_item = self.get_info_for_index_id(self.index_id)
@@ -81,6 +82,7 @@ class LoadManager(object):
         if self.should_reload():
             self.index = self.get_next_index_version(self.index)
 
+        print 'local date:', self.local_date_time
         print 'root directory:', self.root_directory
         print 'index_id:', self.index_id
         print 'server:', self.server
@@ -111,6 +113,8 @@ class LoadManager(object):
         self.src_data_exists = config['src_data_exists']
         if 'src_data_directory' in config:
             self.src_data_directory = config['src_data_directory']
+        if 'local_date_time' in config:
+            self.local_date_time = config['local_date_time']
 
         return config
   
@@ -123,6 +127,7 @@ class LoadManager(object):
         config['type'] = self.type
         config['src_data_exists'] = self.src_data_exists
         config['src_data_directory'] = self.src_data_directory
+        config['local_date_time'] = self.local_date_time
         
         file_utils.save_file(DATA_LOADING_DIRECTORY, self.config_file, config)
         return config
@@ -252,8 +257,6 @@ class LoadManager(object):
 
     def create_tasks_list(self):
         tasks_list = self.load_tasks_list()
-        if len(tasks_list) == 0:
-            tasks_list = []
         
         new_tasks_list = self.get_tasks_list()
         for task in new_tasks_list:
@@ -287,6 +290,8 @@ class LoadManager(object):
     def load_tasks_list(self):
         # print 'Loading tasks list', self.root_directory
         tasks_list = file_utils.load_file(self.root_directory, 'tasks_list.json')
+        if len(tasks_list) == 0:
+            tasks_list = []
         return tasks_list
 
     def set_status(self, task, status):
