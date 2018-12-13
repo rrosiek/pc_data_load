@@ -5,17 +5,17 @@ from data_load.base.load_manager import LoadManager
 # from config import *
 from data_load.pubmed2018.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2018.pubmed_data_mapper import PubmedDataMapper
-from data_load.pubmed2018.ftp_manager import FTPManager
+from data_load.pubmed.ftp_manager import FTPManager
 from data_load.base.constants import ID_PUBMED
 import data_load.base.utils.file_utils as file_utils
-from data_load.pubmed2018.updates import email_client
-from data_load.pubmed2018.updates.prospective_citations import FindProspectiveCitations
+from data_load.pubmed import email_client
+from data_load.pubmed.prospective_citations import FindProspectiveCitations
 
 import os
 import sys
 import time
 
-import data_load.pubmed2018.file_manager as file_manager
+import data_load.pubmed.file_manager as file_manager
 from data_load.base.constants import DATA_LOADING_DIRECTORY, TASK_STATUS_NOT_STARTED
 
 from data_load.base.utils.log_utils import *
@@ -25,7 +25,7 @@ TASK_NAME = 'load_pubmed2018'
 
 from data_load.DATA_LOAD_CONFIG import PROCESS_COUNT
 from data_load.base.utils.export_doc_ids import get_doc_ids
-from data_load.pubmed2018.updates.pubmed_updater import PubmedUpdater
+from data_load.pubmed.pubmed_updater import PubmedUpdater
 
 MODE_FILE = 'MODE_FILE'
 MODE_BASELINE = 'MODE_BASELINE'
