@@ -9,7 +9,7 @@ import json
 import time
 import requests
 
-from config import *
+# from config import *
 from data_load.base.constants import ID_PUBMED
 
 import email_client

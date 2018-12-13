@@ -1,0 +1,153 @@
+{
+    "mappings": {
+        "article": {
+            "properties": {
+                "Author_Details": {
+                    "type": "nested",
+                    "properties": {
+                        "CollectiveName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "ForeName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "Initials": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "LastName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
+                            }
+                        }
+                    }
+                },
+                "annotations": {
+                    "type": "nested",
+                    "properties": {
+                        "added_by": {
+                            "type": "keyword"
+                        },
+                        "annotation": {
+                            "type": "text"
+                        },
+                        "client": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "citations": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "cited_bys": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "grants": {
+                    "type": "nested",
+                    "properties": {
+                        "funding_ack": {
+                            "type": "text"
+                        },
+                        "grant_number": {
+                            "type": "keyword"
+                        },
+                        "grant_organization": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "relations": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "removed_citations": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "startDateYear": {
+                    "type": "keyword"
+                },
+                "startJournalDate": {
+                    "type": "date"
+                },
+                "update_file": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "updated_date": {
+                    "type": "date"
+                },
+                "userTags": {
+                    "type": "nested",
+                    "properties": {
+                        "added_by": {
+                            "type": "keyword"
+                        },
+                        "client": {
+                            "type": "keyword"
+                        },
+                        "tag": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

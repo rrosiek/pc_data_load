@@ -8,7 +8,7 @@ import datetime
 
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
 import data_load.base.utils.doc_utils as doc_utils
-from config import *
+# from config import *
 
 import os
 import data_load.base.utils.file_utils as file_utils
