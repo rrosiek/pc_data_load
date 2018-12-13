@@ -23,3 +23,7 @@
 ### Proposal Central
 
 ```python -u -m data_load.proposal_central.pc_load_manager -path <path to csv file>```
+
+### Grants.gov
+
+```python -u -m data_load.grants.grants_load_manager -auto```
