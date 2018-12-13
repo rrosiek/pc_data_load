@@ -1,7 +1,7 @@
 import data_load.base.utils.file_utils as file_utils
 
 import data_load.base.utils.export_doc_ids as export_doc_ids
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 import data_load.base.utils.file_utils as file_utils
 
 class DownloadDocs(object):
@@ -12,6 +12,8 @@ class DownloadDocs(object):
         self.type = src_type
         self.ids = ids
         self.docs = []
+
+        self.data_utils = DataUtils
 
     def docs_fetched(self, docs, index, type):
         self.docs.extend(docs)
@@ -31,7 +33,7 @@ class DownloadDocs(object):
 
         print len(self.ids), 'ids'
 
-        data_utils.batch_fetch_docs_for_ids(base_url=self.server, 
+        self.data_utils.batch_fetch_docs_for_ids(base_url=self.server, 
                                             ids=self.ids, 
                                             index=self.index, 
                                             type=self.type, 

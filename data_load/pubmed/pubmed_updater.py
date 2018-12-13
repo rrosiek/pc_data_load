@@ -1,6 +1,8 @@
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.base.data_source_xml import XMLDataSource
-from data_load.pubmed2018.pubmed_relationship_processor import PubmedRelationshipProcessor
+from data_load.pubmed.pubmed_relationship_processor import PubmedRelationshipProcessor
+from data_load.base.constants import API_URL, ID_PUBMED
+from data_load.base.utils.export_doc_ids import get_doc_ids
 
 import data_load.base.utils.file_utils as file_utils
 
@@ -10,14 +12,9 @@ import time
 import requests
 
 # from config import *
-from data_load.base.constants import ID_PUBMED
 
 import email_client
-
-from data_load.base.utils.export_doc_ids import get_doc_ids
-
 from prospective_citations import FindProspectiveCitations
-from data_load.base.constants import API_URL
 
 ALL_PUBMED_IDS_FILE = 'all_pubmed_ids.json'
 

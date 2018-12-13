@@ -1,7 +1,7 @@
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
 
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 
 from data_load.base.constants import ID_PUBMED
 from data_load.base.constants import RELATIONSHIP_TYPE_CITATIONS
@@ -19,6 +19,8 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         self.load_relationships = True
 
         self.docs_with_new_citations = {}
+
+        self.data_utils = DataUtils()
 
     def get_docs_with_new_citations(self):
         return self.docs_with_new_citations
@@ -210,7 +212,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
             ]
         }
 
-        response = data_utils.fetch_docs_for_query(url, query, self.load_config.server_username, self.load_config.server_password)
+        response = self.data_utils.fetch_docs_for_query(url, query, self.load_config.server_username, self.load_config.server_password)
         if response is not None:
             hits = response['hits']
             hits = hits['hits']

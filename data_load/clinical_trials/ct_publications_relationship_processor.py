@@ -10,7 +10,7 @@ from data_load.base.relationship_loader import RelationshipLoader
 from data_load.base.data_load_batcher import DataLoadBatcher
 
 import data_load.base.utils.file_utils as file_utils
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 import data_load.base.utils.es_utils as es_utils
 
 import time
@@ -27,6 +27,7 @@ class CTPublicationsRelationshipProcessor(object):
         self.ct_relations = {}
 
         self.processed_docs = 0
+        self.data_utils = DataUtils()
 
     def run(self):
         # doc_ids = export_doc_ids( self.server, self.index,
@@ -38,7 +39,7 @@ class CTPublicationsRelationshipProcessor(object):
 
         doc_ids = doc_ids.keys()
 
-        data_utils.batch_fetch_docs_for_ids(base_url= self.ct_load_config.server,
+        self.data_utils.batch_fetch_docs_for_ids(base_url= self.ct_load_config.server,
                                             ids=doc_ids,
                                             index= self.ct_load_config.index,
                                             type= self.ct_load_config.type,

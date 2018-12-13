@@ -1,4 +1,4 @@
-import data_utils
+from data_utils import DataUtils
 import file_utils
 import requests
 import time
@@ -35,6 +35,8 @@ class DeleteUserData(object):
 
         self.delete_tags = True
         self.delete_annotations = True
+
+        self.data_utils = DataUtils()
 
     def run(self):
         docs_to_delete = self.fetch_ids()
@@ -91,7 +93,7 @@ class DeleteUserData(object):
 
         if self.delete_tags:
             print 'Fetching docs with tags', self.src_server, self.src_index, self.src_type
-            docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+            docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
                                                                   query=tags_query,
                                                                   index=self.src_index,
                                                                   type=self.src_type,
@@ -103,7 +105,7 @@ class DeleteUserData(object):
 
         if self.delete_annotations:
             print 'Fetching docs with annotations', self.src_server, self.src_index, self.src_type
-            docs_with_annotations = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+            docs_with_annotations = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
                                                                          query=annotations_query,
                                                                          index=self.src_index,
                                                                          type=self.src_type,
@@ -182,7 +184,7 @@ class DeleteUserData(object):
         file_utils.make_directory(self.reports_directory)
         ids_array = ids.keys()
         # ids_array = [ids_array[0]]
-        data_utils.batch_fetch_docs_for_ids(base_url=self.src_server,
+        self.data_utils.batch_fetch_docs_for_ids(base_url=self.src_server,
                                             ids=ids_array,
                                             index=self.src_index,
                                             type=self.src_type,

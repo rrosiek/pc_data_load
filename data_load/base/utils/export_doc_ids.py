@@ -1,4 +1,4 @@
-import data_utils
+from data_utils import DataUtils
 import file_utils
 
 
@@ -7,6 +7,7 @@ def export_doc_ids(server, src_index, src_type):
     query = {
             "match_all": {}
     }
+    data_utils = DataUtils()
     ids = data_utils.batch_fetch_ids_for_query(base_url=server, index=src_index, type=src_type, query=query)
 
     documents_ids = dict.fromkeys(ids, None)
