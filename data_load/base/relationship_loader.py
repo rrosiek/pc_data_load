@@ -5,7 +5,7 @@ from constants import RELATIONSHIP_TYPE_RELATIONS
 from constants import RELATIONSHIP_TYPE_CITATIONS
 from constants import RELATIONSHIP_TYPE_CITED_BYS
 
-from utils import data_utils
+from utils.data_utils import DataUtils
 from utils import file_utils
 from utils.data_loader_utils import DataLoaderUtils
 
@@ -27,6 +27,7 @@ class RelationshipLoader(DataLoader):
         # file_utils.make_directory(self.data_source_batch_directory)
 
         self.data_loader_utils = None
+        self.data_utils = None
 
     def get_es_id(self, doc_id):
         return doc_id
@@ -41,13 +42,15 @@ class RelationshipLoader(DataLoader):
                                                  self.load_config.server_username,
                                                  self.load_config.server_password)
 
+        self.data_utils = DataUtils()
+
         count = 0
         bulk_data = ''
 
         ids_to_fetch = self.data_loader_batch.keys()
         self.load_config.log(LOG_LEVEL_TRACE, 'Fetching docs', self.load_config.server, self.index, self.type)
 
-        data_utils.batch_fetch_docs_for_ids(self.load_config.server,
+        self.data_utils.batch_fetch_docs_for_ids(self.load_config.server,
                                             ids_to_fetch,
                                             self.index,
                                             self.type,

@@ -32,10 +32,12 @@ MODE_FILE = 'MODE_FILE'
 MODE_BASELINE = 'MODE_BASELINE'
 MODE_UPDATE = 'MODE_UPDATE'
 
+ID_PUBMED_2019 = 'PUBMED_2019'
+
 class PubmedLoadManager(LoadManager):
 
     def __init__(self, mode=MODE_FILE, no_of_files=0):
-        super(PubmedLoadManager, self).__init__(ID_PUBMED)
+        super(PubmedLoadManager, self).__init__(ID_PUBMED_2019)
         self.mode = mode
         self.no_of_files = no_of_files
         self.files_to_process = []
