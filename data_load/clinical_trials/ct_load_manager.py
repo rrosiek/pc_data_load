@@ -21,9 +21,13 @@ from data_load.base.utils.log_utils import *
 
 class CTLoadManager(LoadManager):
 
-    def __init__(self, data_directory):
+    def __init__(self, data_directory=None):
         super(CTLoadManager, self).__init__(ID_CLINICAL_TRIALS)
-        self.data_directory = data_directory
+        # self.data_directory = data_directory
+        if data_directory is not None:
+            self.data_directories = [data_directory]
+        else:
+            self.data_directories = []
 
     # Methods to override
     def should_reload(self):
@@ -50,10 +54,11 @@ class CTLoadManager(LoadManager):
     def get_tasks_list(self):
         tasks_list = []
 
-        tasks_list.append({
-            'name': 'process_data_directory',
-            'status': ''
-        })
+        for data_directory in self.data_directories:
+            tasks_list.append({
+                'name': data_directory,
+                'status': ''
+            })
 
         # for data_source in DATA_SOURCES:
         #     tasks_list.append({
@@ -74,8 +79,8 @@ class CTLoadManager(LoadManager):
         return tasks_list
 
     def run_task(self, task):
-        if task == 'process_data_directory':
-            self.process_data_directory(self.data_directory)
+        # if task == 'process_data_directory':
+        self.process_data_directory(task)
         # if task == 'copy_tags_and_annotations':
         #     self.copy_tags_and_annotations()
         # if task == 'clear_pubmed_relationships':
@@ -100,7 +105,40 @@ class CTLoadManager(LoadManager):
             exit()
             
     def download_data(self):
-        pass
+        all_public_xml_url = 'https://clinicaltrials.gov/AllPublicXML.zip'
+        load_config = self.get_load_config()
+
+        source_files_directory = self.load_config.source_files_directory()
+
+        file_name = os.path.basename(all_public_xml_url)
+        file_path = os.path.join(source_files_directory, file_name)
+
+        # Download update zip file
+        urllib.urlcleanup()
+        print 'Downloading file: ', all_public_xml_url
+        urllib.urlretrieve(all_public_xml_url, file_path)
+        print 'Saved', file_path
+
+        # TODO - Verify download with md5?
+
+        # Extract update zip file
+
+        print 'Unzipping file', file_path
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                zip_ref.extractall(source_files_directory)
+
+
+            for name in os.listdir(source_files_directory):
+                dir_path = os.path.join(source_files_directory, name)
+                if os.path.isdir(dir_path):
+                    for sub_dir_name in os.listdir(dir_path) and sub_dir_name.startswith('NCT'):
+                        sub_dir_path = os.path.join(dir_path, sub_dir_name)
+
+                        self.data_directories.append(sub_dir_path)
+
+        except Exception as e:
+            print e
 
     def process_data_directory(self, data_directory):
         print 'processing', data_directory
@@ -146,6 +184,11 @@ def start(data_directory):
     load_manager.del_config()
     load_manager.run()
 
+def download_and_start():
+    load_manager = CTLoadManager()
+    load_manager.del_config()
+    load_manager.run()
+
 def resume():
     load_manager = CTLoadManager()
     load_manager.run()
@@ -161,7 +204,10 @@ def run():
                     start(data_directory)
                     return
                 else:
-                    print('Usage: ct_load_manager -path <data_directory>')     
+                    print('Usage: ct_load_manager -path <data_directory>')    
+            elif arg == '-auto':
+                download_and_start()
+                return
             else: 
                 print('Usage: ct_load_manager -path <data_directory>')     
         arg_index += 1
