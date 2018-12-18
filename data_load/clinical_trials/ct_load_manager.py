@@ -16,7 +16,10 @@ import data_load.base.utils.es_utils as es_utils
 
 from config import *
 import sys
+import os
 import psutil
+import urllib
+
 from data_load.base.utils.log_utils import *
 
 class CTLoadManager(LoadManager):
@@ -108,7 +111,7 @@ class CTLoadManager(LoadManager):
         all_public_xml_url = 'https://clinicaltrials.gov/AllPublicXML.zip'
         load_config = self.get_load_config()
 
-        source_files_directory = self.load_config.source_files_directory()
+        source_files_directory = load_config.source_files_directory()
 
         file_name = os.path.basename(all_public_xml_url)
         file_path = os.path.join(source_files_directory, file_name)
