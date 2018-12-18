@@ -110,8 +110,8 @@ class FTPManager(object):
             downloaded_update_file_urls.append(update_file_url)
             downloaded_update_file_paths.append(xml_file_path)
 
-        # Save the downloaded files list
-        self.set_downloaded_update_file_urls(downloaded_update_file_urls)
+            # Save the downloaded files list
+            self.set_downloaded_update_file_urls(downloaded_update_file_urls)
 
         return downloaded_update_file_paths
 

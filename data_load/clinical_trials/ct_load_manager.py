@@ -2,7 +2,7 @@ from data_load.clinical_trials.ct_data_extractor import CTDataExtractor
 from data_load.clinical_trials.ct_data_mapper import CTDataMapper
 from data_load.base.load_manager import LoadManager
 
-from data_load.base.utils.download_data import CSVDownloader
+# from data_load.base.utils.download_data import CSVDownloader
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.base.data_source_xml_2 import XMLDataDirectorySource
@@ -27,7 +27,13 @@ class CTLoadManager(LoadManager):
 
     # Methods to override
     def should_reload(self):
-        return True
+        return False
+
+    def get_info_for_index_id(self, index_id):
+        return {
+            "index": "clinical_trials",
+            "index_type": "study"
+        }
 
     def mapping_file_path(self):
         return 'data_load/clinical_trials/mapping.json'
@@ -162,4 +168,12 @@ def run():
 
     resume()
 
-run()
+# run()
+for i in range(0, 373):
+    count_str = str(i)
+    while len(count_str) < 4:
+         count_str = '0' + count_str
+
+    path = '/Users/robin/Desktop/AllPublicXML/NCT' + count_str + 'xxxx'
+    
+    start(path)
