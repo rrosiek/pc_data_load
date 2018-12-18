@@ -32,7 +32,7 @@ class FTPManager(object):
     def download_missing_files(self, file_urls):
         filtered_file_urls = self.filter_file_urls(file_urls)
 
-        # filtered_file_urls = filtered_file_urls[:2]
+        # filtered_file_urls = filtered_file_urls[:1]
 
         return self.download_files(filtered_file_urls)
 
@@ -110,8 +110,8 @@ class FTPManager(object):
             downloaded_update_file_urls.append(update_file_url)
             downloaded_update_file_paths.append(xml_file_path)
 
-        # Save the downloaded files list
-        self.set_downloaded_update_file_urls(downloaded_update_file_urls)
+            # Save the downloaded files list
+            self.set_downloaded_update_file_urls(downloaded_update_file_urls)
 
         return downloaded_update_file_paths
 
