@@ -79,11 +79,11 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
                 for citation in citations_to_update:
                     # Citations
-                    # if _id not in pubmed_citations_pubmed:
-                    #     pubmed_citations_pubmed[_id] = []
+                    if _id not in pubmed_citations_pubmed:
+                        pubmed_citations_pubmed[_id] = []
 
-                    # if citation not in pubmed_citations_pubmed[_id]:
-                    #     pubmed_citations_pubmed[_id].append(citation)
+                    if citation not in pubmed_citations_pubmed[_id]:
+                        pubmed_citations_pubmed[_id].append(citation)
 
                     # Cited by
                     if citation not in pubmed_cited_bys_pubmed:
@@ -108,8 +108,8 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
-
-                self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
+                if len(removed_citations) > 0:
+                    self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
 
             else:
                 # New doc

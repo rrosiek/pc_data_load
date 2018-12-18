@@ -226,8 +226,8 @@ class DataLoader(object):
         self.load_config.log(LOG_LEVEL_INFO,
                         self.load_config.server,
                         self.load_config.server_username,
-                        self.load_config.index,
-                        self.load_config.type,
+                        self.index,
+                        self.type,
                         ' Updated docs:',
                         len(self.updated_ids) + len(self.indexed_ids),
                         ', Failed docs:', len(self.failed_docs))

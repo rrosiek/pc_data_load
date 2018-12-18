@@ -99,7 +99,7 @@ DATA_SOURCE_BATCHES_FILE = 'data_source_batches.json'
 INDEX_MAPPING = {}
 
 INDEX_MAPPING[ID_PUBMED] = {
-    'index': 'pubmed2018',
+    'index': 'pubmed2019',
     'type': 'article'
 }
 INDEX_MAPPING[ID_IRDB] = {
