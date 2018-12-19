@@ -16,10 +16,6 @@
 
 ```python -u -m data_load.pubmed2018.pubmed_load_manager -n <number of files to process>```
 
-### PubMed 2018 - Baseline + Relationships
-
-```python -u -m data_load.pubmed2018.pubmed_load_manager -baseline```
-
 ### PubMed 2019 - Baseline + Relationships
 
 ```python -u -m data_load.pubmed2019.pubmed_load_manager -baseline```
