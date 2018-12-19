@@ -19,6 +19,7 @@ import sys
 import os
 import psutil
 import urllib
+import zipfile
 
 from data_load.base.utils.log_utils import *
 
@@ -56,7 +57,7 @@ class CTLoadManager(LoadManager):
 
     def get_tasks_list(self):
         tasks_list = []
-
+        self.data_directories.sort()
         for data_directory in self.data_directories:
             tasks_list.append({
                 'name': data_directory,
@@ -117,10 +118,14 @@ class CTLoadManager(LoadManager):
         file_path = os.path.join(source_files_directory, file_name)
 
         # Download update zip file
-        urllib.urlcleanup()
-        print 'Downloading file: ', all_public_xml_url
-        urllib.urlretrieve(all_public_xml_url, file_path)
-        print 'Saved', file_path
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                print file_name, 'exists'
+        except Exception as e:
+            urllib.urlcleanup()
+            print 'Downloading file: ', all_public_xml_url
+            urllib.urlretrieve(all_public_xml_url, file_path)
+            print 'Saved', file_path
 
         # TODO - Verify download with md5?
 
@@ -131,15 +136,12 @@ class CTLoadManager(LoadManager):
             with zipfile.ZipFile(file_path, 'r') as zip_ref:
                 zip_ref.extractall(source_files_directory)
 
+            for sub_dir_name in os.listdir(source_files_directory):
+                if sub_dir_name.startswith('NCT'):
+                    sub_dir_path = os.path.join(source_files_directory, sub_dir_name)
+                    self.data_directories.append(sub_dir_path)
 
-            for name in os.listdir(source_files_directory):
-                dir_path = os.path.join(source_files_directory, name)
-                if os.path.isdir(dir_path):
-                    for sub_dir_name in os.listdir(dir_path) and sub_dir_name.startswith('NCT'):
-                        sub_dir_path = os.path.join(dir_path, sub_dir_name)
-
-                        self.data_directories.append(sub_dir_path)
-
+            self.data_directories.sort()
         except Exception as e:
             print e
 
@@ -189,7 +191,7 @@ def start(data_directory):
 
 def download_and_start():
     load_manager = CTLoadManager()
-    load_manager.del_config()
+    # load_manager.del_config()
     load_manager.run()
 
 def resume():
@@ -217,12 +219,4 @@ def run():
 
     resume()
 
-# run()
-for i in range(0, 373):
-    count_str = str(i)
-    while len(count_str) < 4:
-         count_str = '0' + count_str
-
-    path = '/Users/robin/Desktop/AllPublicXML/NCT' + count_str + 'xxxx'
-    
-    start(path)
+run()
