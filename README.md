@@ -31,3 +31,7 @@
 ### Grants.gov
 
 ```python -u -m data_load.grants.grants_load_manager -auto```
+
+### Clinical Trials
+
+```python -m data_load.clinical_trials.ct_load_manager -auto```
