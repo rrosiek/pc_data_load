@@ -144,14 +144,16 @@ class PubmedLoadManager(LoadManager):
 
         elif self.mode == MODE_COPY_USER_DATA:
             tasks_list.append({
-                'name': 'copy_user_info',
+                'name': 'copy_user_data',
                 'status': ''
             })
         
         return tasks_list
 
     def run_task(self, task):
-        if '_relations' in task:
+        if task == 'copy_user_data':
+            self.copy_user_data()
+        elif '_relations' in task:
             task = task.replace('_relations', '')
             pubmed_data_file = self.file_path_lookup[task]
             self.pubmed_updater.process_relationships(pubmed_data_file)
@@ -169,8 +171,7 @@ class PubmedLoadManager(LoadManager):
             self.send_update_notifications()
         elif task == 'save_new_pmids':
             self.save_new_pmids()
-        elif task == 'copy_user_info':
-            self.copy_user_data()
+     
 
     def copy_user_data(self):
         load_config = self.get_load_config()
