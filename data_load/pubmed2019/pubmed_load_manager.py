@@ -6,6 +6,7 @@ import data_load.base.utils.file_utils as file_utils
 import data_load.base.utils.log_utils as log_utils
 from data_load.base.utils.log_utils import *
 from data_load.base.utils.export_doc_ids import get_doc_ids
+from data_load.base.utils.copy_tags_and_annotations import CopyTagsAndAnnotations
 from data_load.DATA_LOAD_CONFIG import PROCESS_COUNT
 
 from data_load.base.constants import DATA_LOADING_DIRECTORY, TASK_STATUS_NOT_STARTED, ID_PUBMED
@@ -31,6 +32,7 @@ TASK_NAME = 'load_pubmed2018'
 MODE_FILE = 'MODE_FILE'
 MODE_BASELINE = 'MODE_BASELINE'
 MODE_UPDATE = 'MODE_UPDATE'
+MODE_COPY_USER_DATA = 'MODE_COPY_USER_DATA'
 
 ID_PUBMED_2019 = 'PUBMED_2019'
 
@@ -139,6 +141,12 @@ class PubmedLoadManager(LoadManager):
                     'name': file_name + '_' + 'relations',
                     'status': ''
                 })
+
+        elif self.mode == MODE_COPY_USER_DATA:
+            tasks_list.append({
+                'name': 'copy_user_data',
+                'status': ''
+            })
         
         return tasks_list
 
@@ -161,6 +169,20 @@ class PubmedLoadManager(LoadManager):
             self.send_update_notifications()
         elif task == 'save_new_pmids':
             self.save_new_pmids()
+        elif task == 'copy_user_data':
+            self.copy_user_data()
+
+    def copy_user_data(self):
+        load_config = self.get_load_config()
+        copier = CopyTagsAndAnnotations(load_config.other_files_directory(), 
+                                        load_config.server, 
+                                        'pubmed2018_v5',
+                                        'article',
+                                        load_config.server,
+                                        load_config.index,
+                                        load_config.type)
+
+        copier.run()
 
     def save_update_record(self):
         update_records_name = 'pubmed_update_records.json'
@@ -303,6 +325,11 @@ def process_updates():
     # load_manager.del_config()
     load_manager.run()
 
+def copy_user_data():
+    load_manager = PubmedLoadManager(MODE_COPY_USER_DATA, 0)
+    load_manager.del_config()
+    load_manager.run()
+
 def resume():
     load_manager = PubmedLoadManager(0)
     load_manager.run()
@@ -327,6 +354,8 @@ def run():
                 process_baseline()
             elif arg == '-update':
                 process_updates()
+            elif arg == '-copy':
+                copy_user_data()
             else: 
                 print('Usage: pubmed_load_manager -n <number of files to process>')     
         arg_index += 1

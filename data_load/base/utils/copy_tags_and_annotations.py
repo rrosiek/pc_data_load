@@ -38,8 +38,8 @@ class CopyTagsAndAnnotations(object):
         self.copy_tags = True
         self.copy_annotations = True
 
-        self.combine_tags = False   
-        self.combine_annotations = False
+        self.combine_tags = False # Combine not implemented, set to false  
+        self.combine_annotations = False # Combine not implemented, set to false 
 
         self.data_utils = DataUtils()
 
