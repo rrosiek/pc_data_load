@@ -144,7 +144,7 @@ class PubmedLoadManager(LoadManager):
 
         elif self.mode == MODE_COPY_USER_DATA:
             tasks_list.append({
-                'name': 'copy_user_data',
+                'name': 'copy_user_info',
                 'status': ''
             })
         
@@ -169,7 +169,7 @@ class PubmedLoadManager(LoadManager):
             self.send_update_notifications()
         elif task == 'save_new_pmids':
             self.save_new_pmids()
-        elif task == 'copy_user_data':
+        elif task == 'copy_user_info':
             self.copy_user_data()
 
     def copy_user_data(self):
