@@ -52,6 +52,8 @@ def get_new_update_files(load_config, update_file_urls, count=0):
 
 def get_new_files(load_config):
     processed_update_files = get_processed_files(load_config)
+
+    print 'Processed files', processed_update_files
     source_files = get_all_files(load_config)
     new_update_files = []
 

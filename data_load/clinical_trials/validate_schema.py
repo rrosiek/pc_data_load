@@ -124,9 +124,7 @@ class ValidateSchema(object):
         self.create_mapping(data_directory, self.format)
         
 
-    def append_format(self, parents, data, format):
-        # print data
-      
+    def append_format(self, parents, data, format):      
         if isinstance(data, dict):
             for key in data:
                 data_item = data[key]

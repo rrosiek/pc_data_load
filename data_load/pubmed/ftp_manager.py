@@ -29,10 +29,11 @@ class FTPManager(object):
 
         return self.download_update_files(filtered_file_urls)
 
-    def download_missing_files(self, file_urls):
+    def download_missing_files(self, file_urls, no_of_files=None):
         filtered_file_urls = self.filter_file_urls(file_urls)
 
-        # filtered_file_urls = filtered_file_urls[:1]
+        if no_of_files is not None:
+            filtered_file_urls = filtered_file_urls[:no_of_files]
 
         return self.download_files(filtered_file_urls)
 

@@ -15,7 +15,7 @@ from data_load.base.constants import DATA_LOADING_DIRECTORY, TASK_STATUS_NOT_STA
 from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 
-from data_load.pubmed import email_client
+from data_load.pubmed.email_client import EmailClient
 from data_load.pubmed.ftp_manager import FTPManager
 from data_load.pubmed.prospective_citations import FindProspectiveCitations
 from data_load.pubmed.pubmed_updater import PubmedUpdater
@@ -56,7 +56,10 @@ class PubmedLoadManager(LoadManager):
         return self.logger
 
     def get_root_directory(self, local_date):
-        return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019'
+        if self.mode == MODE_UPDATE:
+            return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019_updates'
+        else:
+            return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019'
 
     # Methods to override
     def should_reload(self):
@@ -102,6 +105,11 @@ class PubmedLoadManager(LoadManager):
                     'name': file_name + '_' + 'relations',
                     'status': ''
                 })
+
+            tasks_list.append({
+                'name': 'save_update_record',
+                'status': ''
+            })
 
             tasks_list.append({
                 'name': 'find_prospective_citations',
@@ -172,6 +180,8 @@ class PubmedLoadManager(LoadManager):
         elif task == 'save_new_pmids':
             self.save_new_pmids()
      
+    def tasks_completed(self):
+        self.delete_task_list()
 
     def copy_user_data(self):
         load_config = self.get_load_config()
@@ -198,7 +208,7 @@ class PubmedLoadManager(LoadManager):
         update_records[self.local_date_time] = update_records_for_date
 
         file_utils.save_file(self.pubmed_updater.get_update_records_directory(), update_records_name, update_records)   
-        file_manager.update_processed_files(self.get_load_config(), [self.files_to_process])    
+        file_manager.update_processed_files(self.get_load_config(), self.files_to_process)    
     
     def find_prospective_citations(self):
         docs_with_new_citations = self.pubmed_updater.get_docs_with_new_citations(self.files_to_process)
@@ -253,9 +263,11 @@ class PubmedLoadManager(LoadManager):
         self.send_notifications(all_prospects)
         
         self.get_logger().info('Sending update status mail...')
-        email_client.send_update_notifications(self.local_date_time, update_data, all_prospects)
+        EmailClient.send_update_notifications(self.local_date_time, update_data, all_prospects)
 
     def send_notifications(self, prospects):
+        load_config = self.get_load_config()
+        email_client = EmailClient(load_config)
         # print 'Prospects', all_prospects
         self.get_logger().info('Prospects ' + str(prospects))
         failed_prospects = []
@@ -276,6 +288,9 @@ class PubmedLoadManager(LoadManager):
     def save_new_pmids(self):
         self.pubmed_updater.save_new_pmids(self.files_to_process)
 
+    def should_download_data(self):
+        return True
+
     def download_data(self):
         load_config = self.get_load_config()
         ftp_manager = FTPManager(load_config)
@@ -286,18 +301,20 @@ class PubmedLoadManager(LoadManager):
         if self.mode == MODE_BASELINE:
             baseline_file_urls = ftp_manager.get_baseline_file_urls()
             print 'baseline_file_urls', len(baseline_file_urls)
-            ftp_manager.download_missing_files(baseline_file_urls)
+            ftp_manager.download_missing_files(file_urls=baseline_file_urls)
 
             self.files_to_process = file_manager.get_baseline_files(load_config, baseline_file_urls)
             print 'files_to_process', len(self.files_to_process)
 
         elif self.mode == MODE_UPDATE:
             update_file_urls = ftp_manager.get_update_file_urls()
-            update_file_count = min(len(update_file_urls), self.no_of_files)
-            update_file_urls = update_file_urls[:update_file_count]
-            ftp_manager.download_missing_files(update_file_urls)
+            # update_file_count = min(len(update_file_urls), self.no_of_files)
+            # update_file_urls = update_file_urls[:update_file_count]
+            # print 'Files to download', update_file_urls
+            ftp_manager.download_missing_files(file_urls=update_file_urls, no_of_files=self.no_of_files)
 
             self.files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, self.no_of_files)
+            print 'Update', self.files_to_process
         else:
             files_to_process = file_manager.get_new_files(load_config)
             files_to_download = self.no_of_files - len(files_to_process)
@@ -323,7 +340,7 @@ def process_updates():
     load_manager = PubmedLoadManager(MODE_UPDATE, 0)
     load_manager.mode = MODE_UPDATE
     load_manager.no_of_files = 2
-    # load_manager.del_config()
+    load_manager.del_config()
     load_manager.run()
 
 def copy_user_data():
@@ -361,7 +378,7 @@ def run():
                 print('Usage: pubmed_load_manager -n <number of files to process>')     
         arg_index += 1
 
-    resume()
+    # resume()
 
 if __name__ == '__main__':
     run()

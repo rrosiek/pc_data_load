@@ -103,23 +103,23 @@ INDEX_MAPPING[ID_PUBMED] = {
     'type': 'article'
 }
 INDEX_MAPPING[ID_IRDB] = {
-    'index': 'irdb_v3',
+    'index': 'irdb',
     'type': 'grant'
 }
 INDEX_MAPPING[ID_WEB_OF_SCIENCE] = {
-    'index': 'wos_v2',
+    'index': 'wos',
     'type': 'article'
 }
 INDEX_MAPPING[ID_USPTO] = {
-    'index': 'uspto_v5',
+    'index': 'uspto',
     'type': 'grant'
 }
 INDEX_MAPPING[ID_CLINICAL_TRIALS] = {
-    'index': 'clinical_trials_v2',
+    'index': 'clinical_trials',
     'type': 'study'
 }
 INDEX_MAPPING[ID_CLINICAL_GUIDELINES] = {
-    'index': 'clinical_guidelines_v3',
+    'index': 'clinical_guidelines',
     'type': 'record'
 }
 INDEX_MAPPING[ID_FDA_PURPLE_BOOK] = {
@@ -127,11 +127,11 @@ INDEX_MAPPING[ID_FDA_PURPLE_BOOK] = {
     'type': 'page'
 }
 INDEX_MAPPING[ID_FDA_PATENTS] = {
-    'index': 'fda_patents_v3',
+    'index': 'fda_patents',
     'type': 'patent'
 }
 INDEX_MAPPING[ID_FDA_PRODUCTS] = {
-    'index': 'fda_products_v3',
+    'index': 'fda_products',
     'type': 'product'
 }
 INDEX_MAPPING[ID_DERWENT_PATENTS] = {

@@ -52,10 +52,12 @@ class DataLoaderUtils(object):
             self.create_index(mapping_file_path)
 
     def create_index(self, mapping_file_path):
-        # Create index and mapping
+        mapping = self.load_mapping_from_file(mapping_file_path)
+        self.create_index_from_mapping(mapping)
+
+    def create_index_from_mapping(self, mapping):
         if not self.index_exists():
             print 'Index does not exist, creating index with mapping from file'
-            mapping = self.load_mapping_from_file(mapping_file_path)
             self.put_mapping(mapping)
         else:
             print 'Index already exists, skipping index creation'

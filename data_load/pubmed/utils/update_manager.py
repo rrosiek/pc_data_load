@@ -11,7 +11,7 @@ from find_pmid import FindPMID
 from ftp_manager import FTPManager
 from verify_citations import VerifyCitations
 import pubmed_load_config
-import email_client
+from email_client import EmailClient
 import logging
 import datetime
 
@@ -107,7 +107,7 @@ def process_update_files(is_auto_update, load_config, new_update_files):
 
         # Send update start notification
         if is_auto_update:
-            email_client.send_update_start_notification(local_date, new_update_files)
+            EmailClient.send_update_start_notification(local_date, new_update_files)
 
         # Process files not processed yet
         # Update processed files list
@@ -128,7 +128,7 @@ def process_update_files(is_auto_update, load_config, new_update_files):
 
         # # Send update notification
         logger.info('Sending update status mail...')
-        email_client.send_update_notifications(local_date, update_data, all_prospects)
+        EmailClient.send_update_notifications(local_date, update_data, all_prospects)
 
         # Save existing pmids to file
         logger.info('Saving new pmids...')
@@ -140,7 +140,7 @@ def process_update_files(is_auto_update, load_config, new_update_files):
         if is_auto_update:
             # Send update notification
             logger.info('Sending update status mail...')
-            email_client.send_update_notifications(local_date, [], [])
+            EmailClient.send_update_notifications(local_date, [], [])
 
 
 ### Update records
@@ -201,7 +201,7 @@ def process_update_record(load_config, update_record_name):
 
     # Send update notification
     logger.info('Sending update status mail...')
-    email_client.send_update_notifications(local_date, update_data, all_prospects)
+    EmailClient.send_update_notifications(local_date, update_data, all_prospects)
 
     logger.info('Done')
 

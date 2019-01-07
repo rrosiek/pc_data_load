@@ -5,7 +5,7 @@ import time
 import requests
 
 from data_load.base.constants import API_URL
-import email_client
+from email_client import EmailClient
 import data_load.base.utils.file_utils as file_utils
 
 

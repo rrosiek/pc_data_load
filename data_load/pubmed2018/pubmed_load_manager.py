@@ -8,7 +8,7 @@ from data_load.pubmed2018.pubmed_data_mapper import PubmedDataMapper
 from data_load.pubmed.ftp_manager import FTPManager
 from data_load.base.constants import ID_PUBMED
 import data_load.base.utils.file_utils as file_utils
-from data_load.pubmed import email_client
+from data_load.pubmed.email_client import EmailClient
 from data_load.pubmed.prospective_citations import FindProspectiveCitations
 
 import os
@@ -227,9 +227,11 @@ class PubmedLoadManager(LoadManager):
         self.send_notifications(all_prospects)
         
         self.get_logger().info('Sending update status mail...')
-        email_client.send_update_notifications(self.local_date_time, update_data, all_prospects)
+        EmailClient.send_update_notifications(self.local_date_time, update_data, all_prospects)
 
     def send_notifications(self, prospects):
+        load_config = self.get_load_config()
+        email_client = EmailClient(load_config)
         # print 'Prospects', all_prospects
         self.get_logger().info('Prospects ' + str(prospects))
         failed_prospects = []

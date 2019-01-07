@@ -13,7 +13,7 @@ import requests
 
 # from config import *
 
-import email_client
+from email_client import EmailClient
 from prospective_citations import FindProspectiveCitations
 
 ALL_PUBMED_IDS_FILE = 'all_pubmed_ids.json'

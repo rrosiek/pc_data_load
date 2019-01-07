@@ -161,7 +161,7 @@ class LoadManager(object):
 
     def mapping_file_path(self):
         return None
-
+   
     def get_data_mapper(self):
         return None
 
@@ -170,6 +170,9 @@ class LoadManager(object):
 
     def get_max_memory_percent(self):
         return 75
+
+    def should_download_data(self):
+        return not self.src_data_exists
 
     def download_data(self):
         pass
@@ -188,15 +191,15 @@ class LoadManager(object):
         self.check_and_create_index()
 
         # Download data
-        if not self.src_data_exists:
+        if self.should_download_data():
             # print 'Downloading data...'
-
             self.download_data()
             self.src_data_exists = True
             self.set_config()
 
         tasks_list = self.create_tasks_list()
         self.check_and_start_tasks(tasks_list)
+        self.tasks_completed()
 
     def start_task(self, task):
         task_name = task['name']
@@ -219,11 +222,15 @@ class LoadManager(object):
                 # TODO skip
                 print task['name'], 'completed'
 
+    def tasks_completed(self):
+        pass
+
     def check_and_create_index(self):
         data_loader_utils = DataLoaderUtils(self.server, self.index, self.type, self.server_username, self.server_password)
         mapping_file_path = self.mapping_file_path()
         print 'Checking index...'
         if not data_loader_utils.index_exists() and mapping_file_path is not None:
+            
             data_loader_utils.create_index(mapping_file_path)
 
     def delete_index(self, _server, _index, _type):
@@ -302,6 +309,10 @@ class LoadManager(object):
         if len(tasks_list) == 0:
             tasks_list = []
         return tasks_list
+
+    def delete_task_list(self):
+        file_utils.save_file(self.root_directory, 'tasks_list.json', [])
+
 
     def set_status(self, task, status):
         task['status'] = status
