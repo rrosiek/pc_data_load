@@ -107,11 +107,6 @@ class PubmedLoadManager(LoadManager):
                 })
 
             tasks_list.append({
-                'name': 'save_update_record',
-                'status': ''
-            })
-
-            tasks_list.append({
                 'name': 'find_prospective_citations',
                 'status': ''
             })
@@ -127,7 +122,7 @@ class PubmedLoadManager(LoadManager):
             })
 
             tasks_list.append({
-                'name': 'update_processed_files',
+                'name': 'save_update_record',
                 'status': ''
             })
 
@@ -308,10 +303,13 @@ class PubmedLoadManager(LoadManager):
 
         elif self.mode == MODE_UPDATE:
             update_file_urls = ftp_manager.get_update_file_urls()
+            files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, self.no_of_files)
+            files_to_download = self.no_of_files - len(files_to_process)
+
             # update_file_count = min(len(update_file_urls), self.no_of_files)
             # update_file_urls = update_file_urls[:update_file_count]
             # print 'Files to download', update_file_urls
-            ftp_manager.download_missing_files(file_urls=update_file_urls, no_of_files=self.no_of_files)
+            ftp_manager.download_missing_files(file_urls=update_file_urls, no_of_files=files_to_download)
 
             self.files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, self.no_of_files)
             print 'Update', self.files_to_process

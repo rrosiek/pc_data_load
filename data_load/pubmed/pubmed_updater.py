@@ -129,6 +129,7 @@ class PubmedUpdater(object):
 
     def load_update_summary(self, update_file):
         update_record_file_name = self.get_update_summary_file_name(update_file)
+        # print 'update_record_file_name', update_record_file_name
         return file_utils.load_file(self.get_update_records_directory(), update_record_file_name)
 
     def save_docs_with_new_citations(self, docs_with_new_citations, update_file):
