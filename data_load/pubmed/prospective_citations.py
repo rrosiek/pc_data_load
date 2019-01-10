@@ -129,7 +129,7 @@ class FindProspectiveCitations(object):
                 all_prospects.append(new_prospect)
 
             break
-
+            
         return all_prospects
 
 

@@ -296,7 +296,7 @@ class PubmedLoadManager(LoadManager):
         if self.mode == MODE_BASELINE:
             baseline_file_urls = ftp_manager.get_baseline_file_urls()
             print 'baseline_file_urls', len(baseline_file_urls)
-            ftp_manager.download_missing_files(file_urls=baseline_file_urls)
+            ftp_manager.download_missing_files(file_urls=baseline_file_urls, no_of_files=2)
 
             self.files_to_process = file_manager.get_baseline_files(load_config, baseline_file_urls)
             print 'files_to_process', len(self.files_to_process)
