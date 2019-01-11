@@ -160,7 +160,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         print 'reformatted pubmed_ids', len(pubmed_ids)
 
         relationships = dict()
-        relationships[ID_PUBMED] = pubmed_ids
+        # relationships[ID_PUBMED] = pubmed_ids
 
         return relationships
 
