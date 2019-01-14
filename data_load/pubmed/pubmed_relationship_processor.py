@@ -109,7 +109,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
                 if len(removed_citations) > 0:
-                    # self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
+                    self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
                     pass
 
             else:
@@ -161,7 +161,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         print 'reformatted pubmed_ids', len(pubmed_ids)
 
         relationships = dict()
-        # relationships[ID_PUBMED] = pubmed_ids
+        relationships[ID_PUBMED] = pubmed_ids
 
         return relationships
 
