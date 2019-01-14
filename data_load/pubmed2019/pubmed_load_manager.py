@@ -58,8 +58,10 @@ class PubmedLoadManager(LoadManager):
     def get_root_directory(self, local_date):
         if self.mode == MODE_UPDATE:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019_updates'
-        else:
+        elif self.mode == MODE_BASELINE:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019'
+        else:
+            return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'copy_user_data'
 
     # Methods to override
     def should_reload(self):
