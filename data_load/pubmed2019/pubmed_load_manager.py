@@ -221,7 +221,7 @@ class PubmedLoadManager(LoadManager):
     def get_prospects_file_name(self):
         prospects_file_name = self.local_date_time.replace(' ', '_')
         prospects_file_name = prospects_file_name.replace(':', '_')
-        prospects_file_name = 'prospects_' + prospects_file_name
+        prospects_file_name = 'prospects_' + prospects_file_name + '.json'
 
         return prospects_file_name
 

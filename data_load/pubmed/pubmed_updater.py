@@ -88,7 +88,7 @@ class PubmedUpdater(object):
         load_config.data_source_name = file_name.split('.')[0] + '_relations'
         load_config.process_count = 4
 
-        load_config.append_relations = True
+        load_config.append_relations = False
         load_config.source = ''
         
         # print 'Processing relationships......'
@@ -98,10 +98,12 @@ class PubmedUpdater(object):
         data_processor.run()
         
         docs_with_new_citations = data_processor.get_docs_with_new_citations()
-        # self.docs_with_new_citations[update_file] = docs_with_new_citations
-
         # Save docs with new citations
         self.save_docs_with_new_citations(docs_with_new_citations, update_file)
+
+        # Save docs citation history
+        docs_citations_history = data_processor.get_citations_history()
+        self.save_docs_citations_history(docs_citations_history, update_file)
 
         return docs_with_new_citations
 
@@ -140,6 +142,11 @@ class PubmedUpdater(object):
         update_record_file_name = self.get_docs_with_new_citations_file_name(update_file)
         return file_utils.load_file(self.get_update_records_directory(), update_record_file_name)    
 
+    def save_docs_citations_history(self, doc_citations_history, update_file):
+        update_record_file_name = self.get_docs_citations_history_file_name(update_file)
+        file_utils.save_file(self.get_update_records_directory(), update_record_file_name, doc_citations_history)    
+
+
     def get_update_file_name(self, update_file):
         file_name = os.path.basename(update_file)
         name = file_name.split('.')[0]
@@ -147,12 +154,17 @@ class PubmedUpdater(object):
 
     def get_update_summary_file_name(self, update_file):
         name = self.get_update_file_name(update_file)
-        file_name = 'update_summary_' + name
+        file_name = 'update_summary_' + name + '.json'
         return file_name
 
     def get_docs_with_new_citations_file_name(self, update_file):
         name = self.get_update_file_name(update_file)
-        file_name = 'docs_with_new_citations_' + name
+        file_name = 'docs_with_new_citations_' + name + '.json'
+        return file_name
+
+    def get_docs_citations_history_file_name(self, update_file):
+        name = self.get_update_file_name(update_file)
+        file_name = 'docs_citations_history_' + name + '.json'
         return file_name
 
     def get_new_pmids_per_file(self, update_files):

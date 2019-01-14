@@ -19,11 +19,36 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         self.load_relationships = True
 
         self.docs_with_new_citations = {}
+        self.docs_citations_history = {}
 
         self.data_utils = DataUtils()
 
     def get_docs_with_new_citations(self):
         return self.docs_with_new_citations
+
+    def get_citations_history(self):
+        return self.docs_citations_history
+
+    def update_citations_history(self, new_doc,  _id, new_citations, existing_citations):
+        # Update citation history 
+        if _id not in self.docs_citations_history:
+            self.docs_citations_history[_id] = {}
+
+        # Set the new doc flag
+        self.docs_citations_history[_id]['new'] = new_doc
+
+        # Update new citations
+        if 'new_citations' not in self.docs_citations_history[_id]:
+            self.docs_citations_history[_id]['new_citations'] = []
+
+        self.docs_citations_history[_id]['new_citations'].extend(new_citations)
+
+        # Update existing citations
+        if 'existing_citations' not in self.docs_citations_history[_id]:
+            self.docs_citations_history[_id]['existing_citations'] = []
+
+        self.docs_citations_history[_id]['existing_citations'].extend(existing_citations)
+
 
     def process_relationships(self, extracted_ids):
         all_updated_ids = {}
@@ -60,16 +85,29 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                 # print existing_doc
                 existing_citations = self.get_citations(existing_doc)
 
+                self.update_citations_history(False, _id, new_citations, existing_citations)
+
                 added_citations = []
                 removed_citations = []
                 citations_to_update = []
 
                 # Get removed and existing citations
-                for exisiting_citation in existing_citations:
-                    if exisiting_citation in new_citations:
-                        citations_to_update.append(exisiting_citation)
+                for existing_citation in existing_citations:
+                    if existing_citation in new_citations:
+                        citations_to_update.append(existing_citation)
                     else:
-                        removed_citations.append(exisiting_citation)
+                        removed_citations.append(existing_citation)
+
+                        # Update cited_bys for the removed_citation doc
+                        cited_bys_for_removed_citation = self.get_cited_bys_for_doc(existing_citation)
+                        if _id in cited_bys_for_removed_citation:
+                            cited_bys_for_removed_citation.remove(_id)
+
+                        if existing_citation not in pubmed_cited_bys_pubmed:
+                            pubmed_cited_bys_pubmed[existing_citation] = []
+
+                        pubmed_cited_bys_pubmed[existing_citation].extend(cited_bys_for_removed_citation)
+
 
                 # Get added citations
                 for new_citation in new_citations:
@@ -111,11 +149,13 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
-                if len(removed_citations) > 0:
-                    self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
+                # if len(removed_citations) > 0:
+                self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
 
             else:
                 # New doc
+                # Update citations history
+                self.update_citations_history(True, _id, new_citations, [])
 
                 # Get existing cited bys (citations from other existing docs) for the new doc
                 existing_cited_bys = self.get_existing_cited_bys(_id)
@@ -142,10 +182,11 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     if _id not in pubmed_cited_bys_pubmed[citation]:
                         pubmed_cited_bys_pubmed[citation].append(_id)
 
-                if _id not in self.docs_with_new_citations:
-                    self.docs_with_new_citations[_id]= []
-                    
-                self.docs_with_new_citations[_id].extend(new_citations)
+                if len(new_citations) > 0:
+                    if _id not in self.docs_with_new_citations:
+                        self.docs_with_new_citations[_id]= []
+                        
+                    self.docs_with_new_citations[_id].extend(new_citations)
 
             if count % 1000 == 0:
                 print 'Processed', count, 'docs'
@@ -170,17 +211,36 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
         return relationships
 
+
+    def get_cited_bys_for_doc(self, _id):
+        doc = self.get_existing_doc(_id)
+        return self.get_cited_bys(doc)
+
     # Fetch existing doc from elasticsearch
     def get_existing_doc(self, _id):
         exisiting_doc = self.data_loader_utils.fetch_doc(_id)
-        if '_source' in exisiting_doc:
+        if exisiting_doc is not None and '_source' in exisiting_doc:
             exisiting_doc = exisiting_doc['_source']
         return exisiting_doc
+
+    def get_cited_bys(self, doc):
+        cited_bys = []
+        if doc is not None and 'cited_bys' in doc:
+            cited_bys_array = doc['cited_bys']
+
+            for cited_by_item in cited_bys_array:
+                source = cited_by_item['source']
+                index_id = cited_by_item['index_id']
+                if source == self.load_config.source and index_id == ID_PUBMED:
+                    cited_bys = cited_by_item['ids']
+                    break
+
+        return cited_bys
 
     # Get citations from doc
     def get_citations(self, doc):
         citations = []
-        if 'citations' in doc:
+        if doc is not None and 'citations' in doc:
             citations_array = doc['citations']
 
             for citation_item in citations_array:
@@ -233,8 +293,6 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         return []
 
     def update_doc(self, _id, existing_doc, removed_citations, citations_to_update):
-        # print 'Updating doc', _id
-        # return
         now = datetime.datetime.now()
 
         updated_date = now.isoformat()
@@ -250,14 +308,15 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
             "removed_citations": removed_citations
         }
 
-        existing_doc = self.load_config.data_mapper.update_citations_for_doc(_id,
-                                                                             existing_doc,
-                                                                             citations_to_update,
-                                                                             '',
-                                                                             ID_PUBMED,
-                                                                             append=False)
+        # Not updating citations, will be updated with main relationship load
+        # existing_doc = self.load_config.data_mapper.update_citations_for_doc(_id,
+        #                                                                      existing_doc,
+        #                                                                      citations_to_update,
+        #                                                                      '',
+        #                                                                      ID_PUBMED,
+        #                                                                      append=False)
 
-        doc[RELATIONSHIP_TYPE_CITATIONS] = existing_doc[RELATIONSHIP_TYPE_CITATIONS]
+        # doc[RELATIONSHIP_TYPE_CITATIONS] = existing_doc[RELATIONSHIP_TYPE_CITATIONS]
         doc = {
             'doc': doc
         }
