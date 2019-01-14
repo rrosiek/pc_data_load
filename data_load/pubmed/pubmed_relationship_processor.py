@@ -104,13 +104,15 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                 #     time.sleep(20)
 
                 if len(added_citations) > 0:
-                    self.docs_with_new_citations[_id] = added_citations
+                    if _id not in self.docs_with_new_citations:
+                        self.docs_with_new_citations[_id]= []
+                    
+                    self.docs_with_new_citations[_id].extend(added_citations)
 
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
                 if len(removed_citations) > 0:
                     self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
-                    pass
 
             else:
                 # New doc
@@ -140,7 +142,10 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     if _id not in pubmed_cited_bys_pubmed[citation]:
                         pubmed_cited_bys_pubmed[citation].append(_id)
 
-                self.docs_with_new_citations[_id] = new_citations
+                if _id not in self.docs_with_new_citations:
+                    self.docs_with_new_citations[_id]= []
+                    
+                self.docs_with_new_citations[_id].extend(new_citations)
 
             if count % 1000 == 0:
                 print 'Processed', count, 'docs'
