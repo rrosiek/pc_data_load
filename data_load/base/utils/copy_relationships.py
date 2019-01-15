@@ -28,6 +28,8 @@ class CopyRelationships(object):
         self.username = username
         self.password = password
 
+        self.last_time_stamp = 0
+
     def run(self):
         self.processed_doc_count = 0
         self.total_doc_count = self.get_total_doc_count()
@@ -88,9 +90,18 @@ class CopyRelationships(object):
         # Update progress
         self.processed_doc_count += len(docs)
         progress = ((self.processed_doc_count / float(self.total_doc_count)) * 100)
+
+
+        current_time_stamp = time.time()
+        diff = current_time_stamp - self.last_time_stamp
+        time_remaining = diff * (float(self.total_doc_count) / self.processed_doc_count)
+        
+        self.last_time_stamp = current_time_stamp
+
         print '---------------------------------------------------------------------------------------------'
-        print 'Progress', self.processed_doc_count, '/', self.total_doc_count, progress, '%'
+        print 'Progress', self.processed_doc_count, '/', self.total_doc_count, progress, '%', time_remaining, 'secs'
         print '---------------------------------------------------------------------------------------------'
+
 
     def get_src_relations(self, src_doc, relationship_type):
         src_relations = []
