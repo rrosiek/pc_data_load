@@ -303,5 +303,5 @@ copy_relations.relations_to_exclude.append({
     "source": "",
     "index_id": ID_PUBMED
 })
-# copy_relations.run()
-copy_relations.run_for_ids([12620793])
+copy_relations.run()
+# copy_relations.run_for_ids([12620793])
