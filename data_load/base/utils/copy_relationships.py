@@ -61,11 +61,7 @@ class CopyRelationships(object):
 
     def ids_fetched(self, ids, index, type):
         print 'Ids fetched', len(ids)
-        # self.copy_docs_batch(ids)
-
-        print 'Fetching docs from source index'
-        batch_doc_processor = BatchDocProcessor(ids, self.copy_docs_batch, 500, 4, 0.5)
-        batch_doc_processor.run()
+        self.copy_docs_batch(ids)
 
     def copy_docs_batch(self, doc_ids):
         print 'Fetching docs'
