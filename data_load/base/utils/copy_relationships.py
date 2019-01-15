@@ -211,8 +211,8 @@ class CopyRelationships(object):
             if len(dest_relations[RELATIONSHIP_TYPE_RELATIONS]) > 0:
                 doc[RELATIONSHIP_TYPE_RELATIONS] = dest_relations[RELATIONSHIP_TYPE_RELATIONS]
 
-            if len(dest_relations[RELATIONSHIP_TYPE_CITATIONS]) >= 2:
-                print _id
+            # if len(dest_relations[RELATIONSHIP_TYPE_CITATIONS]) >= 2:
+            #     print _id
 
             count += 1
 
