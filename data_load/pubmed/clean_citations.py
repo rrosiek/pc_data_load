@@ -49,10 +49,22 @@ class CleanCitations(object):
         # files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, 2)
         print files_to_process
 
-        for update_file in files_to_process:
-            xml_data_source = XMLDataSource(update_file, 2)
-            xml_data_source.process_rows(self.process_row)
+        self.get_docs()
 
+        # for update_file in files_to_process:
+        #     xml_data_source = XMLDataSource(update_file, 2)
+        #     xml_data_source.process_rows(self.process_row)
+
+        # print 'total ids:', self.ids
+
+    def get_docs(self):
+        load_config = self.get_load_config(baseline_directory)
+        ftp_manager = FTPManager(load_config)
+
+        baseline_file_urls = ftp_manager.get_baseline_file_urls()
+        baseline_files = file_manager.get_baseline_files(load_config, baseline_file_urls)
+
+        print 'Baseline files:', len(baseline_files)
 
     def process_row(self, row, current_index):
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
@@ -61,6 +73,8 @@ class CleanCitations(object):
 
             if len(self.ids) % 1000 == 0:
                 print len(self.ids)
+
+        return True
 
     def get_load_config(self, root_directory):
         load_config = LoadConfig()
