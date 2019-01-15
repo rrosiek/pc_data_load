@@ -130,17 +130,6 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     if _id not in pubmed_cited_bys_pubmed[citation]:
                         pubmed_cited_bys_pubmed[citation].append(_id)
 
-
-                # if len(citations_to_update) < len(existing_citations) and self.has_multiple_citations(existing_doc):
-                #     print 'Existing doc', _id
-                #     print 'Existing citations', len(existing_citations)
-                #     print 'New citations', len(new_citations)
-                #     print 'Updated citations', len(citations_to_update)
-                #     print 'Doc', existing_doc
-                #     print 'Data', data
-
-                #     time.sleep(20)
-
                 if len(added_citations) > 0:
                     if _id not in self.docs_with_new_citations:
                         self.docs_with_new_citations[_id]= []
@@ -150,7 +139,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
                 # if len(removed_citations) > 0:
-                self.update_doc(_id, existing_doc, removed_citations, citations_to_update)
+                self.update_doc(_id, existing_doc, existing_citations, removed_citations, added_citations)
 
             else:
                 # New doc
@@ -292,31 +281,38 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
         return []
 
-    def update_doc(self, _id, existing_doc, removed_citations, citations_to_update):
+    def update_doc(self, _id, existing_doc, original_citations, removed_citations, added_citations):
         now = datetime.datetime.now()
 
         updated_date = now.isoformat()
         update_file = os.path.basename(self.data_source.data_source_file_path)
 
-        if 'removed_citations' in existing_doc:
-            existing_removed_citations = existing_doc['removed_citations']
-            removed_citations.extend(existing_removed_citations)
-
-        doc = {
+        # Create the update history item
+        update_history_item = {
             "updated_date": updated_date,
             "update_file": update_file,
-            "removed_citations": removed_citations
+            "removed_citations": removed_citations,
+            "added_citations": added_citations
         }
 
-        # Not updating citations, will be updated with main relationship load
-        # existing_doc = self.load_config.data_mapper.update_citations_for_doc(_id,
-        #                                                                      existing_doc,
-        #                                                                      citations_to_update,
-        #                                                                      '',
-        #                                                                      ID_PUBMED,
-        #                                                                      append=False)
+        # Get the existing update history
+        update_history = []
+        if 'update_history' in existing_doc:
+            update_history = existing_doc['update_history']
 
-        # doc[RELATIONSHIP_TYPE_CITATIONS] = existing_doc[RELATIONSHIP_TYPE_CITATIONS]
+        # Add the original citations list if not present
+        if len(update_history) == 0:
+            update_history.append({
+                "original_citations": original_citations
+            })
+            
+        # Add the new update history item
+        update_history.append(update_history_item)
+
+        doc = {
+            "update_history": update_history
+        }
+        
         doc = {
             'doc': doc
         }
