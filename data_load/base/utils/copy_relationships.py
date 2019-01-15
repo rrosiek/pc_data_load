@@ -96,7 +96,7 @@ class CopyRelationships(object):
         current_time_stamp = time.time()
         diff = current_time_stamp - self.last_time_stamp
         self.diff_average = float(diff + self.diff_average) / 2
-        time_remaining = diff * (float(self.total_doc_count) / self.processed_doc_count)
+        time_remaining = diff * (float(self.total_doc_count) / len(docs))
         
         self.last_time_stamp = current_time_stamp
 
