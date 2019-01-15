@@ -47,17 +47,20 @@ class CleanCitations(object):
         all_files = file_manager.get_all_files(load_config)
         files_to_process = all_files[:2]
         # files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, 2)
+        print files_to_process
 
         for update_file in files_to_process:
             xml_data_source = XMLDataSource(update_file, 2)
             xml_data_source.process_rows(self.process_row)
 
-        print files_to_process
 
     def process_row(self, row, current_index):
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
         if _id is not None and _id not in self.ids:
             self.ids[_id] = 0
+
+            if len(self.ids) % 1000 == 0:
+                print len(self.ids)
 
     def get_load_config(self, root_directory):
         load_config = LoadConfig()
