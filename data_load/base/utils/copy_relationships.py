@@ -64,7 +64,7 @@ class CopyRelationships(object):
         # self.copy_docs_batch(ids)
 
         print 'Fetching docs from source index'
-        batch_doc_processor = BatchDocProcessor(ids, self.copy_docs_batch, 500, 1, 0.5)
+        batch_doc_processor = BatchDocProcessor(ids, self.copy_docs_batch, 500, 4, 0.5)
         batch_doc_processor.run()
 
     def copy_docs_batch(self, doc_ids):
@@ -255,7 +255,7 @@ class CopyRelationships(object):
    
 
     def load_bulk_data(self, bulk_data):
-        # print 'Bulk data size', len(bulk_data), 'loading...'
+        print 'Bulk data size', len(bulk_data), 'loading...'
         response = self.dest_data_loader_utils.load_bulk_data(bulk_data)
 
         if response:
