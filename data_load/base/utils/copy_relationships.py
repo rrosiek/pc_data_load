@@ -238,6 +238,7 @@ class CopyRelationships(object):
             # if count % 1000 == 0:
             #     print 'Processed', 1000, 'docs'
             if len(bulk_data) >= 150000:
+                print _id
                 self.load_bulk_data(bulk_data)
                 # print 'Copied', count, 'docs'
                 bulk_data = ''
