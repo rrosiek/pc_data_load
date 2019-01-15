@@ -50,7 +50,7 @@ class CopyRelationships(object):
         print 'Total doc count', self.total_doc_count
 
         print 'Fetching docs from source index'
-        batch_doc_processor = BatchDocProcessor(doc_ids, self.copy_docs_batch, 1000, 2, 0)
+        batch_doc_processor = BatchDocProcessor(doc_ids, self.copy_docs_batch, 1000, 1, 0)
         batch_doc_processor.run()
 
     def export_doc_ids(self, server, src_index, src_type):
@@ -303,5 +303,5 @@ copy_relations.relations_to_exclude.append({
     "source": "",
     "index_id": ID_PUBMED
 })
-copy_relations.run()
-# copy_relations.run_for_ids([28863354])
+# copy_relations.run()
+copy_relations.run_for_ids([12620793])
