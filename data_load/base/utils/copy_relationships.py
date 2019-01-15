@@ -5,7 +5,7 @@ from data_load.base.utils.batch_doc_processor import BatchDocProcessor
 import requests
 import json
 import time
-import data_load.base.utils.file_utils
+import data_load.base.utils.file_utils as file_utils
 from data_load.migrate_indices import migrate_index
 
 
@@ -43,6 +43,11 @@ class CopyRelationships(object):
                             src_type=self.src_data_loader_utils.type)
 
 
+        print 'saving missing docs'
+
+        file_utils.save_file('/data/data_loading/pubmed_2019', 'missing_docs_pubmed2019.json', self.missing_destination_ids)
+
+
     def run_for_ids(self, doc_ids, mapping=None):
         self.processed_doc_count = 0
         self.total_doc_count = len(doc_ids)
@@ -52,6 +57,9 @@ class CopyRelationships(object):
         print 'Fetching docs from source index'
         batch_doc_processor = BatchDocProcessor(doc_ids, self.copy_docs_batch, 1000, 1, 0)
         batch_doc_processor.run()
+
+        file_utils.save_file('/data/data_loading/pubmed_2019', 'missing_docs_pubmed2019.json', self.missing_destination_ids)
+
 
     def export_doc_ids(self, server, src_index, src_type):
         print 'Fetching doc ids for', src_index, src_type

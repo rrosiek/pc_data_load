@@ -34,6 +34,8 @@ MODE_BASELINE = 'MODE_BASELINE'
 MODE_UPDATE = 'MODE_UPDATE'
 MODE_COPY_USER_DATA = 'MODE_COPY_USER_DATA'
 
+MODE_CLEAN_CITATIONS = 'MODE_CLEAN_CITATIONS'
+
 ID_PUBMED_2019 = 'PUBMED_2019'
 
 class PubmedLoadManager(LoadManager):
@@ -60,6 +62,8 @@ class PubmedLoadManager(LoadManager):
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019_updates'
         elif self.mode == MODE_BASELINE:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019'
+        elif self.mode == MODE_CLEAN_CITATIONS:
+            return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019' 
         else:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'copy_user_data'
 
@@ -152,6 +156,12 @@ class PubmedLoadManager(LoadManager):
                 'name': 'copy_user_data',
                 'status': ''
             })
+
+        elif self.mode == MODE_CLEAN_CITATIONS:
+            tasks_list.append({
+                'name': 'clean_citations',
+                'status': ''
+            })
         
         return tasks_list
 
@@ -176,9 +186,14 @@ class PubmedLoadManager(LoadManager):
             self.send_update_notifications()
         elif task == 'save_new_pmids':
             self.save_new_pmids()
+        elif task == 'clean_citations':
+            self.clean_citations()
      
     def tasks_completed(self):
         self.delete_task_list()
+
+    def clean_citations(self):
+        pass
 
     def copy_user_data(self):
         load_config = self.get_load_config()
@@ -313,6 +328,13 @@ class PubmedLoadManager(LoadManager):
             # print 'Files to download', update_file_urls
             ftp_manager.download_missing_files(file_urls=update_file_urls, no_of_files=files_to_download)
 
+            self.files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, self.no_of_files)
+            print 'Update', self.files_to_process
+        elif self.mode == MODE_CLEAN_CITATIONS:
+            update_file_urls = ftp_manager.get_update_file_urls()
+            update_file_urls = update_file_urls[:2]
+
+            ftp_manager.download_missing_files(file_urls=update_file_urls, no_of_files=2)
             self.files_to_process = file_manager.get_new_update_files(load_config, update_file_urls, self.no_of_files)
             print 'Update', self.files_to_process
         else:
