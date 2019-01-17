@@ -8,6 +8,7 @@ from data_load.base.utils.data_loader_utils import DataLoaderUtils
 
 from data_load.pubmed.ftp_manager import FTPManager
 import data_load.pubmed.file_manager as file_manager
+from data_load.base.utils import file_utils
 
 import psutil
 import threading
@@ -42,7 +43,7 @@ class CleanCitations(object):
         self.docs_with_updates = {}
 
     def run(self):
-        # self.get_updated_docs()
+        self.get_updated_docs()
         self.get_original_docs()
 
         print 'Updated docs:', len(self.updated_docs)
@@ -56,6 +57,9 @@ class CleanCitations(object):
         print self.docs_with_updates
 
     def update_docs(self):
+        self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
+        self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
+        
         for _id in self.updated_docs:
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
@@ -111,20 +115,12 @@ class CleanCitations(object):
 
         print 'Baseline files:', len(baseline_files)
 
-        threads = []
         for baseline_file in baseline_files:
-            t = threading.Thread(target=self.process_baseline_file, args=(baseline_file,)) 
-            t.start()
-            threads.append(t)
-
-            if len(threads) >= 48:
-                t1 = threads.pop(0)
-                t1.join()
-
-        while len(threads) > 0:
-            t1 = threads.pop(0)
-            t1.join()
+            self.process_baseline_file(baseline_file)
                 
+        file_utils.save_file(self.load_config.other_files_directory(), 'original_docs.json', self.original_docs)
+
+
     def process_baseline_file(self, baseline_file):
         print "Processing file:", baseline_file
         xml_data_source = XMLDataSource(baseline_file, 2)
@@ -161,6 +157,9 @@ class CleanCitations(object):
             xml_data_source.process_rows(self.process_row)
 
         print 'Total updated ids:', len(self.updated_docs)
+
+        file_utils.save_file(self.load_config.other_files_directory(), 'updated_docs.json', self.updated_docs)
+
 
     def process_row(self, row, current_index):
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
