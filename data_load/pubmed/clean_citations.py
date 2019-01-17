@@ -10,7 +10,7 @@ from data_load.pubmed.ftp_manager import FTPManager
 import data_load.pubmed.file_manager as file_manager
 
 import psutil
-
+import threading
 import sys
 
 ID_PUBMED_2019 = 'PUBMED_2019'
@@ -42,7 +42,7 @@ class CleanCitations(object):
         self.docs_with_updates = {}
 
     def run(self):
-        self.get_updated_docs()
+        # self.get_updated_docs()
         self.get_original_docs()
 
         print 'Updated docs:', len(self.updated_docs)
@@ -111,11 +111,24 @@ class CleanCitations(object):
 
         print 'Baseline files:', len(baseline_files)
 
+        threads = []
         for baseline_file in baseline_files:
-            print "Processing file:", baseline_file
-            xml_data_source = XMLDataSource(baseline_file, 2)
-            xml_data_source.process_rows(self.process_baseline_row)
+            t = threading.Thread(target=self.process_baseline_file, args=(baseline_file,)) 
+            t.start()
+            threads.append(t)
 
+            if len(threads) >= 48:
+                t1 = threads.pop(0)
+                t1.join()
+
+        while len(threads) > 0:
+            t1 = threads.pop(0)
+            t1.join()
+                
+    def process_baseline_file(self, baseline_file):
+        print "Processing file:", baseline_file
+        xml_data_source = XMLDataSource(baseline_file, 2)
+        xml_data_source.process_rows(self.process_baseline_row)
 
     def process_baseline_row(self, row, current_index):
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
@@ -124,8 +137,8 @@ class CleanCitations(object):
             if doc is not None and len(doc) > 0:
                 self.original_docs[_id] = doc
 
-            if len(self.original_docs) % 100 == 0:
-                print 'Original docs', len(self.original_docs)
+            # if len(self.original_docs) % 100 == 0:
+            print 'Original docs', len(self.original_docs)
 
         return True
 
