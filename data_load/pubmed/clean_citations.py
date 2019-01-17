@@ -39,6 +39,8 @@ class CleanCitations(object):
         self.load_config = self.get_load_config(clean_citations_directory)
         self.data_loader_utils = DataLoaderUtils(self.load_config.server, self.load_config.index, self.load_config.type, self.load_config.server_username, self.load_config.server_password)
 
+        self.docs_with_updates = {}
+
     def run(self):
         self.get_updated_docs()
         self.get_original_docs()
@@ -48,14 +50,34 @@ class CleanCitations(object):
         input = raw_input('Continue?')
         if input.lower() in ['n', 'no', '0']:
             sys.exit(1)
-        self.update_doc()
+        self.update_docs()
+
+        print 'Docs with updates', len(self.docs_with_updates)
+        print self.docs_with_updates
 
     def update_docs(self):
         for _id in self.updated_docs:
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
+                updated_doc = self.update_doc[_id]
                 original_citations = self.load_config.data_mapper.get_citations(original_doc)
-                self.update_doc(_id, original_citations)
+                updated_citations = self.load_config.data_mapper.get_citations(updated_doc)
+
+                print _id, 'original', len(original_citations), 'updated', len(updated_citations)
+                if not self.compare_citations():
+                    self.docs_with_updates[_id] = 0
+                # self.update_doc(_id, original_citations)
+
+    def compare_citations(self, original_citations, updated_citations):
+        for _id in original_citations:
+            if _id not in updated_citations:
+                return False
+
+        for _id in updated_citations:
+            if _id not in original_citations:
+                return False
+
+        return True
 
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
@@ -84,7 +106,7 @@ class CleanCitations(object):
         ftp_manager = FTPManager(load_config)
 
         baseline_file_urls = ftp_manager.get_baseline_file_urls()
-        ftp_manager.download_missing_files(file_urls=baseline_file_urls, no_of_files=10)
+        # ftp_manager.download_missing_files(file_urls=baseline_file_urls, no_of_files=10)
         baseline_files = file_manager.get_baseline_files(load_config, baseline_file_urls)
 
         print 'Baseline files:', len(baseline_files)
@@ -107,7 +129,7 @@ class CleanCitations(object):
 
         return True
 
-    def get_updated_docs(self)
+    def get_updated_docs(self):
         load_config = self.get_load_config(updates_directory)
         ftp_manager = FTPManager(load_config)
 
