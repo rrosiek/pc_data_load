@@ -67,8 +67,8 @@ class ProcessBaselineFile(object):
         file_utils.save_file(self.load_config.generated_files_directory(), 'inverted_index_' + self.current_baseline_file + '.json', self.inverted_index)
 
     def process_baseline_row(self, row, current_index):
-        if current_index % 100 == 0:
-            print current_index
+        if current_index % 10000 == 0:
+            print self.current_baseline_file, current_index
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
         if _id is not None:
             self.inverted_index[_id] = self.current_baseline_file
