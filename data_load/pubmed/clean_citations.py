@@ -113,6 +113,7 @@ class CleanCitations(object):
         print 'Original docs:', len(self.original_docs)
 
         self.get_original_docs()
+        self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
 
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
@@ -125,9 +126,7 @@ class CleanCitations(object):
         print self.docs_with_updates
 
     def update_docs(self):
-        self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
-        self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
-
+       
         for _id in self.updated_docs:
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
