@@ -61,6 +61,7 @@ class ProcessBaselineFile(object):
         xml_data_source = XMLDataSource(self.baseline_file, 2)
         xml_data_source.process_rows(self.process_baseline_row)
 
+        print len(self.original_docs), self.current_baseline_file
         if len(self.original_docs) > 0:
             file_utils.save_file(self.load_config.generated_files_directory(), 'original_docs_' + self.current_baseline_file + '.json', self.original_docs)
        
@@ -78,7 +79,7 @@ class ProcessBaselineFile(object):
                     self.original_docs[_id] = doc
 
                 # if len(self.original_docs) % 100 == 0:
-                print 'Original docs', len(self.original_docs)
+                # print 'Original docs', len(self.original_docs)
 
         return True
 
