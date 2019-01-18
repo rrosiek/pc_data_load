@@ -107,7 +107,7 @@ class CleanCitations(object):
         self.processes = []
 
     def run(self):
-        self.get_updated_docs()
+        # self.get_updated_docs()
         self.get_original_docs()
 
         print 'Updated docs:', len(self.updated_docs)
