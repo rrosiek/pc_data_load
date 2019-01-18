@@ -127,6 +127,8 @@ class FindProspectiveCitations(object):
                     'docs_with_matching_citations'] = docs_with_matching_citations
 
                 all_prospects.append(new_prospect)
+
+            break
                     
         return all_prospects
 

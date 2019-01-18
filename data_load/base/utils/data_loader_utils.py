@@ -116,6 +116,7 @@ class DataLoaderUtils(object):
         # print('Updating doc: ' + _id)
         url = self.server + '/' + self.index + '/' + self.type + '/' + str(_id) + '/_update'
         # print(url)
+        # print doc
         response = self.session.post(url, json=doc, auth=self.auth)
         # print(str(response.status_code))
         # print(str(response.text))

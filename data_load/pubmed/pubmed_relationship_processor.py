@@ -282,6 +282,8 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         return []
 
     def update_doc(self, _id, existing_doc, original_citations, removed_citations, added_citations):
+        if len(removed_citations) > 0  or len(added_citations) > 0:
+            print 'Updating doc:', _id, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
         now = datetime.datetime.now()
 
         updated_date = now.isoformat()

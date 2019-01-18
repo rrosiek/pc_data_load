@@ -9,10 +9,13 @@ from data_load.base.utils.data_loader_utils import DataLoaderUtils
 from data_load.pubmed.ftp_manager import FTPManager
 import data_load.pubmed.file_manager as file_manager
 from data_load.base.utils import file_utils
+from multiprocessing import Process
 
 import psutil
 import threading
 import sys
+import time
+import os
 
 ID_PUBMED_2019 = 'PUBMED_2019'
 
@@ -23,6 +26,62 @@ clean_citations_directory = DATA_LOADING_DIRECTORY + '/' + ID_PUBMED_2019.lower(
 SERVER = 'http://localhost:9200'
 INDEX = 'pubmed2019'
 TYPE = 'article'
+
+
+class ProcessBaselineFile(object):
+
+    def __init__(self, load_config, updated_docs, baseline_file):
+        self.baseline_file = baseline_file
+        self.updated_docs = updated_docs
+        self.load_config = load_config
+
+        file_name = os.path.basename(baseline_file)
+        self.current_baseline_file = file_name.split('.')[0]
+
+        self.original_docs = {}
+        self.inverted_index = {}
+
+    def extract_id(self, name, row, current_index):
+        if self.load_config.data_extractor is not None:
+            if self.load_config.data_extractor.should_generate_id(name):
+                return self.load_config.data_extractor.generate_id(current_index)
+            else:
+                return self.load_config.data_extractor.extract_id(name, row)
+
+        self.load_config.log(LOG_LEVEL_WARNING, 'Error: no data extractor configured')
+        return None
+
+    def extract_data(self, _id, name, row):
+        if self.load_config.data_extractor is not None:
+            return self.load_config.data_extractor.extract_data(_id, name, row)
+
+        return row
+
+    def run(self):
+        xml_data_source = XMLDataSource(self.baseline_file, 2)
+        xml_data_source.process_rows(self.process_baseline_row)
+
+        if len(self.original_docs) > 0:
+            file_utils.save_file(self.load_config.generated_files_directory(), 'original_docs_' + self.current_baseline_file + '.json', self.original_docs)
+       
+        file_utils.save_file(self.load_config.generated_files_directory(), 'inverted_index_' + self.current_baseline_file + '.json', self.inverted_index)
+
+    def process_baseline_row(self, row, current_index):
+        if current_index % 100 == 0:
+            print current_index
+        _id = self.extract_id(self.load_config.data_source_name, row, current_index)
+        if _id is not None:
+            self.inverted_index[_id] = self.current_baseline_file
+            if  _id in self.updated_docs:
+                doc = self.extract_data(_id, self.load_config.data_source_name, row)
+                if doc is not None and len(doc) > 0:
+                    self.original_docs[_id] = doc
+
+                # if len(self.original_docs) % 100 == 0:
+                print 'Original docs', len(self.original_docs)
+
+        return True
+
 
 class CleanCitations(object):
 
@@ -42,6 +101,11 @@ class CleanCitations(object):
 
         self.docs_with_updates = {}
 
+        self.inverted_index = {}
+        self.current_baseline_file = None
+
+        self.processes = []
+
     def run(self):
         self.get_updated_docs()
         self.get_original_docs()
@@ -59,7 +123,7 @@ class CleanCitations(object):
     def update_docs(self):
         self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
-        
+
         for _id in self.updated_docs:
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
@@ -116,25 +180,94 @@ class CleanCitations(object):
         print 'Baseline files:', len(baseline_files)
 
         for baseline_file in baseline_files:
-            self.process_baseline_file(baseline_file)
-                
-        file_utils.save_file(self.load_config.other_files_directory(), 'original_docs.json', self.original_docs)
+            # self.process_baseline_file(baseline_file)
+            process = Process(target=self.process_baseline_file, args=(baseline_file,))
+            process.start()
+
+            self.processes.append(process)
+            if len(self.processes) >= 16:
+                old_process = self.processes.pop(0)
+                old_process.join()
+
+            time.sleep(0.5)
+
+        while len(self.processes) > 0:
+            old_process = self.processes.pop(0)
+            old_process.join()
+
+        self.combine_inverted_index()
+        self.combine_original_docs()
+
+        # file_utils.save_file(self.load_config.other_files_directory(), 'original_docs.json', self.original_docs)
+        # file_utils.save_file(self.load_config.other_files_directory(), 'inverted_index.json', self.inverted_index)
+
+    def combine_inverted_index(self):
+        files = []
+        generated_files_directory = self.load_config.generated_files_directory()
+        for name in os.listdir(generated_files_directory):
+            file_path = os.path.join(generated_files_directory, name)
+            if os.path.isfile(file_path) and name.startswith('inverted_index_'):
+                files.append(name)
+
+        combined = {}
+        for name in files:
+            data = file_utils.load_file(generated_files_directory, name)
+            combined.update(data)
+
+        file_utils.save_file(self.load_config.other_files_directory(), 'inverted_index.json', combined)
+
+    def combine_original_docs(self):
+        files = []
+        generated_files_directory = self.load_config.generated_files_directory()
+        for name in os.listdir(generated_files_directory):
+            file_path = os.path.join(generated_files_directory, name)
+            if os.path.isfile(file_path) and name.startswith('original_docs_'):
+                files.append(name)
+         
+        combined = {}
+        for name in files:
+            data = file_utils.load_file(generated_files_directory, name)
+            combined.update(data)
+
+        file_utils.save_file(self.load_config.other_files_directory(), 'original_docs.json', combined)
 
 
     def process_baseline_file(self, baseline_file):
         print "Processing file:", baseline_file
-        xml_data_source = XMLDataSource(baseline_file, 2)
-        xml_data_source.process_rows(self.process_baseline_row)
+
+        process_file = ProcessBaselineFile(self.load_config, dict.fromkeys(self.updated_docs.keys()), baseline_file)
+        process_file.run()
+
+    # def process_baseline_file(self, baseline_file):
+    #     print "Processing file:", baseline_file
+
+    #     file_name = os.path.basename(baseline_file)
+    #     self.current_baseline_file = file_name.split('.')[0]
+
+    #     last_time_stamp = time.time()        
+        
+    #     xml_data_source = XMLDataSource(baseline_file, 2)
+    #     xml_data_source.process_rows(self.process_baseline_row)
+
+    #     current_time_stamp = time.time()
+    #     diff = current_time_stamp - last_time_stamp
+
+    #     print 'Time for file', baseline_file, diff
+
 
     def process_baseline_row(self, row, current_index):
+        if current_index % 100 == 0:
+            print current_index
         _id = self.extract_id(self.load_config.data_source_name, row, current_index)
-        if _id is not None and _id in self.updated_docs:
-            doc = self.extract_data(_id, self.load_config.data_source_name, row)
-            if doc is not None and len(doc) > 0:
-                self.original_docs[_id] = doc
+        if _id is not None:
+            self.inverted_index[_id] = self.current_baseline_file
+            if  _id in self.updated_docs:
+                doc = self.extract_data(_id, self.load_config.data_source_name, row)
+                if doc is not None and len(doc) > 0:
+                    self.original_docs[_id] = doc
 
-            # if len(self.original_docs) % 100 == 0:
-            print 'Original docs', len(self.original_docs)
+                # if len(self.original_docs) % 100 == 0:
+                print 'Original docs', len(self.original_docs)
 
         return True
 
