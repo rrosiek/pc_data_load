@@ -137,8 +137,8 @@ class CleanCitations(object):
 
                 print original_doc
                 print updated_doc
-                original_citations = self.load_config.data_mapper.get_citations(original_doc)
-                updated_citations = self.load_config.data_mapper.get_citations(updated_doc)
+                original_citations = self.load_config.data_mapper.get_citations([original_doc])
+                updated_citations = self.load_config.data_mapper.get_citations([updated_doc])
 
                 print _id, 'original', len(original_citations), 'updated', len(updated_citations)
                 if not self.compare_citations(original_citations, updated_citations):
