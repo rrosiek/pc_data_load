@@ -117,7 +117,7 @@ class CleanCitations(object):
 
     def run(self):
         # self.get_updated_docs()
-        # self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
+        self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
