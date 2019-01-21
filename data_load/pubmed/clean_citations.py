@@ -18,6 +18,7 @@ import sys
 import time
 import os
 import json
+import datetime
 
 ID_PUBMED_2019 = 'PUBMED_2019'
 
@@ -123,10 +124,12 @@ class CleanCitations(object):
         # self.get_original_docs()
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
         self.inverted_index = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index.json')
+        self.inverted_index_for_updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index_for_updated_docs.json')
 
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
-        print 'Original docs:', len(self.original_docs)
+        print 'Inverted index:', len(self.inverted_index)
+        print 'inverted_index_for_updated_docs:', len(self.inverted_index_for_updated_docs)
 
         # input = raw_input('Continue?')
         # if input.lower() in ['n', 'no', '0']:
@@ -169,7 +172,8 @@ class CleanCitations(object):
                         if _id not in updated_citations:
                             removed_citations.append(_id)
 
-                    self.update_doc_with_history(_id, original_citations, removed_citations, added_citations)
+                    update_file = self.inverted_index_for_updated_docs[_id]
+                    self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
                 # self.update_doc(_id, original_citations)
 
             else:
@@ -186,9 +190,54 @@ class CleanCitations(object):
 
         return True
 
-    def update_doc_with_history(self, _id, original_citations, removed_citations, added_citations):
-        print _id, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
+    def get_existing_doc(self, _id):
+        exisiting_doc = self.data_loader_utils.fetch_doc(_id)
+        if exisiting_doc is not None and '_source' in exisiting_doc:
+            exisiting_doc = exisiting_doc['_source']
+        return exisiting_doc
 
+    def update_doc_with_history(self, _id, update_file, original_citations, removed_citations, added_citations):
+        print _id, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
+        now = datetime.datetime.now()
+
+        updated_date = now.isoformat()
+
+        existing_doc = self.get_existing_doc(_id)
+
+        # update_file = os.path.basename(self.data_source.data_source_file_path)
+
+        # Create the update history item
+        update_history_item = {
+            "updated_date": updated_date,
+            "update_file": update_file,
+            "removed_citations": removed_citations,
+            "added_citations": added_citations
+        }
+
+        # Get the existing update history
+        update_history = []
+        if 'update_history' in existing_doc:
+            update_history = existing_doc['update_history']
+
+        # Add the original citations list if not present
+        if len(update_history) == 0:
+            update_history.append({
+                "original_citations": original_citations
+            })
+            
+        # Add the new update history item
+        update_history.append(update_history_item)
+
+        doc = {
+            "update_history": update_history
+        }
+        
+        doc = {
+            'doc': doc
+        }
+
+        # self.data_loader_utils.update_doc(_id, doc)
+        
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
         # input = raw_input('Continue?')
@@ -333,7 +382,7 @@ class CleanCitations(object):
 
         for update_file in files_to_process:
             file_name = os.path.basename(update_file)
-            self.current_update_file = file_name.split('.')[0]
+            # self.current_update_file = file_name.split('.')[0]
 
             xml_data_source = XMLDataSource(update_file, 2)
             xml_data_source.process_rows(self.process_row)
@@ -341,6 +390,7 @@ class CleanCitations(object):
         print 'Total updated ids:', len(self.updated_docs)
 
         file_utils.save_file(self.load_config.other_files_directory(), 'updated_docs.json', self.updated_docs)
+        file_utils.save_file(self.load_config.other_files_directory(), 'inverted_index_for_updated_docs.json', self.inverted_index_for_updated_docs)
 
 
     def process_row(self, row, current_index):
