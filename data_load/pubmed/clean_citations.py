@@ -155,6 +155,7 @@ class CleanCitations(object):
 
                 # print _id, 'original', len(original_citations), 'updated', len(updated_citations)
                 if not self.compare_citations(original_citations, updated_citations):
+                    print 'Doc with update', _id
                     self.docs_with_updates[_id] = {
                         'original_citations': len(original_citations),
                         'updated_citations': len(updated_citations),
