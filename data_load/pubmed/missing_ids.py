@@ -77,7 +77,8 @@ class FindMissingIds(object):
                 missing_docs_with_tags.append(_id)
                 print 'Missing docs with tags', _id
 
-        print 'Missing docs with tags', missing_docs_with_tags
+        print 'Missing docs with tags', len(missing_docs_with_tags)
+        print 'Missing docs with tags', json.dumps(missing_docs_with_tags)
  
 
     def fetch_ids(self):
