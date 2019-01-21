@@ -138,7 +138,7 @@ class CleanCitations(object):
         self.update_docs()
 
         print 'Docs with updates', len(self.docs_with_updates)
-        print json.dumps(self.docs_with_updates)
+        # print json.dumps(self.docs_with_updates)
 
         print 'Missing docs'
         print json.dumps(self.missing_docs.keys())
