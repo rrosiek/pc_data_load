@@ -80,7 +80,21 @@ class FindMissingIds(object):
 
         print 'Missing docs with tags', len(missing_docs_with_tags)
         print 'Missing docs with tags', json.dumps(missing_docs_with_tags)
- 
+
+        for _id in missing_docs_with_tags:
+            existing_doc = self.get_existing_doc(_id)
+            if 'userTags' in existing_doc:
+                user_tags = existing_doc['userTags']
+                print _id
+                print user_tags
+
+
+    def get_existing_doc(self, _id):
+        exisiting_doc = self.data_loader_utils.fetch_doc(_id)
+        if exisiting_doc is not None and '_source' in exisiting_doc:
+            exisiting_doc = exisiting_doc['_source']
+        return exisiting_doc
+
 
     def fetch_ids(self):
         combined_docs = {}
