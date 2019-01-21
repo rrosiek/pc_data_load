@@ -134,6 +134,9 @@ class CleanCitations(object):
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
                 updated_doc = self.updated_docs[_id]
+
+                print original_doc
+                print updated_doc
                 original_citations = self.load_config.data_mapper.get_citations(original_doc)
                 updated_citations = self.load_config.data_mapper.get_citations(updated_doc)
 
