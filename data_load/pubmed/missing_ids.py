@@ -5,6 +5,7 @@ from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 from data_load.base.load_config import LoadConfig
 from data_load.base.utils.export_doc_ids import export_doc_ids
 from data_load.base.utils.data_utils import DataUtils
+from data_load.base.utils.data_loader_utils import DataLoaderUtils
 
 import psutil
 import sys
@@ -32,6 +33,7 @@ class FindMissingIds(object):
         self.missing_ids = {}
         self.new_ids = {}
         self.data_utils = DataUtils()
+        self.data_loader_utils = DataLoaderUtils(SERVER, OLD_INDEX, OLD_TYPE, '', '')
 
     def run(self):
         old_ids = export_doc_ids(server=SERVER,
