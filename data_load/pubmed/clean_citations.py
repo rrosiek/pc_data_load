@@ -17,6 +17,7 @@ import threading
 import sys
 import time
 import os
+import json
 
 ID_PUBMED_2019 = 'PUBMED_2019'
 
@@ -129,7 +130,7 @@ class CleanCitations(object):
         self.update_docs()
 
         print 'Docs with updates', len(self.docs_with_updates)
-        print self.docs_with_updates
+        print json.dumps(self.docs_with_updates)
 
     def update_docs(self):
         for _id in self.updated_docs:
