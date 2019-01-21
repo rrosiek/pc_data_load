@@ -145,9 +145,7 @@ class CleanCitations(object):
                 original_citations = self.load_config.data_mapper.get_citations([original_doc])
                 updated_citations = self.load_config.data_mapper.get_citations([updated_doc])
 
-
-                if _id == '21860364':
-                    print _id, 'original', len(original_citations), 'updated', len(updated_citations)
+                print _id, 'original', len(original_citations), 'updated', len(updated_citations)
                 if not self.compare_citations(original_citations, updated_citations):
                     self.docs_with_updates[_id] = {
                         'original_citations': len(original_citations),
@@ -155,7 +153,7 @@ class CleanCitations(object):
                         'original_doc': original_doc,
                         'updated_doc': updated_doc
                     }
-                # self.update_doc(_id, original_citations)
+                self.update_doc(_id, original_citations)
 
             else:
                 self.missing_docs[_id] = self.updated_docs[_id]
@@ -173,6 +171,10 @@ class CleanCitations(object):
 
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
+        input = raw_input('Continue?')
+        if input.lower() in ['n', 'no', '0']:
+            sys.exit(1)
+            
         # Get the existing update history
         update_history = []
     
