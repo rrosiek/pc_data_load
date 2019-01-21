@@ -1,5 +1,6 @@
 
 from data_load.base.constants import DATA_LOADING_DIRECTORY, ID_PUBMED
+from data_load.base.utils.log_utils import LOG_LEVEL_WARNING
 from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 from data_load.base.load_config import LoadConfig
@@ -113,21 +114,22 @@ class CleanCitations(object):
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
-        self.get_original_docs()
+        # self.get_original_docs()
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
 
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
+       
         input = raw_input('Continue?')
         if input.lower() in ['n', 'no', '0']:
             sys.exit(1)
+
         self.update_docs()
 
         print 'Docs with updates', len(self.docs_with_updates)
         print self.docs_with_updates
 
     def update_docs(self):
-       
         for _id in self.updated_docs:
             if _id in self.original_docs:
                 original_doc = self.original_docs[_id]
@@ -136,7 +138,7 @@ class CleanCitations(object):
                 updated_citations = self.load_config.data_mapper.get_citations(updated_doc)
 
                 print _id, 'original', len(original_citations), 'updated', len(updated_citations)
-                if not self.compare_citations():
+                if not self.compare_citations(original_citations, updated_citations):
                     self.docs_with_updates[_id] = 0
                 # self.update_doc(_id, original_citations)
 

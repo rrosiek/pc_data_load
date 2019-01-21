@@ -91,6 +91,37 @@ class PubmedDataMapper(DataMapper):
 
         return citations
 
+    @staticmethod
+    def update_doc(existing_doc, _id, data_source_name, data):
+        new_doc = PubmedDataMapper.create_doc(_id, data_source_name, data)
+
+        update_doc = {}
+        if 'startJournalDate' in new_doc:
+            existing_value = new_doc['startJournalDate']
+            if existing_value is not None and len(existing_value) > 0:
+                update_doc['startJournalDate'] = existing_value
+
+        if 'startDateYear' in new_doc:
+            existing_value = new_doc['startDateYear']
+            if existing_value is not None and len(existing_value) > 0:
+                update_doc['startDateYear'] = existing_value
+
+        if 'MedlineCitation' in new_doc:
+            existing_value = new_doc['MedlineCitation']
+            if existing_value is not None and len(existing_value) > 0:
+                update_doc['MedlineCitation'] = existing_value
+
+        if 'PubmedData' in new_doc:
+            existing_value = new_doc['PubmedData']
+            if existing_value is not None and len(existing_value) > 0:
+                update_doc['PubmedData'] = existing_value
+
+        if 'Author_Details' in new_doc:
+            existing_value = new_doc['Author_Details']
+            if existing_value is not None and len(existing_value) > 0:
+                update_doc['Author_Details'] = existing_value
+
+        return update_doc
 
     @staticmethod
     def create_doc(_id, data_source_name, data):
@@ -107,6 +138,8 @@ class PubmedDataMapper(DataMapper):
             # Medline Citation
             if 'MedlineCitation' in data:
                 doc['MedlineCitation'] = PubmedDataMapper.clean_medline_citation(data['MedlineCitation'])
+
+            if 'PubmedData' in data:
                 doc['PubmedData'] = data['PubmedData']
 
             # Authors
@@ -389,29 +422,4 @@ class PubmedDataMapper(DataMapper):
 
         return None
 
-    @staticmethod
-    def update_doc(existing_doc, _id, data_source_name, data):
-        new_doc = PubmedDataMapper.create_doc(_id, data_source_name, data)
-
-        update_doc = {}
-        if 'startJournalDate' in new_doc:
-            existing_value = new_doc['startJournalDate']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['startJournalDate'] = existing_value
-
-        if 'startDateYear' in new_doc:
-            existing_value = new_doc['startDateYear']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['startDateYear'] = existing_value
-
-        if 'MedlineCitation' in new_doc:
-            existing_value = new_doc['MedlineCitation']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['MedlineCitation'] = existing_value
-
-        if 'Author_Details' in new_doc:
-            existing_value = new_doc['Author_Details']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['Author_Details'] = existing_value
-
-        return update_doc
+    
