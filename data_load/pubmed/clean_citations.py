@@ -177,7 +177,11 @@ class CleanCitations(object):
                 # self.update_doc(_id, original_citations)
 
             else:
-                self.missing_docs[_id] = self.updated_docs[_id]
+                updated_doc = self.updated_docs[_id]
+                self.missing_docs[_id] = updated_doc
+                updated_citations = self.load_config.data_mapper.get_citations([updated_doc])
+
+                print 'Missing doc', _id, updated_citations
 
     def compare_citations(self, original_citations, updated_citations):
         for _id in original_citations:
