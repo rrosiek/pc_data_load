@@ -42,7 +42,6 @@ class ProcessBaselineFile(object):
         self.original_docs = {}
         self.inverted_index = {}
 
-        self.missing_docs = {}
 
     def extract_id(self, name, row, current_index):
         if self.load_config.data_extractor is not None:
@@ -109,6 +108,7 @@ class CleanCitations(object):
         self.current_baseline_file = None
 
         self.processes = []
+        self.missing_docs = {}
 
     def run(self):
         # self.get_updated_docs()
