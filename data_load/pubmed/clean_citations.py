@@ -172,8 +172,11 @@ class CleanCitations(object):
                         if _id not in updated_citations:
                             removed_citations.append(_id)
 
-                    update_file = self.inverted_index_for_updated_docs[_id]
-                    self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
+                    if _id in self.inverted_index_for_updated_docs:
+                        update_file = self.inverted_index_for_updated_docs[_id]
+                        self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
+                    else:
+                        print _id, 'missing from inverted index'
                 # self.update_doc(_id, original_citations)
 
             else:
@@ -181,7 +184,7 @@ class CleanCitations(object):
                 self.missing_docs[_id] = updated_doc
                 updated_citations = self.load_config.data_mapper.get_citations([updated_doc])
 
-                print 'Missing doc', _id, updated_citations
+                print 'Missing doc', _id, len(updated_citations)
 
     def compare_citations(self, original_citations, updated_citations):
         for _id in original_citations:
