@@ -175,6 +175,7 @@ class CleanCitations(object):
 
                     if _id in self.inverted_index_for_updated_docs:
                         update_file = self.inverted_index_for_updated_docs[_id]
+                        print update_file
                         self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
                     else:
                         print _id, 'missing from inverted index'
