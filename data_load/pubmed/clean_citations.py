@@ -212,7 +212,7 @@ class CleanCitations(object):
         now = datetime.datetime.now()
 
         # updated_date = now.isoformat()
-        updated_date = 2019-01-14T11:16:01.000000
+        updated_date = "2019-01-14T11:16:01.000000"
         # 2019-01-17T18:03:43.605774
 
         existing_doc = self.get_existing_doc(_id)
