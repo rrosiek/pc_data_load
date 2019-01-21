@@ -121,8 +121,8 @@ class CleanCitations(object):
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
-        self.get_original_docs()
-        sys.exit(1)
+        # self.get_original_docs()
+        # sys.exit(1)
 
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
         self.inverted_index = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index.json')
