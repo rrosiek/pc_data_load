@@ -123,9 +123,9 @@ class CleanCitations(object):
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
        
-        input = raw_input('Continue?')
-        if input.lower() in ['n', 'no', '0']:
-            sys.exit(1)
+        # input = raw_input('Continue?')
+        # if input.lower() in ['n', 'no', '0']:
+        #     sys.exit(1)
 
         self.update_docs()
 
@@ -134,7 +134,7 @@ class CleanCitations(object):
 
 
         print 'Missing docs'
-        print json.dumps(self.missing_docs)
+        print len(self.missing_docs)
 
     def update_docs(self):
         for _id in self.updated_docs:
