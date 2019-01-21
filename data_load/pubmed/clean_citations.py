@@ -172,8 +172,8 @@ class CleanCitations(object):
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
         # input = raw_input('Continue?')
-        if input.lower() in ['n', 'no', '0']:
-            sys.exit(1)
+        # if input.lower() in ['n', 'no', '0']:
+        #     sys.exit(1)
 
         # Get the existing update history
         update_history = []
