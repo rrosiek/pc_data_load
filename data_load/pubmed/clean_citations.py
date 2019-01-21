@@ -145,6 +145,8 @@ class CleanCitations(object):
         print 'Missing docs'
         print json.dumps(self.missing_docs.keys())
 
+        file_utils.save_file(self.load_config.other_files_directory(), 'docs_with_updates.json', self.docs_with_updates)
+
     def update_docs(self):
         for _id in self.updated_docs:
             if _id in self.original_docs:
@@ -178,7 +180,7 @@ class CleanCitations(object):
                 if _id in self.inverted_index_for_updated_docs:
                     update_file = self.inverted_index_for_updated_docs[_id]
                     # print update_file
-                    self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
+                    # self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
                 else:
                     print _id, 'missing from inverted index'
                 # self.update_doc(_id, original_citations)
