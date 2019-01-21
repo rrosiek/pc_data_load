@@ -165,22 +165,22 @@ class CleanCitations(object):
                         'updated_doc': updated_doc
                     }
 
-                    added_citations = []
-                    removed_citations = []
-                    for citation in updated_citations:
-                        if citation not in original_citations:
-                            added_citations.append(citation)
+                added_citations = []
+                removed_citations = []
+                for citation in updated_citations:
+                    if citation not in original_citations:
+                        added_citations.append(citation)
 
-                    for citation in original_citations:
-                        if citation not in updated_citations:
-                            removed_citations.append(citation)
+                for citation in original_citations:
+                    if citation not in updated_citations:
+                        removed_citations.append(citation)
 
-                    if _id in self.inverted_index_for_updated_docs:
-                        update_file = self.inverted_index_for_updated_docs[_id]
-                        # print update_file
-                        self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
-                    else:
-                        print _id, 'missing from inverted index'
+                if _id in self.inverted_index_for_updated_docs:
+                    update_file = self.inverted_index_for_updated_docs[_id]
+                    # print update_file
+                    self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
+                else:
+                    print _id, 'missing from inverted index'
                 # self.update_doc(_id, original_citations)
 
             else:
@@ -249,7 +249,7 @@ class CleanCitations(object):
             'doc': doc
         }
 
-        # self.data_loader_utils.update_doc(_id, doc)
+        self.data_loader_utils.update_doc(_id, doc)
         
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
