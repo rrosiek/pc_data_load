@@ -4,6 +4,7 @@ from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 from data_load.base.load_config import LoadConfig
 from data_load.base.utils.export_doc_ids import export_doc_ids
+from data_utils import DataUtils
 
 import psutil
 import sys
@@ -64,6 +65,9 @@ class FindMissingIds(object):
     def check_tags_and_annotations(self):
         missing_ids = file_utils.load_file(missing_ids_directory, 'missing_ids.json')
         new_ids = file_utils.load_file(missing_ids_directory, 'new_ids.json')
+        
+        print 'Missing ids', len(missing_ids)
+        print 'New ids', len(new_ids)
 
         docs_with_tags = self.fetch_ids()
 
