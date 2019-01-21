@@ -133,7 +133,7 @@ class CleanCitations(object):
         print json.dumps(self.docs_with_updates)
 
         print 'Missing docs'
-        print self.missing_docs.keys()
+        print json.dumps(self.missing_docs.keys())
 
     def update_docs(self):
         for _id in self.updated_docs:
