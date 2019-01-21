@@ -165,13 +165,13 @@ class CleanCitations(object):
 
                     added_citations = []
                     removed_citations = []
-                    for _id in updated_citations:
-                        if _id not in original_citations:
-                            added_citations.append(_id)
+                    for citation in updated_citations:
+                        if citation not in original_citations:
+                            added_citations.append(citation)
 
-                    for _id in original_citations:
-                        if _id not in updated_citations:
-                            removed_citations.append(_id)
+                    for citation in original_citations:
+                        if citation not in updated_citations:
+                            removed_citations.append(citation)
 
                     if _id in self.inverted_index_for_updated_docs:
                         update_file = self.inverted_index_for_updated_docs[_id]
