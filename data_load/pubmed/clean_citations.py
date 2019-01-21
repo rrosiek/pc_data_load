@@ -42,6 +42,8 @@ class ProcessBaselineFile(object):
         self.original_docs = {}
         self.inverted_index = {}
 
+        self.missing_docs = {}
+
     def extract_id(self, name, row, current_index):
         if self.load_config.data_extractor is not None:
             if self.load_config.data_extractor.should_generate_id(name):
@@ -141,8 +143,16 @@ class CleanCitations(object):
 
                 print _id, 'original', len(original_citations), 'updated', len(updated_citations)
                 if not self.compare_citations(original_citations, updated_citations):
-                    self.docs_with_updates[_id] = 0
+                    self.docs_with_updates[_id] = {
+                        'original_citations': len(original_citations),
+                        'updated_citations': len(updated_citations),
+                        'original_doc': original_doc,
+                        'updated_doc': updated_doc
+                    }
                 # self.update_doc(_id, original_citations)
+
+            else:
+                self.missing_docs[_id] = self.updated_docs[_id]
 
     def compare_citations(self, original_citations, updated_citations):
         for _id in original_citations:
