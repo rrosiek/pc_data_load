@@ -116,12 +116,14 @@ class CleanCitations(object):
         self.inverted_index_for_updated_docs = {}
 
     def run(self):
-        self.get_updated_docs()
+        # self.get_updated_docs()
         # self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
-        # self.get_original_docs()
+        self.get_original_docs()
+        sys.exit(1)
+
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
         self.inverted_index = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index.json')
         self.inverted_index_for_updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index_for_updated_docs.json')
@@ -281,6 +283,16 @@ class CleanCitations(object):
         # ftp_manager.download_missing_files(file_urls=baseline_file_urls, no_of_files=10)
         baseline_files = file_manager.get_baseline_files(load_config, baseline_file_urls)
 
+        # Filter
+        filtered_baseline_files = []
+        for baseline_file in baseline_files:
+            if 'pubmed19n0511' in baseline_file:
+                filtered_baseline_files.append(baseline_file)
+            elif 'pubmed19n0560' in baseline_file:
+                filtered_baseline_files.append(baseline_file)
+
+        baseline_files = filtered_baseline_files
+
         print 'Baseline files:', len(baseline_files)
 
         for baseline_file in baseline_files:
@@ -318,6 +330,7 @@ class CleanCitations(object):
             data = file_utils.load_file(generated_files_directory, name)
             combined.update(data)
 
+        print 'Inverted index', len(combined)
         file_utils.save_file(self.load_config.other_files_directory(), 'inverted_index.json', combined)
 
     def combine_original_docs(self):
@@ -333,6 +346,7 @@ class CleanCitations(object):
             data = file_utils.load_file(generated_files_directory, name)
             combined.update(data)
 
+        print 'Original docs', len(combined)
         file_utils.save_file(self.load_config.other_files_directory(), 'original_docs.json', combined)
 
 
