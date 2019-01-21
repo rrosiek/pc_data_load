@@ -116,7 +116,7 @@ class CleanCitations(object):
         self.inverted_index_for_updated_docs = {}
 
     def run(self):
-        self.get_updated_docs()
+        # self.get_updated_docs()
         # self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
@@ -130,7 +130,7 @@ class CleanCitations(object):
         print 'Original docs:', len(self.original_docs)
         print 'Inverted index:', len(self.inverted_index)
         print 'inverted_index_for_updated_docs:', len(self.inverted_index_for_updated_docs)
-
+        print json.dumps(self.inverted_index_for_updated_docs)
         # input = raw_input('Continue?')
         # if input.lower() in ['n', 'no', '0']:
         #     sys.exit(1)
@@ -201,7 +201,7 @@ class CleanCitations(object):
         return exisiting_doc
 
     def update_doc_with_history(self, _id, update_file, original_citations, removed_citations, added_citations):
-        print _id, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
+        print _id, update_file, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
         now = datetime.datetime.now()
 
         updated_date = now.isoformat()
