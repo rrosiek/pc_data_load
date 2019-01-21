@@ -130,7 +130,7 @@ class CleanCitations(object):
         print 'Original docs:', len(self.original_docs)
         print 'Inverted index:', len(self.inverted_index)
         print 'inverted_index_for_updated_docs:', len(self.inverted_index_for_updated_docs)
-        print json.dumps(self.inverted_index_for_updated_docs)
+        # print json.dumps(self.inverted_index_for_updated_docs)
         # input = raw_input('Continue?')
         # if input.lower() in ['n', 'no', '0']:
         #     sys.exit(1)
