@@ -165,22 +165,22 @@ class CleanCitations(object):
                         'updated_doc': updated_doc
                     }
 
-                added_citations = []
-                removed_citations = []
-                for citation in updated_citations:
-                    if citation not in original_citations:
-                        added_citations.append(citation)
+                    added_citations = []
+                    removed_citations = []
+                    for citation in updated_citations:
+                        if citation not in original_citations:
+                            added_citations.append(citation)
 
-                for citation in original_citations:
-                    if citation not in updated_citations:
-                        removed_citations.append(citation)
+                    for citation in original_citations:
+                        if citation not in updated_citations:
+                            removed_citations.append(citation)
 
-                if _id in self.inverted_index_for_updated_docs:
-                    update_file = self.inverted_index_for_updated_docs[_id]
-                    print update_file
-                    self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
-                else:
-                    print _id, 'missing from inverted index'
+                    if _id in self.inverted_index_for_updated_docs:
+                        update_file = self.inverted_index_for_updated_docs[_id]
+                        # print update_file
+                        self.update_doc_with_history(_id, update_file, original_citations, removed_citations, added_citations)
+                    else:
+                        print _id, 'missing from inverted index'
                 # self.update_doc(_id, original_citations)
 
             else:
@@ -211,7 +211,9 @@ class CleanCitations(object):
         print _id, update_file, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
         now = datetime.datetime.now()
 
-        updated_date = now.isoformat()
+        # updated_date = now.isoformat()
+        updated_date = 2019-01-14T11:16:01.000000
+        # 2019-01-17T18:03:43.605774
 
         existing_doc = self.get_existing_doc(_id)
 
