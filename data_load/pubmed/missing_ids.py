@@ -4,7 +4,7 @@ from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 from data_load.base.load_config import LoadConfig
 from data_load.base.utils.export_doc_ids import export_doc_ids
-from data_utils import DataUtils
+from data_load.base.utils.data_utils import DataUtils
 
 import psutil
 import sys
