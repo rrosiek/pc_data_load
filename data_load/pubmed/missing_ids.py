@@ -29,6 +29,7 @@ class FindMissingIds(object):
     def __init__(self):
         self.missing_ids = {}
         self.new_ids = {}
+        self.data_utils = DataUtils()
 
     def run(self):
         old_ids = export_doc_ids(server=SERVER,
@@ -60,7 +61,97 @@ class FindMissingIds(object):
         file_utils.save_file(missing_ids_directory, 'new_ids.json', self.new_ids)
 
 
+    def check_tags_and_annotations(self):
+        missing_ids = file_utils.load_file(missing_ids_directory, 'missing_ids.json')
+        new_ids = file_utils.load_file(missing_ids_directory, 'new_ids.json')
+
+        docs_with_tags = self.fetch_ids()
+
+        missing_docs_with_tags = []
+        for _id in missing_ids:
+            if _id in docs_with_tags:
+                missing_docs_with_tags.append(_id)
+                print 'Missing docs with tags', _id
+
+        print 'Missing docs with tags', missing_docs_with_tags
+ 
+
+    def fetch_ids(self):
+        combined_docs = {}
+
+        tags_query = self.tags_query()
+        annotations_query = self.annotations_query()
+
+        print 'Fetching docs with tags', SERVER, OLD_INDEX, OLD_TYPE
+        docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=SERVER,
+                                                                    query=tags_query,
+                                                                    index=OLD_INDEX,
+                                                                    type=OLD_TYPE,
+                                                                    ids_fetched=self.ids_fetched,
+                                                                    batch_size=1000)
+        print len(docs_with_tags), 'docs_with_tags'
+        for _id in docs_with_tags:
+            combined_docs[_id] = ''
+
+        print 'Fetching docs with annotations', SERVER, OLD_INDEX, OLD_TYPE
+        docs_with_annotations = self.data_utils.batch_fetch_ids_for_query(base_url=SERVER,
+                                                                            query=annotations_query,
+                                                                            index=OLD_INDEX,
+                                                                            type=OLD_TYPE,
+                                                                            ids_fetched=self.ids_fetched,
+                                                                            batch_size=1000)
+
+        print len(docs_with_annotations), 'docs_with_annotations'
+        for _id in docs_with_annotations:
+            combined_docs[_id] = ''
+
+        print len(combined_docs), 'combined_docs'
+        return combined_docs
+
+    def ids_fetched(self, ids, index, type):
+        print len(ids), 'ids fetched' 
+
+    def tags_query(self):
+        tags_query = {
+            "nested": {
+                "path": "userTags",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "exists": {
+                                    "field": "userTags"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+
+        return tags_query
+
+    def annotations_query(self):
+        annotations_query = {
+            "nested": {
+                "path": "annotations",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "exists": {
+                                    "field": "annotations"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+
+        return annotations_query  
+
 find_missing_ids = FindMissingIds()
-find_missing_ids.run()
+find_missing_ids.check_tags_and_annotations()
 
 

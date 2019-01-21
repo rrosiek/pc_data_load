@@ -27,7 +27,7 @@ class ValidateSchema(object):
 
             mapping = self.add_mapping(parents, mapping)
 
-        file_utils.save_file(data_directory, 'mapping.json', mapping)
+        file_utils.save_file(data_directory, 'mapping_generated.json', mapping)
 
     def add_mapping(self, parents, mapping):
         child_mapping = {}
