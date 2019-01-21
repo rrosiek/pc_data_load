@@ -107,22 +107,27 @@ class CleanCitations(object):
 
         self.inverted_index = {}
         self.current_baseline_file = None
+        self.current_update_file = None
 
         self.processes = []
         self.missing_docs = {}
 
+        self.inverted_index_for_updated_docs = {}
+
     def run(self):
-        # self.get_updated_docs()
-        self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
+        self.get_updated_docs()
+        # self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
         # self.get_original_docs()
         self.original_docs = file_utils.load_file(self.load_config.other_files_directory(), 'original_docs.json')
+        self.inverted_index = file_utils.load_file(self.load_config.other_files_directory(), 'inverted_index.json')
 
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
-       
+        print 'Original docs:', len(self.original_docs)
+
         # input = raw_input('Continue?')
         # if input.lower() in ['n', 'no', '0']:
         #     sys.exit(1)
@@ -153,7 +158,19 @@ class CleanCitations(object):
                         'original_doc': original_doc,
                         'updated_doc': updated_doc
                     }
-                self.update_doc(_id, original_citations)
+
+                    added_citations = []
+                    removed_citations = []
+                    for _id in updated_citations:
+                        if _id not in original_citations:
+                            added_citations.append(_id)
+
+                    for _id in original_citations:
+                        if _id not in updated_citations:
+                            removed_citations.append(_id)
+
+                    self.update_doc_with_history(_id, original_citations, removed_citations, added_citations)
+                # self.update_doc(_id, original_citations)
 
             else:
                 self.missing_docs[_id] = self.updated_docs[_id]
@@ -168,6 +185,9 @@ class CleanCitations(object):
                 return False
 
         return True
+
+    def update_doc_with_history(self, _id, original_citations, removed_citations, added_citations):
+        print _id, 'original_citations', len(original_citations), 'removed_citations', len(removed_citations), 'added_citations', len(added_citations)
 
     def update_doc(self, _id, original_citations):
         print 'Updating doc', _id, len(original_citations), 'citations'
@@ -312,6 +332,9 @@ class CleanCitations(object):
         print files_to_process
 
         for update_file in files_to_process:
+            file_name = os.path.basename(update_file)
+            self.current_update_file = file_name.split('.')[0]
+
             xml_data_source = XMLDataSource(update_file, 2)
             xml_data_source.process_rows(self.process_row)
 
@@ -326,6 +349,8 @@ class CleanCitations(object):
             doc = self.extract_data(_id, self.load_config.data_source_name, row)
             if doc is not None and len(doc) > 0:
                 self.updated_docs[_id] = doc
+
+            self.inverted_index_for_updated_docs[_id] = self.current_update_file
 
             if len(self.updated_docs) % 1000 == 0:
                 print 'Updated docs', len(self.updated_docs)
