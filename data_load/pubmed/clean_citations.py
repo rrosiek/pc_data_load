@@ -116,8 +116,8 @@ class CleanCitations(object):
         self.inverted_index_for_updated_docs = {}
 
     def run(self):
-        # self.get_updated_docs()
-        self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
+        self.get_updated_docs()
+        # self.updated_docs = file_utils.load_file(self.load_config.other_files_directory(), 'updated_docs.json')
         print 'Updated docs:', len(self.updated_docs)
         print 'Original docs:', len(self.original_docs)
 
@@ -391,7 +391,7 @@ class CleanCitations(object):
 
         for update_file in files_to_process:
             file_name = os.path.basename(update_file)
-            # self.current_update_file = file_name.split('.')[0]
+            self.current_update_file = file_name #file_name.split('.')[0]
 
             xml_data_source = XMLDataSource(update_file, 2)
             xml_data_source.process_rows(self.process_row)
