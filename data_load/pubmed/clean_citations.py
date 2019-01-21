@@ -11,6 +11,7 @@ from data_load.pubmed.ftp_manager import FTPManager
 import data_load.pubmed.file_manager as file_manager
 from data_load.base.utils import file_utils
 from multiprocessing import Process
+from data_utils import DataUtils
 
 import psutil
 import threading
