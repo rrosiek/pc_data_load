@@ -19,6 +19,7 @@ from data_load.pubmed.email_client import EmailClient
 from data_load.pubmed.ftp_manager import FTPManager
 from data_load.pubmed.prospective_citations import FindProspectiveCitations
 from data_load.pubmed.pubmed_updater import PubmedUpdater
+from data_load.pubmed.pubmed_updater import DIR_PROSPECTS
 
 import data_load.pubmed.file_manager as file_manager
 
@@ -196,15 +197,47 @@ class PubmedLoadManager(LoadManager):
         update_records_name = 'pubmed_update_records.json'
 
         update_records = file_utils.load_file(self.pubmed_updater.get_update_records_directory(), update_records_name)
-        
-        update_records_for_date = []
-        if self.local_date_time in update_records:
-            update_records_for_date = update_records[self.local_date_time]
+        if len(update_records) == 0:
+            update_records = []
 
-        update_records_for_date.extend(self.files_to_process)
-        update_records[self.local_date_time] = update_records_for_date
+        # update_records_for_date = []
+        # if self.local_date_time in update_records:
+        #     update_records_for_date = update_records[self.local_date_time]
+
+        # update_records_for_date.extend(self.files_to_process)
+        # update_records[self.local_date_time] = update_records_for_date
+        
+        update_data = self.pubmed_updater.generate_update_summary(self.files_to_process)
+
+        update_file_records = []
+        for update_file_path in update_data:
+            update_file_name = os.path.basename(update_file_path)
+            update_data_for_file = update_data[update_file_path]
+            
+            articles_processed = len(update_data_for_file['articles_processed'])
+            new_articles = len(update_data_for_file['new_articles'])
+            updated_articles = articles_processed - new_articles
+            
+            update_file_record_item = {
+                'file_name': update_file_name,
+                'file_path': update_file_path,
+                'total_articles': articles_processed,
+                'new_articles': new_articles,
+                'updated_articles': updated_articles
+            }
+
+            update_file_records.append(update_file_record_item)
+
+        update_record_item = {
+            'date': self.local_date_time,
+            'update_files': update_file_records 
+        }
+
+        update_records.append(update_record_item)
 
         file_utils.save_file(self.pubmed_updater.get_update_records_directory(), update_records_name, update_records)   
+
+        # Save processed files list
         file_manager.update_processed_files(self.get_load_config(), self.files_to_process)    
     
     def find_prospective_citations(self):
@@ -231,14 +264,14 @@ class PubmedLoadManager(LoadManager):
         update_record['prospects'] = prospects
         update_record['date'] = self.local_date_time
 
-        update_records_directory = self.pubmed_updater.get_update_records_directory()
+        update_records_directory = self.pubmed_updater.get_update_records_directory(DIR_PROSPECTS)
         prospects_file_name = self.get_prospects_file_name()
 
         file_utils.save_file(update_records_directory, prospects_file_name, update_record) 
 
     def load_prospects(self):
         prospects_file_name = self.get_prospects_file_name()
-        update_records_directory = self.pubmed_updater.get_update_records_directory()
+        update_records_directory = self.pubmed_updater.get_update_records_directory(DIR_PROSPECTS)
 
         update_record = file_utils.load_file(update_records_directory, prospects_file_name)
         if 'prospects' in update_record:

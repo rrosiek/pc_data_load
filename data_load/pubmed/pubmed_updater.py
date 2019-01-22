@@ -18,6 +18,14 @@ from prospective_citations import FindProspectiveCitations
 
 ALL_PUBMED_IDS_FILE = 'all_pubmed_ids.json'
 
+
+DIR_DOCS_WITH_NEW_CITATION = 'docs_with_new_citations'
+DIR_DOCS_CITATION_HISTORY = 'docs_citation_history'
+DIR_PROSPECTS = 'prospects'
+DIR_UPDATE_SUMMARY = 'update_summary'
+
+
+
 class PubmedUpdater(object):
 
     def __init__(self, load_manager):
@@ -118,33 +126,36 @@ class PubmedUpdater(object):
         load_config = self.load_manager.get_load_config()
         file_utils.save_file(load_config.other_files_directory(), ALL_PUBMED_IDS_FILE, self.existing_pubmed_ids)
 
-    def get_update_records_directory(self):
+    def get_update_records_directory(self, sub_directory=None):
         load_config = self.load_manager.get_load_config()
         other_files_directory = load_config.other_files_directory()
+        
         update_records_directory = other_files_directory + '/' + 'update_records'
+        if sub_directory is not None:
+            update_records_directory += '/' + sub_directory
         file_utils.make_directory(update_records_directory)
         return update_records_directory
 
     def save_update_summary(self, update_summary, update_file):
         update_record_file_name = self.get_update_summary_file_name(update_file)
-        file_utils.save_file(self.get_update_records_directory(), update_record_file_name, update_summary)    
+        file_utils.save_file(self.get_update_records_directory(DIR_UPDATE_SUMMARY), update_record_file_name, update_summary)    
 
     def load_update_summary(self, update_file):
         update_record_file_name = self.get_update_summary_file_name(update_file)
         # print 'update_record_file_name', update_record_file_name
-        return file_utils.load_file(self.get_update_records_directory(), update_record_file_name)
+        return file_utils.load_file(self.get_update_records_directory(DIR_UPDATE_SUMMARY), update_record_file_name)
 
     def save_docs_with_new_citations(self, docs_with_new_citations, update_file):
         update_record_file_name = self.get_docs_with_new_citations_file_name(update_file)
-        file_utils.save_file(self.get_update_records_directory(), update_record_file_name, docs_with_new_citations)    
+        file_utils.save_file(self.get_update_records_directory(DIR_DOCS_WITH_NEW_CITATION), update_record_file_name, docs_with_new_citations)    
 
     def load_docs_with_new_citations(self, update_file):
         update_record_file_name = self.get_docs_with_new_citations_file_name(update_file)
-        return file_utils.load_file(self.get_update_records_directory(), update_record_file_name)    
+        return file_utils.load_file(self.get_update_records_directory(DIR_DOCS_WITH_NEW_CITATION), update_record_file_name)    
 
     def save_docs_citations_history(self, doc_citations_history, update_file):
         update_record_file_name = self.get_docs_citations_history_file_name(update_file)
-        file_utils.save_file(self.get_update_records_directory(), update_record_file_name, doc_citations_history)    
+        file_utils.save_file(self.get_update_records_directory(DIR_DOCS_CITATION_HISTORY), update_record_file_name, doc_citations_history)    
 
 
     def get_update_file_name(self, update_file):

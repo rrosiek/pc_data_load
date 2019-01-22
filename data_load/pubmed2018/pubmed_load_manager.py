@@ -27,6 +27,8 @@ from data_load.DATA_LOAD_CONFIG import PROCESS_COUNT
 from data_load.base.utils.export_doc_ids import get_doc_ids
 from data_load.pubmed.pubmed_updater import PubmedUpdater
 
+from data_load.pubmed.pubmed_updater import DIR_PROSPECTS
+
 MODE_FILE = 'MODE_FILE'
 MODE_BASELINE = 'MODE_BASELINE'
 MODE_UPDATE = 'MODE_UPDATE'
@@ -198,14 +200,14 @@ class PubmedLoadManager(LoadManager):
         update_record['prospects'] = prospects
         update_record['date'] = self.local_date_time
 
-        update_records_directory = self.pubmed_updater.get_update_records_directory()
+        update_records_directory = self.pubmed_updater.get_update_records_directory(DIR_PROSPECTS)
         prospects_file_name = self.get_prospects_file_name()
 
         file_utils.save_file(update_records_directory, prospects_file_name, update_record) 
 
     def load_prospects(self):
         prospects_file_name = self.get_prospects_file_name()
-        update_records_directory = self.pubmed_updater.get_update_records_directory()
+        update_records_directory = self.pubmed_updater.get_update_records_directory(DIR_PROSPECTS)
 
         update_record = file_utils.load_file(update_records_directory, prospects_file_name)
         if 'prospects' in update_record:
