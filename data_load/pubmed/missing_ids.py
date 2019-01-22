@@ -35,6 +35,8 @@ class FindMissingIds(object):
         self.data_utils = DataUtils()
         self.data_loader_utils = DataLoaderUtils(SERVER, OLD_INDEX, OLD_TYPE, '', '')
 
+        self.docs_for_dolan = {}
+
     def run(self):
         old_ids = export_doc_ids(server=SERVER,
                                 src_index=OLD_INDEX,
@@ -87,9 +89,19 @@ class FindMissingIds(object):
             existing_doc = self.get_existing_doc(_id)
             if 'userTags' in existing_doc:
                 user_tags = existing_doc['userTags']
-                print _id
-                print user_tags
+                for user_tag in user_tags:
+                    added_by = user_tag['added_by']
 
+                    if added_by == 'ghoshd1@niaid.nih.gov':
+                        self.docs_for_dolan[_id] = existing_doc
+                        print _id
+                        print user_tags
+
+                    break
+
+        print 'Docs for Dolan', len(self.docs_for_dolan)
+
+        print 'Docs for Dolan', self.docs_for_dolan.keys()
 
     def get_existing_doc(self, _id):
         exisiting_doc = self.data_loader_utils.fetch_doc(_id)
