@@ -43,7 +43,7 @@ class EmailClient(object):
 
         # if to_address == 'admin@altum.com':
         #     to_address = 'robint@qburst.com'
-        to_address = 'robint@qburst.com'
+        # to_address = 'robint@qburst.com'
 
         # Hard coded for testing
         # to_address = 'robint@qburst.com'
@@ -154,7 +154,7 @@ class EmailClient(object):
     def send_update_start_notification(local_date, update_files):
         # to_address = ['robint@qburst.com', 'darryl.blackburn@altum.com']
         to_address = file_utils.load_file('', 'update_status_emails.json')
-        to_address = ['robint@qburst.com']
+        # to_address = ['robint@qburst.com']
         # now = datetime.datetime.now()
         # local_date = now.strftime("%m-%d-%Y")
 
@@ -194,7 +194,7 @@ class EmailClient(object):
     def send_update_notifications(local_date, update_data, all_prospects):
         # to_address = ['robint@qburst.com', 'darryl.blackburn@altum.com']
         to_address = file_utils.load_file('', 'update_status_emails.json')
-        to_address = ['robint@qburst.com']
+        # to_address = ['robint@qburst.com']
 
         # , 'darryl.blackburn@altum.com'
         new_udate_file_count = len(update_data)
