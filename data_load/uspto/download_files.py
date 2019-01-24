@@ -84,6 +84,7 @@ def download_files(year=None):
 
                 downloaded_update_file_urls.append(update_file_url)
                 downloaded_update_file_paths.append(xml_file_path)
+                set_downloaded_files(source_files_directory, downloaded_update_file_urls)
 
             except Exception as e:
                 print e
