@@ -74,5 +74,6 @@ def run():
     year = 2019
     while year >= 2001:
         download_files(str(year))
+        year = year - 1
 
 run()
