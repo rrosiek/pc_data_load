@@ -117,4 +117,4 @@ class ValidateSchema(object):
                 }  
 
 validate_schema = ValidateSchema()
-validate_schema.process('/Users/robin/Desktop/uspto')
+validate_schema.process('/data/data_loading/source-files/uspto/')
