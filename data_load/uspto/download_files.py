@@ -62,39 +62,40 @@ def download_files(year=None):
 
     print 'Downloading', len(files_to_download), 'files...'
     for update_file_url in files_to_download:
-        file_name = os.path.basename(update_file_url)
-        update_file_path = os.path.join(source_files_directory, file_name)
-        xml_file_path = os.path.join(source_files_directory, file_name.replace('.zip', '.xml'))
+        if update_file_url not in downloaded_update_file_urls:
+            file_name = os.path.basename(update_file_url)
+            update_file_path = os.path.join(source_files_directory, file_name)
+            xml_file_path = os.path.join(source_files_directory, file_name.replace('.zip', '.xml'))
 
-        # Download update zip file
-        urllib.urlcleanup()
-        print 'Downloading file: ', update_file_url
-        urllib.urlretrieve(update_file_url, update_file_path)
-        print 'Saved', update_file_path
+            # Download update zip file
+            urllib.urlcleanup()
+            print 'Downloading file: ', update_file_url
+            urllib.urlretrieve(update_file_url, update_file_path)
+            print 'Saved', update_file_path
 
-        # TODO - Verify download with md5?
+            # TODO - Verify download with md5?
 
-        # Extract update zip file
+            # Extract update zip file
 
-        print 'Unzipping file', update_file_path
-        try:
-            with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
-                zip_ref.extractall(source_files_directory)
+            print 'Unzipping file', update_file_path
+            try:
+                with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
+                    zip_ref.extractall(source_files_directory)
 
-            downloaded_update_file_urls.append(update_file_url)
-            downloaded_update_file_paths.append(xml_file_path)
+                downloaded_update_file_urls.append(update_file_url)
+                downloaded_update_file_paths.append(xml_file_path)
 
-        except Exception as e:
-            print e
+            except Exception as e:
+                print e
 
-        # f = gzip.open(update_file_path, 'rb')
-        # with open(xml_file_path, 'w') as xml_file:
-        #     xml_file.write(f.read())
-        # f.close()
+            # f = gzip.open(update_file_path, 'rb')
+            # with open(xml_file_path, 'w') as xml_file:
+            #     xml_file.write(f.read())
+            # f.close()
 
-        # Delete update zip file
-        print 'Deleting file', update_file_path
-        os.remove(update_file_path)
+            # Delete update zip file
+            print 'Deleting file', update_file_path
+            os.remove(update_file_path)
 
     # Save the downloaded files list
     set_downloaded_files(source_files_directory, downloaded_update_file_urls)
