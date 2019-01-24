@@ -7,7 +7,9 @@ from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.uspto.data_source_xml import XMLDataSource
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
 
-from data_load.grants import file_manager
+from data_load.uspto import file_manager
+
+import get_data_source_links
 
 import os
 import sys
@@ -74,12 +76,15 @@ class USPTOLoadManager(LoadManager):
             data_loader_utils.create_index_from_mapping(mapping)
 
     def download_data(self):
-        data_directory = '/Users/robin/Desktop/uspto'
-        for name in os.listdir(data_directory):
-            file_path = os.path.join(data_directory, name)
-            if os.path.isfile(file_path) and name.endswith('.xml'):
-                print 'Parsing file:', file_path
-                self.files_to_process.append(file_path)
+        # data_directory = '/Users/robin/Desktop/uspto'
+        # for name in os.listdir(data_directory):
+        #     file_path = os.path.join(data_directory, name)
+        #     if os.path.isfile(file_path) and name.endswith('.xml'):
+        #         print 'Parsing file:', file_path
+        #         self.files_to_process.append(file_path)
+        load_config = self.get_load_config()
+        self.files_to_process = file_manager.download_files(load_config, '2019')
+        print self.files_to_process
 
     def process(self, data_source_file):
         file_name = os.path.basename(data_source_file)

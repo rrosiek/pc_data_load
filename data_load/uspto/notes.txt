@@ -1,0 +1,5 @@
+Data Source: http://patents.reedtech.com/pgrbft.php
+
+https://bulkdata.uspto.gov/
+
+DTD: https://www.uspto.gov/learning-and-resources/xml-resources

@@ -4,21 +4,27 @@ import os
 import urllib
 
 from data_load.base.utils import file_utils
+import get_data_source_links
 
-GRANTS_XML_EXTRACT_URL = 'https://www.grants.gov/extract/'
-GRANTS_XML_EXTRACT_FILE_NAME_PREFIX = 'GrantsDBExtract'
-GRANTS_PROCESSED_FILES = 'GRANTS_PROCESSED_FILES.json'
-GRANTS_DOWNLOADED_FILES = 'GRANTS_DOWNLOADED_FILES.json'
+GRANTS_PROCESSED_FILES = 'USPTO_PROCESSED_FILES.json'
+GRANTS_DOWNLOADED_FILES = 'USPTO_DOWNLOADED_FILES.json'
 
 # GrantsDBExtract20181203v2.zip
 
-def get_available_files_to_download():
-    urls = []
-    file_names = get_filenames_for_last_seven_days()
-    for file_name in file_names:
-        url = GRANTS_XML_EXTRACT_URL + file_name
-        urls.append(url) 
+def get_available_files_to_download(year=None):
+    files_per_year = get_data_source_links.run()
+    print len(files_per_year)
+    if year is not None:
+        urls = files_per_year[year]
+    else:
+        urls = []
+        years = files_per_year.keys()
+        years.sort()
 
+        for year in years:
+            urls.extend(files_per_year[year])
+
+    print urls
     return urls   
 
 def get_available_files_to_process(load_config):
@@ -63,8 +69,8 @@ def get_files_to_process(load_config):
     filtered_files.sort()
     return filtered_files
 
-def get_files_to_download(load_config):
-    available_files = get_available_files_to_download()
+def get_files_to_download(load_config, year=None):
+    available_files = get_available_files_to_download(year=year)
     downloaded_files = get_downloaded_files(load_config)
 
     filtered_files = []
@@ -76,8 +82,8 @@ def get_files_to_download(load_config):
     return filtered_files
 
 
-def download_files(load_config):
-    files_to_download = get_files_to_download(load_config)
+def download_files(load_config, year=None):
+    files_to_download = get_files_to_download(load_config, year=year)
     source_files_directory = load_config.source_files_directory()
 
     downloaded_update_file_urls = get_downloaded_files(load_config)
@@ -123,21 +129,4 @@ def download_files(load_config):
 
     return downloaded_update_file_paths
 
-def get_file_name(now):
-    year = now.strftime("%Y")
-    month = now.strftime("%m")
-    day = now.strftime("%d")
-
-    return GRANTS_XML_EXTRACT_FILE_NAME_PREFIX + year + month + day + 'v2.zip'
-
-def get_filenames_for_last_seven_days():
-    days_to_subtract = 0
-    file_names = []
-    while days_to_subtract <= 7:
-        d = datetime.today() - timedelta(days=days_to_subtract)
-        file_name = get_file_name(d)
-        file_names.append(file_name)
-        days_to_subtract += 1
-
-    return file_names
 
