@@ -29,11 +29,11 @@ def process_data():
 
     print 'processing', appls_at
     csv_data_source = CSVDataSource(appls_at)
-    csv_data_source.process_rows()
+    csv_data_source.process_rows(process_row)
 
     print 'processing', appls_mv
     csv_data_source1 = CSVDataSource(appls_mv)
-    csv_data_source1.process_rows()
+    csv_data_source1.process_rows(process_row)
 
 
     print len(irdb_ids), 'total ids'
