@@ -36,8 +36,9 @@ class ValidateSchema(object):
                 "type": "text"
             }
             key = parents.pop()
-            if key not in ['description', 'abstract', 'claims', 'us-sequence-list-doc']:
-                mapping[key] = child_mapping
+            
+            # if key not in ['description', 'abstract', 'claims', 'us-sequence-list-doc']:
+            mapping[key] = child_mapping
             return mapping
         else: 
             key = parents.pop(0)
@@ -52,8 +53,8 @@ class ValidateSchema(object):
             child_mapping = {
                 "properties" : self.add_mapping(parents, properties)
             }
-            if key not in ['description', 'abstract', 'claims', 'us-sequence-list-doc']:
-                mapping[key] = child_mapping
+            # if key not in ['description', 'abstract', 'claims', 'us-sequence-list-doc']:
+            mapping[key] = child_mapping
             return mapping  
 
     def process(self, data_directory):
@@ -89,12 +90,12 @@ class ValidateSchema(object):
         file_utils.save_file(data_directory, 'schema.json', self.format)
         self.create_mapping(data_directory, self.format)
 
-    def handle_row(self, _, row):
-        self.append_format([], row, self.format)
+    # def handle_row(self, _, row):
+    #     self.append_format([], row, self.format)
 
-        self.index += 1
-        print 'Docs processed:', self.index , 'Keys in format:', len(self.format), 'Schema errors:', self.schema_errors
-        return True
+    #     self.index += 1
+    #     print 'Docs processed:', self.index , 'Keys in format:', len(self.format), 'Schema errors:', self.schema_errors
+    #     return True
 
     def append_format(self, parents, data, format):      
         if isinstance(data, dict):
