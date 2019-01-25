@@ -35,7 +35,6 @@ def process_data():
     csv_data_source1 = CSVDataSource(appls_mv)
     csv_data_source1.process_rows(process_row)
 
-
     print len(irdb_ids), 'total ids'
     sorted_ids = irdb_ids.keys()
     sorted_ids.sort()
@@ -74,6 +73,8 @@ def process_row(row, current_index):
 
     if current_index % 1000 == 0:
         print 'Processed', current_index, 'ids', appl_id
+
+    return True
 
 process_data()
 
