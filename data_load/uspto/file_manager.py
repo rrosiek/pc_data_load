@@ -124,8 +124,8 @@ def download_files(load_config, year=None):
         print 'Deleting file', update_file_path
         os.remove(update_file_path)
 
-    # Save the downloaded files list
-    set_downloaded_files(load_config, downloaded_update_file_urls)
+        # Save the downloaded files list
+        set_downloaded_files(load_config, downloaded_update_file_urls)
 
     return downloaded_update_file_paths
 
