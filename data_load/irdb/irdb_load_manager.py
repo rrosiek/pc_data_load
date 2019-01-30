@@ -293,7 +293,7 @@ def resume():
 
 def analyse():
     irdb_reload = IRDBLoadManager()
-    irdb_reload.analyse()
+    irdb_reload.analyse_failed_docs()
 
 def run():
     src_files_directory = None
