@@ -42,7 +42,7 @@ DATA_SOURCE_FILES = {
     DATA_SOURCE_APPLS_MV: 'appls_mv.csv',
     DATA_SOURCE_PVA_GRANT_PI_MV: 'pvp_grant_pi_mv.csv',
     DATA_SOURCE_AWD_FUNDINGS: 'awd_fundings.csv',
-    DATA_SOURCE_AWD_FUNDINGS_MV: 'awd_fundings_mv.csv'
+    DATA_SOURCE_AWD_FUNDINGS_MV: 'awd_fundings_mv.csv',
     DATA_SOURCE_AWD_FUNDINGS_PUB: 'awd_fundings_pub.csv',
     DATA_SOURCE_AWD_FUNDINGS_VW: 'awd_fundings_vw.csv',
     DATA_SOURCE_ABSTRACTS: 'abstracts_vw.csv',
