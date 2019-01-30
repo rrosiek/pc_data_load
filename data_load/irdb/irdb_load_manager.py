@@ -284,12 +284,16 @@ class IRDBLoadManager(LoadManager):
 
 def start(src_files_directory):
     irdb_reload = IRDBLoadManager(src_files_directory)
-    irdb_reload.del_config()
+    # irdb_reload.del_config()
     irdb_reload.run()
 
 def resume():
     irdb_reload = IRDBLoadManager()
     irdb_reload.run()
+
+def analyse():
+    irdb_reload = IRDBLoadManager()
+    irdb_reload.analyse()
 
 def run():
     src_files_directory = None
@@ -306,8 +310,11 @@ def run():
                     print('Usage: irdb_load_manager -start <src_files_directory>')
                 return
 
-            if arg == '-resume':
+            elif arg == '-resume':
                 resume()
+                return
+            elif arg == '-analyse':
+                analyse()
                 return
 
         arg_index += 1

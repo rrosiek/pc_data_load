@@ -352,3 +352,29 @@ class LoadManager(object):
                                         dest_type=load_config.type)
 
         copier.run()
+
+    def analyse_failed_docs(self):
+        self.get_config()
+
+        print 'Analysing failed docs'
+        load_config = self.get_load_config()
+        failed_docs_files = load_config.get_failed_docs_files()
+        print len(failed_docs_files), 'failed doc files'
+        for failed_docs_file in failed_docs_files:
+            print 'Loading file:', failed_docs_file
+            failed_docs = file_utils.load_file_path(failed_docs_file)
+            for failed_doc in failed_docs:
+                reason = failed_docs[failed_doc]['reason']
+                print failed_doc
+                if isinstance(reason, dict):
+                    if 'index' in reason:
+                        index = reason['index']
+                        if 'error' in index:
+                            error = index['error']
+                            if 'reason' in error:
+                                error_reason = error['reason']
+                                print error_reason
+                else:
+                    print reason
+
+                raw_input('Continue?')
