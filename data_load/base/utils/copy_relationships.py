@@ -289,27 +289,27 @@ class CopyRelationships(object):
 
 
 
-src_server = 'http://localhost:9200'
-src_index = 'pubmed2018_v5'
-src_type = 'article'
+# src_server = 'http://localhost:9200'
+# src_index = 'pubmed2018_v5'
+# src_type = 'article'
 
-dest_server = 'http://localhost:9200'
-dest_index = 'pubmed2019'
-dest_type = 'article'
+# dest_server = 'http://localhost:9200'
+# dest_index = 'pubmed2019'
+# dest_type = 'article'
 
-copy_relations = CopyRelationships(src_server=src_server, 
-                                    dest_server=dest_server, 
-                                    src_index=src_index, 
-                                    src_type=src_type, 
-                                    dst_index=dest_index, 
-                                    dst_type=dest_type, 
-                                    username='', 
-                                    password='')
+# copy_relations = CopyRelationships(src_server=src_server, 
+#                                     dest_server=dest_server, 
+#                                     src_index=src_index, 
+#                                     src_type=src_type, 
+#                                     dst_index=dest_index, 
+#                                     dst_type=dest_type, 
+#                                     username='', 
+#                                     password='')
 
 
-copy_relations.relations_to_exclude.append({
-    "source": "",
-    "index_id": ID_PUBMED
-})
-copy_relations.run()
+# copy_relations.relations_to_exclude.append({
+#     "source": "",
+#     "index_id": ID_PUBMED
+# })
+# copy_relations.run()
 # copy_relations.run_for_ids([12620793])

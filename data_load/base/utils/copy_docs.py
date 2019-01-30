@@ -133,3 +133,27 @@ class CopyDocs(object):
             # print 'Done loading bulk data, saving response'
         else:
             print 'Bulk data load failed'
+
+
+
+src_server = 'http://localhost:9200'
+src_index = 'irdb_v4'
+src_type = 'grant'
+
+dest_server = 'http://localhost:9200'
+dest_index = 'irdb_v5'
+dest_type = 'grant'
+
+copy_docs = CopyDocs(src_server=src_server, 
+                            dest_server=dest_server, 
+                            src_index=src_index, 
+                            src_type=src_type, 
+                            dst_index=dest_index, 
+                            dst_type=dest_type)
+
+copy_docs.copy_docs()
+# copy_relations.relations_to_exclude.append({
+#     "source": "",
+#     "index_id": ID_PUBMED
+# })
+# copy_relations.run()
