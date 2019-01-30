@@ -1,6 +1,6 @@
 
 import data_load.base.utils.file_utils as file_utils
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 
 from data_load.base.utils import export_doc_ids
 from data_load.base.constants import *

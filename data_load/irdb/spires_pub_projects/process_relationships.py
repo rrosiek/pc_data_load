@@ -9,7 +9,7 @@ import data_load.irdb.irdb_load_config as irdb_load_config
 from data_load.base.utils.batch_doc_processor import BatchDocProcessor
 
 import data_load.base.utils.export_doc_ids as export_doc_ids
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 import data_load.base.utils.file_utils as file_utils
 from data_load.base.utils.download_data import CSVDownloader
 
@@ -65,6 +65,8 @@ class GenerateRelationships(object):
         #                             dest_file_name="all_irdb_ids.json")
 
         doc_ids = document_ids.keys()
+
+        data_utils = DataUtils()
         data_utils.batch_fetch_docs_for_ids(base_url=load_config.server,
                                             ids=doc_ids,
                                             index=load_config.index,

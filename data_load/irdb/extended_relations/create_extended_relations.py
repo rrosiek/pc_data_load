@@ -1,5 +1,5 @@
 import data_load.base.utils.file_utils as file_utils
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 
 from data_load.base.utils import export_doc_ids
 from data_load.base.constants import *
@@ -106,6 +106,7 @@ class RelationsProcessor:
                 self.pubmed_docs[_id] = pubmed_doc
    
     def batch_fetch_docs(self, ids, index_id):
+        data_utils = DataUtils()
         if index_id == ID_IRDB:
             data_utils.batch_fetch_docs_for_ids(LOCAL_SERVER,
                                                 ids,

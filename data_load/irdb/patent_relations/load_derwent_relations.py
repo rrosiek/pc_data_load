@@ -1,5 +1,5 @@
 import data_load.base.utils.file_utils as file_utils
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils import DataUtils
 
 from data_load.base.relationship_loader import RelationshipLoader
 
