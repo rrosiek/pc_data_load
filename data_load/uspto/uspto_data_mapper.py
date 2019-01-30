@@ -53,6 +53,12 @@ class USPTODataMapper(DataMapper):
 
         data = data[0]
 
+        path = 'us-patent-grant.claims.claim.claim-text.claim-text'.split('.')
+        data = USPTODataMapper.clean_value_for_path(path, data)
+
+        path = 'us-patent-grant.us-bibliographic-data-grant.us-references-cited.us-citation.nplcit.othercit'.split('.')
+        data = USPTODataMapper.clean_value_for_path(path, data)
+
         doc = data
 
         return doc
@@ -63,3 +69,35 @@ class USPTODataMapper(DataMapper):
         update_doc = new_doc
 
         return update_doc
+
+    @staticmethod
+    def clean_value_for_path(path, data):
+        key = path[0]
+        if isinstance(data, dict) and key in data:
+            key = path.pop(0)
+            value = data[key]
+
+            if len(path) == 0:
+                if not isinstance(value, dict):
+                    value = {
+                        "#text": value
+                    }
+                
+                data[key] = value
+                # print key, value
+            else:
+                cleaned_value = USPTODataMapper.clean_value_for_path(path, value)
+                if cleaned_value is not None:
+                    data[key] = cleaned_value
+        elif isinstance(data, list):
+            # print data
+            cleaned_data = []
+            for item in data:
+                path_copy = path[:]
+                cleaned_item = USPTODataMapper.clean_value_for_path(path_copy, item)
+                cleaned_data.append(cleaned_item)
+                            
+            data = cleaned_data
+
+                
+        return data

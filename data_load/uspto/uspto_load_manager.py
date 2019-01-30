@@ -6,6 +6,7 @@ from data_load.uspto.uspto_data_extractor import USPTODataExtractor
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.uspto.data_source_xml import XMLDataSource
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
+import data_load.base.utils.file_utils as file_utils
 
 from data_load.uspto import file_manager
 
@@ -13,6 +14,7 @@ import get_data_source_links
 
 import os
 import sys
+import json
 
 from data_load.base.constants import ID_USPTO
 
@@ -74,6 +76,14 @@ class USPTOLoadManager(LoadManager):
         if not data_loader_utils.index_exists() and mapping_file_path is not None:
             mapping = data_loader_utils.load_mapping_from_file(mapping_file_path)
             data_loader_utils.create_index_from_mapping(mapping)
+    
+    def should_download_data(self):
+        return True
+
+    def tasks_completed(self):
+        self.delete_task_list()
+        load_config = self.get_load_config()
+        file_manager.set_processed_files(load_config, self.files_to_process)
 
     def download_data(self):
         # data_directory = '/Users/robin/Desktop/uspto'
@@ -83,7 +93,9 @@ class USPTOLoadManager(LoadManager):
         #         print 'Parsing file:', file_path
         #         self.files_to_process.append(file_path)
         load_config = self.get_load_config()
-        self.files_to_process = file_manager.download_files(load_config, '2019')
+
+        self.files_to_process = file_manager.get_files_to_process(load_config)
+        # self.files_to_process = file_manager.download_files(load_config, '2019')
         print self.files_to_process
 
     def process(self, data_source_file):
@@ -96,6 +108,32 @@ class USPTOLoadManager(LoadManager):
         data_processor = DataSourceProcessor(load_config, XMLDataSource(data_source_file, 2))
         data_processor.run()
 
+    def analyse_failed_docs(self):
+        self.get_config()
+
+        print 'Analysing failed docs'
+        load_config = self.get_load_config()
+        failed_docs_files = load_config.get_failed_docs_files()
+        print len(failed_docs_files), 'failed doc files'
+        for failed_docs_file in failed_docs_files:
+            print 'Loading file:', failed_docs_file
+            failed_docs = file_utils.load_file_path(failed_docs_file)
+            for failed_doc in failed_docs:
+                reason = failed_docs[failed_doc]['reason']
+                print failed_doc
+                if isinstance(reason, dict):
+                    if 'index' in reason:
+                        index = reason['index']
+                        if 'error' in index:
+                            error = index['error']
+                            if 'reason' in error:
+                                error_reason = error['reason']
+                                print error_reason
+                else:
+                    print reason
+
+                raw_input('Continue?')
+
 def process_file(data_source_file):
     load_manager = USPTOLoadManager(MODE_FILE)
     load_manager.files_to_process.append(data_source_file)
@@ -106,6 +144,12 @@ def process_auto():
     load_manager = USPTOLoadManager(MODE_AUTO)
     load_manager.del_config()
     load_manager.run()
+
+
+def analyse():
+    load_manager = USPTOLoadManager(MODE_AUTO)
+    load_manager.analyse_failed_docs()
+
 
 def run():
     arg_index = 0
@@ -120,6 +164,8 @@ def run():
                     print('Usage: uspto_load_manager -path <path to csv file>')     
             elif arg == '-auto': 
                 process_auto()
+            elif arg == '-analyse': 
+                analyse()
             else:
                 print('Usage: uspto_load_manager -path <path to csv file>')     
         arg_index += 1
