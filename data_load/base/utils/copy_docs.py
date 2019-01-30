@@ -137,11 +137,11 @@ class CopyDocs(object):
 
 
 src_server = 'http://localhost:9200'
-src_index = 'irdb_v4'
+src_index = 'irdb_v3'
 src_type = 'grant'
 
 dest_server = 'http://localhost:9200'
-dest_index = 'irdb_v5'
+dest_index = 'irdb_v4'
 dest_type = 'grant'
 
 copy_docs = CopyDocs(src_server=src_server, 
