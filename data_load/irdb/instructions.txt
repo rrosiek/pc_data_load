@@ -1,0 +1,146 @@
+
+https://jira.altum.com/browse/NIAID-496 - Load Grant Data APPLS_MV
+
+There is an APPLS_MV.CSV file in the /data/data_loading/grants folder on dev
+
+We want to load up that data as "IRDB" Data Source and make the following columns available for query. 
+I've also indicated what fields to display in the detail
+
+APPL_ID - Display
+FY - Display
+PROG_CLASS_CODE - Display
+ACTIVITY_CODE - Display
+ADMIN_PHS_ORG_CODE - Display
+APPL_CLASS_CODE - Display
+APPL_STATUS_CODE
+APPL_SUB_TYPE_CODE
+APPL_TYPE_CODE - Display
+ARRA_FLAG
+COFUNDING_INDICATOR_CODE
+COMPETING_GRANT_CODE
+FUNDING_RECOMMENDED_CODE
+GRANT_NUM - Display
+IC_SUBPROJECT_ID
+MAJOR_ACTIVITY_CODE - Display
+MECHANISM_CODE - Display
+PROJECT_NUM - Display
+PROJECT_PERIOD_END_DATE
+PROJECT_PERIOD_START_DATE
+PROJECT_TITLE - Display
+RFA_PA_NUMBER
+SERIAL_NUM
+SOURCE_CODE_DC
+SPECIAL_DISP_CODE
+SUBPROJECT_ID - Display
+SUBPROJECT_TYPE_CODE
+TOTAL_COST_REQUESTED_AMT
+YEARS_RECOMMENDED_NUM
+ESI_APPL_ELIG_FLAG
+IRG_CODE
+IRG_FLEX_CODE
+IRG_PERCENTILE_NUM
+IRG_RECOM_CODE
+modular_grant_FLAG
+MULTI_PI_INDICATOR_CODE
+NEW_INVESTIGATOR_CODE
+PROG_CLASS_CODE - Display
+SUPPORT_YEAR - Display
+
+-----------------------------------------------------------------------------------------------------------
+
+https://jira.altum.com/browse/NIAID-497 - Load Abstracts_vw
+
+After https://jira.altum.com/browse/NIAID-496
+
+Add the Abstract_Text from abstracts_vw.csv matching the record from appl_mv by APPL_ID
+
+This field should be both query and display
+
+-----------------------------------------------------------------------------------------------------------
+
+https://jira.altum.com/browse/NIAID-498 - Load PVA_GRANT_PI_MV
+
+Add the following fields to the record loaded from APPL_MV in https://jira.altum.com/browse/NIAID-496
+
+From pva_grant_pi_mv.csv the following fields should be added matching APPL_ID to APPL_MV. All should be queryable. Display in the detail popup is also marked
+
+PI_FIRST_NAME - Display
+PI_LAST_NAME - Display
+PI_MI_NAME - Display
+PI_PROFILE_PERSON_ID - Display
+EXTERNAL_ORG_ID - Display
+ORG_NAME - Display
+joint_funded_appl_code
+PRIORITY_SCORE_NUM
+ANIMAL_SUBJECTS_CODE
+GENDER_CLINICAL_STUDY_CODE
+HUMAN_SUBJECT_CODE
+
+-----------------------------------------------------------------------------------------------------------
+
+https://jira.altum.com/browse/NIAID-502 - Load AWD_FUNDING
+
+Load the following fields, matching to IRDB grant by APPL_ID for fields that are not already loaded
+
+awd.APPL_ID,
+awd.AWARDED_DIRECT_COST_AMT,
+awd.AWARDED_INDIRECT_COST_AMT,
+awd.CAN,
+awd.DEOBLIGATION_AMT,
+awd.FY, - Display
+awd.PERIOD_TYPE_CODE,
+awd.PHS_ORG_CODE,
+awd.PROG_CLASS_CODE,
+awd.TOTAL_AWARDED_AMT, - Display
+awd.TOTAL_OBLGTD_AMT,
+awd.UNOBLGTD_BAL_AMT
+
+Looks like we should match by FY and APPL_ID
+
+-----------------------------------------------------------------------------------------------------------
+
+
+https://jira.altum.com/browse/NIAID-530 - Load APPLS_AT
+
+So there are the additional tables. So adding to https://jira.altum.com/browse/NIAID-496, we want to load the APPLS_AT file that can be downloaded from here:
+
+https://www.dropbox.com/s/1ble0k3faadh29h/APPLS_AT.csv?dl=0
+
+We want to add any records that are not already loaded from https://jira.altum.com/browse/NIAID-496 to the IRDB data source
+-------------------------------------------------------------------------------------------------------------------------------
+
+https://www.dropbox.com/s/tgtxsxavwqxibqv/ARCHIVED_ABSTRACTS_VW.csv?dl=0 is the new Abstracts file
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+https://www.dropbox.com/s/f8w3r1xjawlkynd/awd_fundings_pub.csv?dl=0
+
+Is and additional AWD_FUNDINGS table. Same thing, use this to supplement anything not in AWD_FUNDINGS_MV
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+IRDB reload steps
+-----------------
+
+Configure root directory
+Configure index name
+Configure process count
+
+
+1. Process IRDB data sources
+2. Add funded flag
+3. Add initial grant flag
+4. Process APPL_DC_BUDGETS_MV
+5. Process spires_pub_projects - IRDB - Pubmed relations
+    * Clear IRDB relations
+    * Load IRDB relations
+    * Clear PubMed relations
+    * Load PubMed relations
+6. Process extended relations
+7. Load extended relations
+    * Clear IRDB relations
+    * Load IRDB relations
+8. Process patent relations
+9. Load patent relations
+    * Clear IRDB relations
+    * Load IRDB relations

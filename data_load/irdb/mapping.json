@@ -1,0 +1,782 @@
+{
+    "mappings": {
+        "grant": {
+            "properties": {
+                "abstract_exists_code": {
+                    "type": "keyword"
+                },
+                "abstract_text": {
+                    "type": "text"
+                },
+                "accession_num": {
+                    "type": "keyword"
+                },
+                "activation_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "activity_code": {
+                    "type": "keyword"
+                },
+                "adhoc_irg_code": {
+                    "type": "keyword"
+                },
+                "adhoc_irg_flex_code": {
+                    "type": "keyword"
+                },
+                "admin_phs_org_code": {
+                    "type": "keyword"
+                },
+                "aids_related_code": {
+                    "type": "keyword"
+                },
+                "animal_subject_assurance_num": {
+                    "type": "keyword"
+                },
+                "animal_subject_iacuc_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "animal_subjects_code": {
+                    "type": "keyword"
+                },
+                "annotations": {
+                    "type": "nested",
+                    "properties": {
+                        "added_by": {
+                            "type": "keyword"
+                        },
+                        "annotation": {
+                            "type": "text"
+                        },
+                        "client": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "appl_class_code": {
+                    "type": "keyword"
+                },
+                "appl_form_type_code": {
+                    "type": "keyword"
+                },
+                "appl_id": {
+                    "type": "keyword"
+                },
+                "appl_receipt_due_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "appl_received_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "appl_shell_flag": {
+                    "type": "keyword"
+                },
+                "appl_source_code": {
+                    "type": "keyword"
+                },
+                "appl_status_code": {
+                    "type": "keyword"
+                },
+                "appl_status_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "appl_sub_type_code": {
+                    "type": "keyword"
+                },
+                "appl_system_ownership_code": {
+                    "type": "keyword"
+                },
+                "appl_type_code": {
+                    "type": "keyword"
+                },
+                "applicant_type_code": {
+                    "type": "keyword"
+                },
+                "applicant_type_text": {
+                    "type": "text"
+                },
+                "applied_research_pct": {
+                    "type": "text"
+                },
+                "approval_list_num": {
+                    "type": "keyword"
+                },
+                "area_of_training_text": {
+                    "type": "text"
+                },
+                "awarded_direct_cost_amt": {
+                    "type": "text"
+                },
+                "awarded_indirect_cost_amt": {
+                    "type": "text"
+                },
+                "awd_cfda_code": {
+                    "type": "keyword"
+                },
+                "awd_doc_num": {
+                    "type": "keyword"
+                },
+                "awd_funding": {
+                    "type": "nested",
+                    "properties": {
+                        "awarded_direct_cost_amt": {
+                            "type": "text"
+                        },
+                        "awarded_indirect_cost_amt": {
+                            "type": "text"
+                        },
+                        "can": {
+                            "type": "keyword"
+                        },
+                        "deobligation_amt": {
+                            "type": "text"
+                        },
+                        "fy": {
+                            "type": "text"
+                        },
+                        "period_type_code": {
+                            "type": "keyword"
+                        },
+                        "phs_org_code": {
+                            "type": "keyword"
+                        },
+                        "prog_class_code": {
+                            "type": "keyword"
+                        },
+                        "total_awarded_amt": {
+                            "type": "text"
+                        },
+                        "total_oblgtd_amt": {
+                            "type": "text"
+                        },
+                        "unoblgtd_bal_amt": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "awd_idc_file_upd_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "awd_notice_issued_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "awd_release_cnt": {
+                    "type": "text"
+                },
+                "basic_research_pct": {
+                    "type": "text"
+                },
+                "bus_ofc_addr_seq_num": {
+                    "type": "keyword"
+                },
+                "can": {
+                    "type": "keyword"
+                },
+                "child_clinical_study_code": {
+                    "type": "keyword"
+                },
+                "citations": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "cited_bys": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "city_state_name": {
+                    "type": "text"
+                },
+                "clinical_trial_code": {
+                    "type": "keyword"
+                },
+                "cofunding_indicator_code": {
+                    "type": "keyword"
+                },
+                "commitment_doc_num": {
+                    "type": "keyword"
+                },
+                "competing_grant_code": {
+                    "type": "keyword"
+                },
+                "contract_doc_num": {
+                    "type": "keyword"
+                },
+                "contract_num": {
+                    "type": "keyword"
+                },
+                "conversion_code": {
+                    "type": "keyword"
+                },
+                "council_meeting_date": {
+                    "type": "text"
+                },
+                "council_recom_code": {
+                    "type": "keyword"
+                },
+                "created_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "creator_id": {
+                    "type": "keyword"
+                },
+                "crisp_status_code": {
+                    "type": "keyword"
+                },
+                "cs_appl_elig_flag": {
+                    "type": "keyword"
+                },
+                "curr_awd_notice_issue_datetime": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "deobligation_amt": {
+                    "type": "text"
+                },
+                "dept_code": {
+                    "type": "keyword"
+                },
+                "dept_seq_num": {
+                    "type": "keyword"
+                },
+                "developmental_research_pct": {
+                    "type": "text"
+                },
+                "direct_cost_requested_amt": {
+                    "type": "text"
+                },
+                "disclosure_permission_code": {
+                    "type": "keyword"
+                },
+                "division_seq_num": {
+                    "type": "keyword"
+                },
+                "drg_control_code": {
+                    "type": "keyword"
+                },
+                "dsf_code": {
+                    "type": "keyword"
+                },
+                "dual_meeting_date": {
+                    "type": "text"
+                },
+                "dual_priority_code": {
+                    "type": "keyword"
+                },
+                "dual_recom_code": {
+                    "type": "keyword"
+                },
+                "duns_id": {
+                    "type": "keyword"
+                },
+                "ein": {
+                    "type": "keyword"
+                },
+                "enga_indicator_code": {
+                    "type": "keyword"
+                },
+                "esnap_exists_code": {
+                    "type": "keyword"
+                },
+                "expanded_authorities_code": {
+                    "type": "keyword"
+                },
+                "expedited_review_code": {
+                    "type": "keyword"
+                },
+                "extension_eligible_code": {
+                    "type": "keyword"
+                },
+                "external_org_id": {
+                    "type": "keyword"
+                },
+                "external_org_wip_flag": {
+                    "type": "keyword"
+                },
+                "fed_demo_project_code": {
+                    "type": "keyword"
+                },
+                "foreign_appl_code": {
+                    "type": "keyword"
+                },
+                "former_num": {
+                    "type": "keyword"
+                },
+                "fot_code": {
+                    "type": "keyword"
+                },
+                "fsr_accepted_code": {
+                    "type": "keyword"
+                },
+                "funded": {
+                    "type": "boolean"
+                },
+                "funding_recommended_code": {
+                    "type": "keyword"
+                },
+                "fy": {
+                    "type": "text"
+                },
+                "gender_clinical_study_code": {
+                    "type": "keyword"
+                },
+                "grant_image_exists_code": {
+                    "type": "keyword"
+                },
+                "grant_num": {
+                    "type": "keyword"
+                },
+                "group_code": {
+                    "type": "keyword"
+                },
+                "group_ext_code": {
+                    "type": "keyword"
+                },
+                "high_risk_impact_rsrch_code": {
+                    "type": "keyword"
+                },
+                "human_subject_assurance_num": {
+                    "type": "keyword"
+                },
+                "human_subject_code": {
+                    "type": "keyword"
+                },
+                "human_subject_irb_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "ic_approved_code": {
+                    "type": "keyword"
+                },
+                "ic_approver_id": {
+                    "type": "keyword"
+                },
+                "ic_subproject_id": {
+                    "type": "keyword"
+                },
+                "icd_disp_code": {
+                    "type": "keyword"
+                },
+                "icd_review_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "icd_special_code": {
+                    "type": "keyword"
+                },
+                "icd_special_code_cmnt": {
+                    "type": "text"
+                },
+                "indexed_code": {
+                    "type": "keyword"
+                },
+                "indirect_cost_requested_amt": {
+                    "type": "text"
+                },
+                "init_encumbrance_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "initial_grant": {
+                    "type": "boolean"
+                },
+                "initiative_type_code": {
+                    "type": "keyword"
+                },
+                "inst_addr_seq_num": {
+                    "type": "keyword"
+                },
+                "intent_to_pay_code": {
+                    "type": "keyword"
+                },
+                "interim_funding_code": {
+                    "type": "keyword"
+                },
+                "invention_code": {
+                    "type": "keyword"
+                },
+                "invention_reported_code": {
+                    "type": "keyword"
+                },
+                "irb_expedited_review_code": {
+                    "type": "keyword"
+                },
+                "irg_code": {
+                    "type": "keyword"
+                },
+                "irg_flex_code": {
+                    "type": "keyword"
+                },
+                "irg_meeting_date": {
+                    "type": "text"
+                },
+                "irg_percentile_num": {
+                    "type": "keyword"
+                },
+                "irg_percentile_ref_code": {
+                    "type": "keyword"
+                },
+                "irg_recom_code": {
+                    "type": "keyword"
+                },
+                "irg_round_code": {
+                    "type": "keyword"
+                },
+                "joint_funded_appl_code": {
+                    "type": "keyword"
+                },
+                "kind_of_record_code": {
+                    "type": "keyword"
+                },
+                "last_awd_notice_issue_datetime": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "last_upd_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "last_upd_id": {
+                    "type": "keyword"
+                },
+                "latest_encumbrance_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "legacy_source_file": {
+                    "type": "text"
+                },
+                "level_type_code": {
+                    "type": "keyword"
+                },
+                "licensure_code": {
+                    "type": "keyword"
+                },
+                "m_row$$": {
+                    "type": "keyword"
+                },
+                "major_activity_code": {
+                    "type": "keyword"
+                },
+                "major_component_code": {
+                    "type": "keyword"
+                },
+                "major_component_seq_num": {
+                    "type": "keyword"
+                },
+                "mechanism_assign_datetime": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "mechanism_assign_id": {
+                    "type": "keyword"
+                },
+                "mechanism_code": {
+                    "type": "keyword"
+                },
+                "midyear_transfer_code": {
+                    "type": "keyword"
+                },
+                "minority_clinical_study_code": {
+                    "type": "keyword"
+                },
+                "mod_num": {
+                    "type": "keyword"
+                },
+                "modular_grant_flag": {
+                    "type": "keyword"
+                },
+                "months_requested_num": {
+                    "type": "keyword"
+                },
+                "multi_pi_indicator_code": {
+                    "type": "keyword"
+                },
+                "new_investigator_code": {
+                    "type": "keyword"
+                },
+                "nga_line_item_code": {
+                    "type": "keyword"
+                },
+                "nominating_country_code": {
+                    "type": "keyword"
+                },
+                "notice_year": {
+                    "type": "text"
+                },
+                "oblgtn_control_num": {
+                    "type": "keyword"
+                },
+                "org_code": {
+                    "type": "keyword"
+                },
+                "org_component_code": {
+                    "type": "keyword"
+                },
+                "org_name": {
+                    "type": "text"
+                },
+                "other_country_code": {
+                    "type": "keyword"
+                },
+                "out_years_num": {
+                    "type": "keyword"
+                },
+                "period_type_code": {
+                    "type": "keyword"
+                },
+                "phase_3_clinical_trial_code": {
+                    "type": "keyword"
+                },
+                "phs_org_code": {
+                    "type": "keyword"
+                },
+                "pi_first_name": {
+                    "type": "text"
+                },
+                "pi_last_name": {
+                    "type": "text"
+                },
+                "pi_mi_name": {
+                    "type": "text"
+                },
+                "pi_profile_person_id": {
+                    "type": "keyword"
+                },
+                "preceptor_country_code": {
+                    "type": "keyword"
+                },
+                "prevention_code": {
+                    "type": "keyword"
+                },
+                "priority_code": {
+                    "type": "keyword"
+                },
+                "priority_score_num": {
+                    "type": "keyword"
+                },
+                "prog_class_code": {
+                    "type": "keyword"
+                },
+                "prog_income_type_code": {
+                    "type": "keyword"
+                },
+                "project_num": {
+                    "type": "keyword"
+                },
+                "project_period_end_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "project_period_start_date": {
+                    "type": "date",
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "project_title": {
+                    "type": "text"
+                },
+                "relations": {
+                    "properties": {
+                        "ids": {
+                            "type": "keyword"
+                        },
+                        "index_id": {
+                            "type": "keyword"
+                        },
+                        "source": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "release_num": {
+                    "type": "keyword"
+                },
+                "research_area_code": {
+                    "type": "keyword"
+                },
+                "rfa_pa_number": {
+                    "type": "keyword"
+                },
+                "sbir_topic_code": {
+                    "type": "keyword"
+                },
+                "sci_class_code": {
+                    "type": "keyword"
+                },
+                "serial_num": {
+                    "type": "keyword"
+                },
+                "small_bus_code": {
+                    "type": "keyword"
+                },
+                "snap_indicator_code": {
+                    "type": "keyword"
+                },
+                "sort_term_text": {
+                    "type": "text"
+                },
+                "special_consider_code": {
+                    "type": "keyword"
+                },
+                "special_disp_code": {
+                    "type": "keyword"
+                },
+                "special_supp_code": {
+                    "type": "keyword"
+                },
+                "sponsor_name": {
+                    "type": "text"
+                },
+                "sra_designator_code": {
+                    "type": "keyword"
+                },
+                "sra_flex_code": {
+                    "type": "keyword"
+                },
+                "ss_admin_note_flag": {
+                    "type": "keyword"
+                },
+                "ss_animal_subject_comment_code": {
+                    "type": "keyword"
+                },
+                "ss_biohazard_flag": {
+                    "type": "keyword"
+                },
+                "ss_budget_comments_flag": {
+                    "type": "keyword"
+                },
+                "ss_budgetary_overlap_code": {
+                    "type": "keyword"
+                },
+                "ss_foreign_flag": {
+                    "type": "keyword"
+                },
+                "ss_revision_note_code": {
+                    "type": "keyword"
+                },
+                "stem_cells_used_code": {
+                    "type": "keyword"
+                },
+                "sttr_inst_city_state": {
+                    "type": "text"
+                },
+                "sttr_inst_name": {
+                    "type": "text"
+                },
+                "sttr_research_inst_amt": {
+                    "type": "text"
+                },
+                "sttr_small_bus_amt": {
+                    "type": "text"
+                },
+                "submtd_org_id": {
+                    "type": "keyword"
+                },
+                "submtd_phs_org_code": {
+                    "type": "keyword"
+                },
+                "subproject_id": {
+                    "type": "keyword"
+                },
+                "subproject_type_code": {
+                    "type": "keyword"
+                },
+                "suffix_code": {
+                    "type": "keyword"
+                },
+                "summary_statement_exists_code": {
+                    "type": "keyword"
+                },
+                "supp_type_code": {
+                    "type": "keyword"
+                },
+                "support_year": {
+                    "type": "text"
+                },
+                "task_num": {
+                    "type": "keyword"
+                },
+                "termination_code": {
+                    "type": "keyword"
+                },
+                "total_awarded_amt": {
+                    "type": "text"
+                },
+                "total_cost_requested_amt": {
+                    "type": "text"
+                },
+                "total_cost_requested_year1_amt": {
+                    "type": "text"
+                },
+                "total_oblgtd_amt": {
+                    "type": "text"
+                },
+                "tracking_exception_code": {
+                    "type": "keyword"
+                },
+                "transfer_status_code": {
+                    "type": "keyword"
+                },
+                "triage_code": {
+                    "type": "keyword"
+                },
+                "unoblgtd_bal_amt": {
+                    "type": "text"
+                },
+                "userTags": {
+                    "type": "nested",
+                    "properties": {
+                        "added_by": {
+                            "type": "keyword"
+                        },
+                        "client": {
+                            "type": "keyword"
+                        },
+                        "tag": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "verification_report_code": {
+                    "type": "keyword"
+                },
+                "wip_status_code": {
+                    "type": "keyword"
+                },
+                "wip_terms_status_code": {
+                    "type": "keyword"
+                },
+                "without_council_review_code": {
+                    "type": "keyword"
+                },
+                "years_recommended_num": {
+                    "type": "keyword"
+                }
+            }
+        }
+    }
+}
