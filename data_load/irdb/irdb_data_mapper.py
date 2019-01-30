@@ -1,5 +1,5 @@
 from data_load.base.data_mapper import DataMapper
-from config import *
+from data_load.irdb.config import *
 
 import time
 
@@ -101,7 +101,7 @@ class IRDBDataMapper(DataMapper):
 
                 break
 
-        elif data_source_name == DATA_SOURCE_AWD_FUNDINGS or data_source_name == DATA_SOURCE_AWD_FUNDINGS_PUB or data_source_name == DATA_SOURCE_AWD_FUNDINGS_VW:
+        elif data_source_name == DATA_SOURCE_AWD_FUNDINGS_VW or data_source_name == DATA_SOURCE_AWD_FUNDINGS or data_source_name == DATA_SOURCE_AWD_FUNDINGS_PUB or data_source_name == DATA_SOURCE_AWD_FUNDINGS_VW:
             for data_item in data:
                 awd_funding = {}
                 for field in AWD_FIELDS:

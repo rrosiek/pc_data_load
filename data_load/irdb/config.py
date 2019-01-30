@@ -26,8 +26,9 @@ DATA_SOURCE_APPLS_MV = 'appls_mv'
 
 DATA_SOURCE_PVA_GRANT_PI_MV = 'pva_grant_pi_mv'
 
-DATA_SOURCE_AWD_FUNDINGS_VW = 'awd_fundings_vw'
 DATA_SOURCE_AWD_FUNDINGS = 'awd_fundings'
+DATA_SOURCE_AWD_FUNDINGS_VW = 'awd_fundings_vw'
+DATA_SOURCE_AWD_FUNDINGS_MV = 'awd_fundings_mv'
 DATA_SOURCE_AWD_FUNDINGS_PUB = 'awd_fundings_pub'
 
 DATA_SOURCE_ABSTRACTS = 'abstracts'
@@ -41,18 +42,20 @@ DATA_SOURCE_FILES = {
     DATA_SOURCE_APPLS_MV: 'appls_mv.csv',
     DATA_SOURCE_PVA_GRANT_PI_MV: 'pvp_grant_pi_mv.csv',
     DATA_SOURCE_AWD_FUNDINGS: 'awd_fundings.csv',
+    DATA_SOURCE_AWD_FUNDINGS_MV: 'awd_fundings_mv.csv'
     DATA_SOURCE_AWD_FUNDINGS_PUB: 'awd_fundings_pub.csv',
-    DATA_SOURCE_AWD_FUNDINGS_VW: 'awd_fundings_mv.csv',
+    DATA_SOURCE_AWD_FUNDINGS_VW: 'awd_fundings_vw.csv',
     DATA_SOURCE_ABSTRACTS: 'abstracts_vw.csv',
     DATA_SOURCE_ABSTRACTS_ARCHIVED: 'archived_abstracts_vw.csv',
     DATA_SOURCE_APPL_DC_BUDGETS_MV: 'appl_dc_budgets_mv.csv'
 }
 
 DATA_SOURCE_PROCESSING_ORDER = [
-    DATA_SOURCE_APPLS_AT,
+    # DATA_SOURCE_APPLS_AT,
     DATA_SOURCE_APPLS_MV,
     DATA_SOURCE_PVA_GRANT_PI_MV,
     DATA_SOURCE_AWD_FUNDINGS,
+    DATA_SOURCE_AWD_FUNDINGS_MV,
     DATA_SOURCE_AWD_FUNDINGS_PUB,
     DATA_SOURCE_AWD_FUNDINGS_VW,
     DATA_SOURCE_ABSTRACTS,
