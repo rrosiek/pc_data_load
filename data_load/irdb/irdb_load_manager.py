@@ -187,8 +187,8 @@ class IRDBLoadManager(LoadManager):
         elif task_name == 'load_spires_pubmed_relations':
             self.load_pubmed_relations()
 
-    def should_download_data(self):
-        return True
+    # def should_download_data(self):
+    #     return True
 
     def download_data(self):
         load_config = self.get_load_config()
