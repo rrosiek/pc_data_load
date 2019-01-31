@@ -316,7 +316,7 @@ def run():
     docs_missing = []
     for _id in docs_to_find:
         id_to_find = 'IRDB' + _id
-        if id_to_find not in docs_to_find:
+        if id_to_find not in doc_ids:
             docs_missing.append(_id)
 
     print 'total docs', len(doc_ids)

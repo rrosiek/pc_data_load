@@ -166,21 +166,21 @@ class IRDBLoadManager(LoadManager):
         elif task_name == 'extended_relations':
             pass
         elif task_name == 'create_extended_relations':
-            create_extended_relations.run()
+            # create_extended_relations.run()
         elif task_name == 'clear_extended_relations':
-            clear_extended_relations.run()
+            # clear_extended_relations.run()
         elif task_name == 'load_extended_relations':
-            load_extended_relations.run()
+            # load_extended_relations.run()
         elif task_name == 'patent_relations':
             pass
         elif task_name == 'create_patent_relations':
             generate_grant_numbers.run() 
         elif task_name == 'clear_patent_relations':
-            clear_derwent_relations.run()
+            # clear_derwent_relations.run()
         elif task_name == 'load_patent_relations':
-            load_derwent_relations.run()
+            # load_derwent_relations.run()
         elif task_name == 'copy_tags_and_annotations':
-            self.copy_tags_and_annotations()
+            # self.copy_tags_and_annotations()
 
         elif task_name == 'clear_pubmed_relations':
             self.clear_pubmed_relations()
