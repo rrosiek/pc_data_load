@@ -136,22 +136,22 @@ class CopyDocs(object):
 
 
 
-src_server = 'http://localhost:9200'
-src_index = 'irdb_v3'
-src_type = 'grant'
+# src_server = 'http://localhost:9200'
+# src_index = 'irdb_v3'
+# src_type = 'grant'
 
-dest_server = 'http://localhost:9200'
-dest_index = 'irdb_v4'
-dest_type = 'grant'
+# dest_server = 'http://localhost:9200'
+# dest_index = 'irdb_v4'
+# dest_type = 'grant'
 
-copy_docs = CopyDocs(src_server=src_server, 
-                            dest_server=dest_server, 
-                            src_index=src_index, 
-                            src_type=src_type, 
-                            dst_index=dest_index, 
-                            dst_type=dest_type)
+# copy_docs = CopyDocs(src_server=src_server, 
+#                             dest_server=dest_server, 
+#                             src_index=src_index, 
+#                             src_type=src_type, 
+#                             dst_index=dest_index, 
+#                             dst_type=dest_type)
 
-copy_docs.copy_docs()
+# copy_docs.copy_docs()
 # copy_relations.relations_to_exclude.append({
 #     "source": "",
 #     "index_id": ID_PUBMED
