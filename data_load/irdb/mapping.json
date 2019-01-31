@@ -13,7 +13,7 @@
                 },
                 "activation_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "activity_code": {
                     "type": "keyword"
@@ -65,11 +65,11 @@
                 },
                 "appl_receipt_due_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "appl_received_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "appl_shell_flag": {
                     "type": "keyword"
@@ -82,7 +82,7 @@
                 },
                 "appl_status_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "appl_sub_type_code": {
                     "type": "keyword"
@@ -160,11 +160,11 @@
                 },
                 "awd_idc_file_upd_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "awd_notice_issued_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "awd_release_cnt": {
                     "type": "text"
@@ -239,7 +239,7 @@
                 },
                 "created_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "creator_id": {
                     "type": "keyword"
@@ -252,7 +252,7 @@
                 },
                 "curr_awd_notice_issue_datetime": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "deobligation_amt": {
                     "type": "text"
@@ -367,7 +367,7 @@
                 },
                 "human_subject_irb_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "ic_approved_code": {
                     "type": "keyword"
@@ -383,7 +383,7 @@
                 },
                 "icd_review_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "icd_special_code": {
                     "type": "keyword"
@@ -399,7 +399,7 @@
                 },
                 "init_encumbrance_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "initial_grant": {
                     "type": "boolean"
@@ -454,18 +454,18 @@
                 },
                 "last_awd_notice_issue_datetime": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "last_upd_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "last_upd_id": {
                     "type": "keyword"
                 },
                 "latest_encumbrance_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "legacy_source_file": {
                     "type": "text"
@@ -590,11 +590,11 @@
                 },
                 "project_period_end_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "project_period_start_date": {
                     "type": "date",
-                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS"
+                    "format": "dd-MMM-yy||yyyy-MM-dd||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss"
                 },
                 "project_title": {
                     "type": "text"
