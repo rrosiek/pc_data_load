@@ -3,7 +3,7 @@ from data_load.base.data_source_csv import CSVDataSource
 
 
 SERVER = 'http://localhost:9200'
-INDEX = 'irdb_v3'
+INDEX = 'irdb_v4'
 TYPE = 'grant'
 
 
