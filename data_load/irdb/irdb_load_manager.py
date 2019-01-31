@@ -52,11 +52,11 @@ class IRDBLoadManager(LoadManager):
     def mapping_file_path(self):
         return 'data_load/irdb/mapping.json'
 
-    def get_info_for_index_id(self, index_id):
-        return {
-            "index": "irdb_v4",
-            "index_type": "grant"
-        }
+    # def get_info_for_index_id(self, index_id):
+    #     return {
+    #         "index": "irdb_v4",
+    #         "index_type": "grant"
+    #     }
 
     def get_data_mapper(self):
         return IRDBDataMapper()
