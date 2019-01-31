@@ -1,5 +1,5 @@
 from data_load.irdb.config import *
-# import data_load.irdb.irdb_load_config as irdb_load_config
+import data_load.irdb.irdb_load_config as irdb_load_config
 
 import data_load.base.utils.file_utils as file_utils
 
