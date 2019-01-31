@@ -38,7 +38,7 @@ DATA_SOURCE_APPL_DC_BUDGETS_MV = 'appl_dc_budgets_mv'
 
 
 DATA_SOURCE_FILES = {
-    DATA_SOURCE_APPLS_AT: 'appls_at.csv',
+    DATA_SOURCE_APPLS_AT: 'appls_vw.csv',
     DATA_SOURCE_APPLS_MV: 'appls_mv.csv',
     DATA_SOURCE_PVA_GRANT_PI_MV: 'pvp_grant_pi_mv.csv',
     DATA_SOURCE_AWD_FUNDINGS: 'awd_fundings.csv',
@@ -51,7 +51,7 @@ DATA_SOURCE_FILES = {
 }
 
 DATA_SOURCE_PROCESSING_ORDER = [
-    # DATA_SOURCE_APPLS_AT,
+    DATA_SOURCE_APPLS_AT,
     DATA_SOURCE_APPLS_MV,
     DATA_SOURCE_PVA_GRANT_PI_MV,
     DATA_SOURCE_AWD_FUNDINGS,
