@@ -130,7 +130,7 @@ class RelationsProcessor:
         self.batch_fetch_docs(pmids, ID_PUBMED)
 
     def process_irdb_relations(self):
-        generated_files_directory = self.self.load_config.data_source_directory()
+        generated_files_directory = self.load_config.data_source_directory()
         all_ids = file_utils.load_file(generated_files_directory, self.batch_file_name)
 
         processed_count = 0
