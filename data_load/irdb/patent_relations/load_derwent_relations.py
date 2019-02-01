@@ -45,10 +45,10 @@ class ExtendedRelationsLoader(object):
         # self.source_index_id = ID_IRDB
         # self.source = 'derived'
 
-        self.reports_directory = self.load_config.generated_files_directory()
+        self.reports_directory = self.load_config.data_source_directory()
 
     def load(self):
-        generated_files_directory = self.load_config.generated_files_directory()
+        generated_files_directory = self.load_config.data_source_directory()
         print 'Processing batch', self.batch_file_name
 
         processes_ids_file_name = 'processed_ids_' + self.batch_file_name
@@ -171,7 +171,7 @@ class BatchRelationsLoader:
         self.pool_count = 16
 
     def start(self):
-        generated_files_directory = self.load_config.generated_files_directory()
+        generated_files_directory = self.load_config.data_source_directory()
 
         batch_file_names = []
         for batch_file_name in os.listdir(generated_files_directory):
@@ -223,6 +223,8 @@ def run():
     # extended_relations_loader = ExtendedRelationsLoader('', BATCH_DATA_DIRECTORY, 1000)
     # extended_relations_loader.load()
     load_config = get_load_config()
+    load_config.data_source_name = 'patent_relations'
+
     get_uspto_ids(load_config)
 
     batch_relations_loader = BatchRelationsLoader(load_config)
