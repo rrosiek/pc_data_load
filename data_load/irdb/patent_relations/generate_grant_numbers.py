@@ -35,7 +35,7 @@ def get_load_config():
 
 def filter_and_split_ids_into_batches(load_config):
     other_files_directory = load_config.other_files_directory()
-    generated_files_directory = self.load_config.data_source_directory()
+    generated_files_directory = load_config.data_source_directory()
 
     all_ids = export_doc_ids.get_doc_ids_for_load_config(load_config)
     # total_count = len(all_ids)
