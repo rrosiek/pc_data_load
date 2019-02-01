@@ -120,19 +120,31 @@ class USPTOLoadManager(LoadManager):
             failed_docs = file_utils.load_file_path(failed_docs_file)
             for failed_doc in failed_docs:
                 reason = failed_docs[failed_doc]['reason']
+                doc = failed_docs[failed_doc]['doc']
                 print failed_doc
+                error_reason = None
                 if isinstance(reason, dict):
                     if 'index' in reason:
                         index = reason['index']
-                        if 'error' in index:
-                            error = index['error']
-                            if 'reason' in error:
-                                error_reason = error['reason']
-                                print error_reason
-                else:
-                    print reason
+                    
+                    elif 'update' in reason:
+                        index = reason['update']
 
-                raw_input('Continue?')
+                    if 'error' in index:
+                        error = index['error']
+                        if 'reason' in error:
+                            error_reason = error['reason']
+                            
+                if error_reason is None or len(error_reason) == 0:
+                    print failed_docs[failed_doc]['reason']
+                else:
+                    print 'Reason:', error_reason
+
+                print_doc = raw_input('Print doc?')
+                if print_doc.lower() in ['y', 'yes']:
+                    print json.dumps(failed_docs[failed_doc]['reason'])
+
+                
 
 def process_file(data_source_file):
     load_manager = USPTOLoadManager(MODE_FILE)

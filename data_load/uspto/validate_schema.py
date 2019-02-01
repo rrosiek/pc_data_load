@@ -7,7 +7,7 @@ import xmltodict
 import json
 import time
 import os
-
+import pprint
 from jsonschema import validate
 
 class ValidateSchema(object):
@@ -117,5 +117,32 @@ class ValidateSchema(object):
                     "data": [data]
                 }  
 
+    def process_mapping(self):
+        with open('data_load/uspto/mapping.json') as mapping_file:
+            mapping = json.load(mapping_file)
+
+            properties = mapping['mappings']['grant']['properties']
+            for key in properties:
+                print key
+
+            keys_to_print = ['sequence-cwu', 'us-patent-grant']
+            for key in keys_to_print:
+                print key
+                properties = mapping['mappings']['grant']['properties'][key]['properties']
+                # pp = pprint.PrettyPrinter(indent=1)
+                # print(json.dumps(properties, indent=2, sort_keys=True)) 
+                for key in properties:
+                    data_for_key = properties[key]
+                    print '       ', key, len(json.dumps(data_for_key))
+                    if key in ['description', 'abstract', 'claims', 'us-bibliographic-data-grant']:
+                        for k in data_for_key['properties']:
+                            print '          ',k
+                            # print(json.dumps(data_for_key['properties'][k], indent=2, sort_keys=True)) 
+            # properties = mapping['mappings']['grant']['properties']['sequence-cwu']['properties']
+            # pp = pprint.PrettyPrinter(indent=1)
+            # print(json.dumps(properties, indent=2, sort_keys=True)) 
+
+
 validate_schema = ValidateSchema()
-validate_schema.process('/data/data_loading/source-files/uspto/')
+# validate_schema.process('/data/data_loading/source-files/uspto/')
+validate_schema.process_mapping()

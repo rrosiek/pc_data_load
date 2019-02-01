@@ -83,20 +83,20 @@ class IRDBLoadManager(LoadManager):
             'name': 'initial_grant_flag',
             'status': ''
         })
-        tasks_list.append({
-                'name': 'spires_relations',
-                'sub_tasks': [
-                    {
-                        'name': 'process_spires_relations',
-                        'status': ''
-                    },
-                    {
-                        'name': 'load_spires_irdb_relations',
-                        'status': ''
-                    }
-                ],
-                'status': ''
-            })
+        # tasks_list.append({
+        #         'name': 'spires_relations',
+        #         'sub_tasks': [
+        #             {
+        #                 'name': 'process_spires_relations',
+        #                 'status': ''
+        #             },
+        #             {
+        #                 'name': 'load_spires_irdb_relations',
+        #                 'status': ''
+        #             }
+        #         ],
+        #         'status': ''
+        #     })
         # tasks_list.append({
         #         'name': 'extended_relations',
         #         'sub_tasks': [
@@ -114,23 +114,23 @@ class IRDBLoadManager(LoadManager):
         #             }
         #         ]
         #     })
-        # tasks_list.append({
-        #         'name': 'patent_relations',
-        #         'sub_tasks': [
-        #             {
-        #                 'name': 'create_patent_relations',
-        #                 'status': ''
-        #             },
-        #             {
-        #                 'name': 'clear_patent_relations',
-        #                 'status': ''
-        #             },
-        #             {
-        #                 'name': 'load_patent_relations',
-        #                 'status': ''
-        #             }
-        #         ]
-        #     })
+        tasks_list.append({
+                'name': 'patent_relations',
+                'sub_tasks': [
+                    {
+                        'name': 'create_patent_relations',
+                        'status': ''
+                    },
+                    # {
+                    #     'name': 'clear_patent_relations',
+                    #     'status': ''
+                    # },
+                    {
+                        'name': 'load_patent_relations',
+                        'status': ''
+                    }
+                ]
+            })
         tasks_list.append({
                 'name': 'copy_tags_and_annotations',
                 'status': ''
