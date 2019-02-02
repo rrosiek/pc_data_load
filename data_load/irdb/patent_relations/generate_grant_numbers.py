@@ -252,7 +252,7 @@ def process_relations(batch_file_name):
 class BatchRelationsProcessor:
     def __init__(self, load_config):
         self.load_config = load_config
-        self.pool_count = 16
+        self.pool_count = 8
 
     def start(self):
         generated_files_directory = self.load_config.data_source_directory()
