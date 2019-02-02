@@ -103,7 +103,7 @@ INDEX_MAPPING[ID_PUBMED] = {
     'type': 'article'
 }
 INDEX_MAPPING[ID_IRDB] = {
-    'index': 'irdb_v3',
+    'index': 'irdb_v4',
     'type': 'grant'
 }
 INDEX_MAPPING[ID_WEB_OF_SCIENCE] = {
