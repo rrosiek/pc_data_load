@@ -111,7 +111,7 @@ class RelationsProcessor:
                 self.pubmed_docs[_id] = pubmed_doc
    
     def batch_fetch_docs(self, ids, index_id):
-        data_utils = DataUtils()
+        data_utils = DataUtils(self.session)
         if index_id == ID_IRDB:
             data_utils.batch_fetch_docs_for_ids(LOCAL_SERVER,
                                                 ids,
@@ -227,7 +227,7 @@ class RelationsProcessor:
                 }
             }
 
-            data_utils = DataUtils()
+            data_utils = DataUtils(self.session)
             derwent_ids = data_utils.batch_fetch_ids_for_query(base_url=SERVER,
                                                                query=query,
                                                                index=INDEX_MAPPING[ID_DERWENT_PATENTS]['index'],

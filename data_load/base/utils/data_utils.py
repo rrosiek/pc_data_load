@@ -6,8 +6,11 @@ PROCESS_QUERY_BATCH_SIZE = 1000
 
 class DataUtils(object):
 
-    def __init__(self):
-        self.session = requests.session()
+    def __init__(self, session=None):
+        if session is not None:
+            self.session = session
+        else:   
+            self.session = requests.session()
 
     def docs_for_tag_query(self, tag, email, client_identifier):
         data = {
