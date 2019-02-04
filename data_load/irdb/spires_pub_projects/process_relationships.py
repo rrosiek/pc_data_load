@@ -46,11 +46,12 @@ class GenerateRelationships(object):
         return load_config
 
     def download_spires_pub_projects(self):
-        print('Downloading spires_pub_projects csv...')
-        load_config = self.get_load_config()
-        other_files_directory = load_config.other_files_directory()
-        csv_downloader = CSVDownloader(other_files_directory)
-        csv_downloader.download('spires_pub_projects')
+        # print('Downloading spires_pub_projects csv...')
+        # load_config = self.get_load_config()
+        # other_files_directory = load_config.other_files_directory()
+        # csv_downloader = CSVDownloader(other_files_directory)
+        # csv_downloader.download('spires_pub_projects')
+        pass
 
     def fetch_irdb_docs(self):
         print('Fetching irdb docs...')
@@ -95,6 +96,7 @@ class GenerateRelationships(object):
                     self.grant_num_groups[grant_num_comps[0]].append(es_id)
 
     def process_full_project_num__pmid_relationships(self):
+
         # pmid to core_project_num mapping
         full_project_num_for_pmids = {}
         print('Processing spires_pub_projects file...')

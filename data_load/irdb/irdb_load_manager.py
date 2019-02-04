@@ -22,6 +22,7 @@ import sys
 import datetime
 import psutil
 import os
+import csv
 
 from shutil import copyfile
 import data_load.irdb.irdb_load_config as irdb_load_config
@@ -83,20 +84,20 @@ class IRDBLoadManager(LoadManager):
             'name': 'initial_grant_flag',
             'status': ''
         })
-        # tasks_list.append({
-        #         'name': 'spires_relations',
-        #         'sub_tasks': [
-        #             {
-        #                 'name': 'process_spires_relations',
-        #                 'status': ''
-        #             },
-        #             {
-        #                 'name': 'load_spires_irdb_relations',
-        #                 'status': ''
-        #             }
-        #         ],
-        #         'status': ''
-        #     })
+        tasks_list.append({
+                'name': 'spires_relations',
+                'sub_tasks': [
+                    {
+                        'name': 'process_spires_relations',
+                        'status': ''
+                    },
+                    {
+                        'name': 'load_spires_irdb_relations',
+                        'status': ''
+                    }
+                ],
+                'status': ''
+            })
         # tasks_list.append({
         #         'name': 'extended_relations',
         #         'sub_tasks': [
@@ -284,6 +285,36 @@ class IRDBLoadManager(LoadManager):
         else:
             exit()
 
+    def check_spires(self):
+        self.get_config()
+
+        load_config = self.get_load_config()
+        other_files_directory = load_config.other_files_directory()
+        spires_ids_old = {}
+
+        with open(other_files_directory + '/' + "spires_pub_projects.csv") as data_file:
+            reader = csv.DictReader(data_file)
+            for row in reader:
+                full_project_num = str(row['core_project_num'])
+                pmid = str(row['pmid'])
+                spires_id = str(row['spires_id'])
+                spires_ids_old[spires_id] = pmid
+
+        spires_ids_new = {}
+
+        with open(other_files_directory + '/' + 'testcsvconverted.csv') as data_file:
+            reader = csv.DictReader(data_file)
+            for row in reader:
+                full_project_num = str(row['core_project_num'])
+                pmid = str(row['pmid'])
+                spires_id = str(row['spires_id'])
+                spires_ids_new[spires_id] = pmid
+
+        print len(spires_ids_old)
+        print len(spires_ids_new)
+
+
+
 def start(src_files_directory):
     irdb_reload = IRDBLoadManager(src_files_directory)
     # irdb_reload.del_config()
@@ -293,9 +324,14 @@ def resume():
     irdb_reload = IRDBLoadManager()
     irdb_reload.run()
 
+# def analyse():
+#     irdb_reload = IRDBLoadManager()
+#     irdb_reload.analyse_failed_docs()
+
 def analyse():
     irdb_reload = IRDBLoadManager()
-    irdb_reload.analyse_failed_docs()
+    irdb_reload.check_spires()
+
 
 def run():
     src_files_directory = None
