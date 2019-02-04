@@ -313,7 +313,18 @@ class IRDBLoadManager(LoadManager):
         print 'spires_ids_old', len(spires_ids_old)
         print 'spires_ids_new', len(spires_ids_new)
 
+        new_ids = {}
+        missing_ids = {}
+        for pmid in spires_ids_new:
+            if pmid not in spires_ids_old:
+                new_ids[pmid] = 0
 
+        for pmid in spires_ids_old:
+            if pmid not in spires_ids_new:
+                missing_ids[pmid] = 0
+
+        print 'missing_ids', missing_ids
+        print 'new_ids', new_ids
 
 def start(src_files_directory):
     irdb_reload = IRDBLoadManager(src_files_directory)
