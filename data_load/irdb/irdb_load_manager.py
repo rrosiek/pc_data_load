@@ -298,7 +298,7 @@ class IRDBLoadManager(LoadManager):
                 full_project_num = str(row['core_project_num'])
                 pmid = str(row['pmid'])
                 spires_id = str(row['spires_id'])
-                spires_ids_old[spires_id] = pmid
+                spires_ids_old[pmid] = pmid
 
         spires_ids_new = {}
 
@@ -308,10 +308,10 @@ class IRDBLoadManager(LoadManager):
                 full_project_num = str(row['core_project_num'])
                 pmid = str(row['pmid'])
                 spires_id = str(row['spires_id'])
-                spires_ids_new[spires_id] = pmid
+                spires_ids_new[pmid] = pmid
 
-        print len(spires_ids_old)
-        print len(spires_ids_new)
+        print 'spires_ids_old', len(spires_ids_old)
+        print 'spires_ids_new', len(spires_ids_new)
 
 
 
