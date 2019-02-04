@@ -7,7 +7,7 @@ SERVER = 'http://localhost:9200'
 ROOT_DIRECTORY = '/data/data_loading/irdb_2018_06'
 # BATCH_DATA_DIRECTORY = ROOT_DIRECTORY + "/batch_data"
 
-INDEX = 'irdb_v3'
+INDEX = 'irdb_v4'
 TYPE = 'grant'
 
 ID_FIELD = 'appl_id'

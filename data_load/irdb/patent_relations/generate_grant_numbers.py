@@ -14,6 +14,7 @@ import os
 import time
 
 from multiprocessing import Pool
+session = requests.Session()
 
 
 IRDB_IDS_FILE_NAME = 'DOC_IDS_' + ID_IRDB + '.json'
@@ -111,7 +112,7 @@ class RelationsProcessor:
                 self.pubmed_docs[_id] = pubmed_doc
    
     def batch_fetch_docs(self, ids, index_id):
-        data_utils = DataUtils()
+        data_utils = DataUtils(self.session)
         if index_id == ID_IRDB:
             data_utils.batch_fetch_docs_for_ids(LOCAL_SERVER,
                                                 ids,
@@ -227,7 +228,7 @@ class RelationsProcessor:
                 }
             }
 
-            data_utils = DataUtils()
+            data_utils = DataUtils(self.session)
             derwent_ids = data_utils.batch_fetch_ids_for_query(base_url=SERVER,
                                                                query=query,
                                                                index=INDEX_MAPPING[ID_DERWENT_PATENTS]['index'],
@@ -242,8 +243,8 @@ class RelationsProcessor:
 
         return derwent_ids
 
+
 def process_relations(batch_file_name):
-    session = requests.Session()
     load_config = get_load_config()
 
     relations_processor = RelationsProcessor(load_config, batch_file_name, session)
@@ -252,7 +253,7 @@ def process_relations(batch_file_name):
 class BatchRelationsProcessor:
     def __init__(self, load_config):
         self.load_config = load_config
-        self.pool_count = 16
+        self.pool_count = 8
 
     def start(self):
         generated_files_directory = self.load_config.data_source_directory()
