@@ -323,8 +323,8 @@ class IRDBLoadManager(LoadManager):
             if pmid not in spires_ids_new:
                 missing_ids[pmid] = 0
 
-        print 'missing_ids', missing_ids
-        print 'new_ids', new_ids
+        print 'missing_ids', len(missing_ids)
+        print 'new_ids', len(new_ids)
 
 def start(src_files_directory):
     irdb_reload = IRDBLoadManager(src_files_directory)
