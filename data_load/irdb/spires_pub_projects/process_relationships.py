@@ -103,7 +103,7 @@ class GenerateRelationships(object):
         load_config = self.get_load_config()
         other_files_directory = load_config.other_files_directory()
 
-        with open(other_files_directory + '/' + RELATIONSHIPS_FILE) as data_file:
+        with open(other_files_directory + '/' + 'testcsvconverted.csv') as data_file:
             reader = csv.DictReader(data_file)
             # records = data['RECORDS']
             # print('Relationship records count: ' + str(len(records)))
