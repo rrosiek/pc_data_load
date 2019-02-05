@@ -290,7 +290,7 @@ class PubmedLoadManager(LoadManager):
             all_prospects = find_prospective_citations.run()
 
         self.get_logger().info('Sending prospective notifications...')
-        self.send_notifications(all_prospects)
+        # self.send_notifications(all_prospects)
         
         self.get_logger().info('Sending update status mail...')
         EmailClient.send_update_notifications(self.local_date_time, update_data, all_prospects)

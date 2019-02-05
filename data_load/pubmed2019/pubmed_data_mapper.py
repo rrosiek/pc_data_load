@@ -115,6 +115,8 @@ class PubmedDataMapper(DataMapper):
             existing_value = new_doc['PubmedData']
             if existing_value is not None and len(existing_value) > 0:
                 update_doc['PubmedData'] = existing_value
+            else:
+                print 'PubmedData missing', _id
 
         if 'Author_Details' in new_doc:
             existing_value = new_doc['Author_Details']

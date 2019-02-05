@@ -27,7 +27,7 @@ class FTPManager(object):
         if len(filtered_file_urls) > no_of_files:
             filtered_file_urls = filtered_file_urls[:no_of_files]
 
-        return self.download_update_files(filtered_file_urls)
+        return self.download_missing_files(filtered_file_urls)
 
     def download_missing_files(self, file_urls, no_of_files=None):
         filtered_file_urls = self.filter_file_urls(file_urls)

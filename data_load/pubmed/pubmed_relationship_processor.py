@@ -139,8 +139,11 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                 # Update existing doc with update file and update date
                 # Update existing doc with added and removed citations
                 # if len(removed_citations) > 0:
-                self.update_doc(_id, existing_doc, existing_citations, removed_citations, added_citations)
-
+                self.update_doc(_id, 
+                                existing_doc=existing_doc, 
+                                original_citations=existing_citations, 
+                                removed_citations=removed_citations,
+                                added_citations=added_citations)
             else:
                 # New doc
                 # Update citations history
