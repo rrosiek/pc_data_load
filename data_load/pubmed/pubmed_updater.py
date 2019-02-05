@@ -116,6 +116,9 @@ class PubmedUpdater(object):
         return docs_with_new_citations
 
     def save_new_pmids(self, update_files):
+        load_config = self.load_manager.get_load_config()
+        self.existing_pubmed_ids = file_utils.load_file(load_config.other_files_directory(), ALL_PUBMED_IDS_FILE)
+
         update_summary = self.generate_update_summary(update_files)
         for update_file in update_summary:
             update_summary_for_file = update_summary[update_file]
@@ -123,7 +126,6 @@ class PubmedUpdater(object):
             for _id in articles_processed:
                 self.existing_pubmed_ids[_id] = None
 
-        load_config = self.load_manager.get_load_config()
         file_utils.save_file(load_config.other_files_directory(), ALL_PUBMED_IDS_FILE, self.existing_pubmed_ids)
 
     def get_update_records_directory(self, sub_directory=None):
