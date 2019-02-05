@@ -98,23 +98,23 @@ class IRDBLoadManager(LoadManager):
                 ],
                 'status': ''
             })
-        # tasks_list.append({
-        #         'name': 'extended_relations',
-        #         'sub_tasks': [
-        #             {
-        #                 'name': 'create_extended_relations',
-        #                 'status': ''
-        #             },
-        #             {
-        #                 'name': 'clear_extended_relations',
-        #                 'status': ''
-        #             },
-        #             {
-        #                 'name': 'load_extended_relations',
-        #                 'status': ''
-        #             }
-        #         ]
-        #     })
+        tasks_list.append({
+                'name': 'extended_relations',
+                'sub_tasks': [
+                    {
+                        'name': 'create_extended_relations',
+                        'status': ''
+                    },
+                    {
+                        'name': 'clear_extended_relations',
+                        'status': ''
+                    },
+                    {
+                        'name': 'load_extended_relations',
+                        'status': ''
+                    }
+                ]
+            })
         tasks_list.append({
                 'name': 'patent_relations',
                 'sub_tasks': [

@@ -372,7 +372,7 @@ def process_baseline():
 def process_updates():
     load_manager = PubmedLoadManager(MODE_UPDATE, 0)
     load_manager.mode = MODE_UPDATE
-    load_manager.no_of_files = 2
+    load_manager.no_of_files = 4
     load_manager.del_config()
     load_manager.run()
 

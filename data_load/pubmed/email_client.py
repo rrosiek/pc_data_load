@@ -41,12 +41,9 @@ class EmailClient(object):
         # Recipient's email address
         to_address = prospect['email']
 
-        # if to_address == 'admin@altum.com':
-        #     to_address = 'robint@qburst.com'
-        # to_address = 'robint@qburst.com'
+        if to_address == 'admin@altum.com':
+            to_address = 'robint@qburst.com'
 
-        # Hard coded for testing
-        # to_address = 'robint@qburst.com'
         docs_with_matching_citations = prospect['docs_with_matching_citations']
 
         print 'Sending mail for prospect', to_address, 'docs_with_matching_citations',  len(docs_with_matching_citations)
@@ -200,7 +197,7 @@ class EmailClient(object):
         new_udate_file_count = len(update_data)
         html = ""
 
-        html += """<h3><span>OCAT PubMed Auto Update </span><span style="font-weight: normal;">""" + local_date + """</span></h3>
+        html += """<h3><span>OCAT PubMed Update </span><span style="font-weight: normal;">""" + local_date + """</span></h3>
         <div style="margin-bottom: 10px; font-size: 13px; font-weight: bold;">
             <span style="color: #000;"> Total update files processed: </span>
             <span>""" + str("{:,}".format(new_udate_file_count)) + """</span>
@@ -305,7 +302,7 @@ class EmailClient(object):
 
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "OCAT Auto Update Status " + str(local_date)
+        msg['Subject'] = "OCAT PubMed Update Status - " + str(local_date)
         msg['From'] = "OCAT NIAID <" + from_address + ">"
         msg['To'] = COMMASPACE.join(to_address)
 
