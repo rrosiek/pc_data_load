@@ -12,6 +12,8 @@ import os
 
 from multiprocessing import Pool
 
+session = requests.Session()
+
 RELATION_INDEXES = [
     # ID_USPTO,
     ID_CLINICAL_TRIALS,
@@ -27,10 +29,14 @@ IRDB_IDS_FILE_NAME = 'DOC_IDS_' + ID_IRDB + '.json'
 
 BATCH_DOC_COUNT = 1000
 
+def get_load_config():
+    load_config = irdb_load_config.get_load_config()
+    load_config.data_source_name = DS_EXTENDED_RELATIONS
+    return load_config
 
 def filter_and_split_ids_into_batches(load_config):
     other_files_directory = load_config.other_files_directory()
-    generated_files_directory = load_config.generated_files_directory()
+    generated_files_directory = load_config.data_source_directory()
 
     all_ids = export_doc_ids.get_doc_ids_for_load_config(load_config)
     # total_count = len(all_ids)
@@ -125,7 +131,7 @@ class RelationsProcessor:
         self.batch_fetch_docs(pmids, ID_PUBMED)
 
     def process_irdb_relations(self):
-        generated_files_directory = self.load_config.generated_files_directory()
+        generated_files_directory = self.load_config.data_source_directory()
         all_ids = file_utils.load_file(generated_files_directory, self.batch_file_name)
 
         processed_count = 0
@@ -237,8 +243,7 @@ class RelationsProcessor:
 
 
 def process_relations(batch_file_name):
-    session = requests.Session()
-    load_config = irdb_load_config.get_load_config()
+    load_config = get_load_config()
     load_config.data_source_name = DATA_SOURCE_NAME
 
     relations_processor = RelationsProcessor(load_config, batch_file_name, session)
@@ -251,7 +256,7 @@ class BatchRelationsProcessor:
         self.pool_count = PROCESS_COUNT
 
     def start(self):
-        generated_files_directory = self.load_config.generated_files_directory()
+        generated_files_directory = self.load_config.data_source_directory()
 
         batch_file_names = []
         for batch_file_name in os.listdir(generated_files_directory):
@@ -269,8 +274,8 @@ class BatchRelationsProcessor:
 
 
 def run():
-    load_config = irdb_load_config.get_load_config()
-    load_config.data_source_name = DS_EXTENDED_RELATIONS
+    load_config = get_load_config()
+    # load_config.data_source_name = DS_EXTENDED_RELATIONS
 
     filter_and_split_ids_into_batches(load_config)
 

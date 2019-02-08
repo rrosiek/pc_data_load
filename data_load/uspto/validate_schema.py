@@ -118,30 +118,111 @@ class ValidateSchema(object):
                 }  
 
     def process_mapping(self):
+        mapping = {}
         with open('data_load/uspto/mapping.json') as mapping_file:
             mapping = json.load(mapping_file)
+            sub_mapping = mapping['mappings']['grant']['properties']['us-patent-grant']['properties']
 
-            properties = mapping['mappings']['grant']['properties']
-            for key in properties:
-                print key
+            # print mapping
+            self.print_mapping(sub_mapping, 0, '')
 
-            keys_to_print = ['sequence-cwu', 'us-patent-grant']
-            for key in keys_to_print:
-                print key
-                properties = mapping['mappings']['grant']['properties'][key]['properties']
-                # pp = pprint.PrettyPrinter(indent=1)
-                # print(json.dumps(properties, indent=2, sort_keys=True)) 
-                for key in properties:
-                    data_for_key = properties[key]
-                    print '       ', key, len(json.dumps(data_for_key))
-                    if key in ['description', 'abstract', 'claims', 'us-bibliographic-data-grant']:
-                        for k in data_for_key['properties']:
-                            print '          ',k
+            mapping_new = {}
+            for key in sub_mapping:
+                if key in ['@status',
+                            '@country',
+                            '@lang',
+                            '@dtd-version',
+                            '@date-publ',
+                            '@date-produced',
+                            'drawings',
+                            '@file' ,
+                            'us-math', 
+                            'us-sequence-list-doc_str',
+                            'us-bibliographic-data-grant',
+                            '@id',
+                            'us-chemistry',
+                            'us-claim-statement'
+                            ]:
+                    data = sub_mapping[key]
+                    mapping_new[key] = data
+
+        # '@status',
+        # 'description ',
+        # '@country',
+        # '@lang',
+        # 'abstract',
+        # '@dtd-version',
+        # '@date-publ',
+        # '@date-produced',
+        # 'drawings',
+        # '@file' ,
+        # 'us-math', 
+        # 'claims' ,
+        # 'us-sequence-list-doc_str',
+        # 'us-bibliographic-data-grant',
+        # '@id',
+        # 'us-chemistry',
+        # 'us-claim-statement'
+
+            mapping['mappings']['grant']['properties']['us-patent-grant']['properties'] = mapping_new
+
+        file_utils.save_file('data_load/uspto/', 'mapping.json', mapping)
+
+
+            # properties = mapping['mappings']['grant']['properties']
+
+            # for key in properties:
+            #     print key
+
+            # keys_to_print = ['sequence-cwu', 'us-patent-grant']
+            # for key in keys_to_print:
+            #     print key
+            #     properties = mapping['mappings']['grant']['properties'][key]['properties']
+            #     # pp = pprint.PrettyPrinter(indent=1)
+            #     # print(json.dumps(properties, indent=2, sort_keys=True)) 
+            #     for key in properties:
+            #         data_for_key = properties[key]
+            #         print '       ', key, len(json.dumps(data_for_key))
+            #         if key in ['description', 'abstract', 'claims', 'us-bibliographic-data-grant']:
+            #             for k in data_for_key['properties']:
+            #                 print '          ',k
                             # print(json.dumps(data_for_key['properties'][k], indent=2, sort_keys=True)) 
             # properties = mapping['mappings']['grant']['properties']['sequence-cwu']['properties']
             # pp = pprint.PrettyPrinter(indent=1)
             # print(json.dumps(properties, indent=2, sort_keys=True)) 
 
+
+    def print_mapping(self, mapping, indent, parents):
+        if indent > 0:
+            return
+        if 'properties' in mapping:
+            properties = mapping['properties']
+            self.print_mapping(properties, indent, parents)
+        else:
+            if isinstance(mapping, dict):
+                for key in mapping:
+                    child_mapping = mapping[key]
+                    if len(parents) == 0:
+                        parents_sub = key
+                    else:
+                        parents_sub = parents + '.' + key
+                    if key != 'type' and parents_sub.startswith(''):
+                        print self.get_indent(indent) + key, '(' + str(len(json.dumps(child_mapping))) + ')'
+                    self.print_mapping(child_mapping, indent + 1, parents_sub)
+            elif isinstance(mapping, list):
+                for item in mapping:
+                    self.print_mapping(item, indent + 1, parents)
+            else:
+                pass
+                # print self.get_indent(indent) + mapping
+
+    def get_indent(self, indent):
+        indent_str = ''
+        while indent > 0:
+            indent_str += '|  '
+            indent = indent - 1
+
+        return indent_str
 
 validate_schema = ValidateSchema()
 # validate_schema.process('/data/data_loading/source-files/uspto/')

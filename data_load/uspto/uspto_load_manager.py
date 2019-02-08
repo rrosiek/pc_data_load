@@ -142,7 +142,7 @@ class USPTOLoadManager(LoadManager):
 
                 print_doc = raw_input('Print doc?')
                 if print_doc.lower() in ['y', 'yes']:
-                    print json.dumps(failed_docs[failed_doc]['reason'])
+                    print json.dumps(doc)
 
                 
 

@@ -271,7 +271,7 @@ class BatchRelationsProcessor:
 
 def run():
     load_config = get_load_config()
-    load_config.data_source_name = 'patent_relations'
+    # load_config.data_source_name = 'patent_relations'
 
     # fetch_all_ids_from_index(load_config)
     filter_and_split_ids_into_batches(load_config)

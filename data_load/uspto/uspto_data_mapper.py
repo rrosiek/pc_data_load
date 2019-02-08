@@ -22,6 +22,7 @@ class USPTODataMapper(DataMapper):
 
     @staticmethod
     def pad_zeros(number, count):
+        number_str = ''
         while len(number) < count:
             number_str = '0' + number_str
 
@@ -56,10 +57,22 @@ class USPTODataMapper(DataMapper):
         path = 'us-patent-grant.claims.claim.claim-text.claim-text'.split('.')
         data = USPTODataMapper.clean_value_for_path(path, data)
 
+        path = 'us-patent-grant.claims.claim.claim-text'.split('.')
+        data = USPTODataMapper.clean_value_for_path(path, data)
+
         path = 'us-patent-grant.us-bibliographic-data-grant.us-references-cited.us-citation.nplcit.othercit'.split('.')
         data = USPTODataMapper.clean_value_for_path(path, data)
 
-        doc = data
+        path = 'us-patent-grant.us-bibliographic-data-grant.us-references-cited.us-citation.nplcit.othercit.sup'.split('.')
+        data = USPTODataMapper.clean_value_for_path(path, data)
+
+        path = 'us-patent-grant.description.p.tables.table.tgroup.tbody.row.entry'.split('.')
+        data = USPTODataMapper.clean_value_for_path(path, data)
+
+        doc = data # USPTODataMapper.add_value_for_path('us-patent-grant.us-bibliographic-data-grant', data, doc)
+        
+        # print doc
+        # raw_input('Continue?')
 
         return doc
 
@@ -69,6 +82,40 @@ class USPTODataMapper(DataMapper):
         update_doc = new_doc
 
         return update_doc
+
+    @staticmethod
+    def add_value_for_path(path, src, dst):
+        key = path[0]
+
+        if isinstance(src, dict) and key in src:
+            key = path.pop(0)
+            value = src[key]
+            sub_dst = {}
+            dst[key] = sub_dst
+
+            if len(path) == 0:
+                if not isinstance(value, dict):
+                    value = {
+                        "#text": value
+                    }
+                
+                dst[key]= value
+                # print key, value
+            else:
+                cleaned_value = USPTODataMapper.add_value_for_path(path, value, sub_dst)
+                if cleaned_value is not None:
+                    dst[key] = cleaned_value
+        elif isinstance(src, list):
+            # print data
+            cleaned_data = []
+            for item in src:
+                path_copy = path[:]
+                cleaned_item = USPTODataMapper.add_value_for_path(path_copy, item, dst)
+                cleaned_data.append(cleaned_item)
+                            
+            dst = cleaned_data
+
+        return dst
 
     @staticmethod
     def clean_value_for_path(path, data):
