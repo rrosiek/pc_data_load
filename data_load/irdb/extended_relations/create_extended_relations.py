@@ -139,14 +139,6 @@ class RelationsProcessor:
 
         ids_to_update = file_utils.load_file(generated_files_directory, 'ids_to_update_' + self.batch_file_name)
         processed_ids = file_utils.load_file(generated_files_directory, 'processed_ids_' + self.batch_file_name)
-        p_ids = file_utils.load_file(generated_files_directory, 'p_ids_' + self.batch_file_name)
-
-        if len(p_ids) == 0:
-            if (len(processed_ids) == len(all_ids)) and (len(ids_to_update) == 0):
-                print 'Clearing processed ids...'
-                processed_ids = {}
-            else:
-                p_ids = processed_ids
 
         filtered_ids = []
         for _id in all_ids:
@@ -159,7 +151,6 @@ class RelationsProcessor:
 
         for _id in filtered_ids:
             processed_ids[_id] = ''
-            p_ids[_id] = 0
 
             processed_count += 1
             batch_count += 1
@@ -178,11 +169,9 @@ class RelationsProcessor:
 
                 file_utils.save_file(generated_files_directory, 'ids_to_update_' + self.batch_file_name, ids_to_update)
                 file_utils.save_file(generated_files_directory, 'processed_ids_' + self.batch_file_name, processed_ids)
-                file_utils.save_file(generated_files_directory, 'p_ids_' + self.batch_file_name, p_ids)
 
         file_utils.save_file(generated_files_directory, 'ids_to_update_' + self.batch_file_name, ids_to_update)
         file_utils.save_file(generated_files_directory, 'processed_ids_' + self.batch_file_name, processed_ids)
-        file_utils.save_file(generated_files_directory, 'p_ids_' + self.batch_file_name, p_ids)
 
         file_utils.save_file(generated_files_directory, 'missing_pubmed_ids_' + self.batch_file_name, self.missing_pubmed_ids)
 

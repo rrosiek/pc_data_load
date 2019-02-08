@@ -105,10 +105,10 @@ class IRDBLoadManager(LoadManager):
                         'name': 'create_extended_relations',
                         'status': ''
                     },
-                    {
-                        'name': 'clear_extended_relations',
-                        'status': ''
-                    },
+                    # {
+                    #     'name': 'clear_extended_relations',
+                    #     'status': ''
+                    # },
                     {
                         'name': 'load_extended_relations',
                         'status': ''
