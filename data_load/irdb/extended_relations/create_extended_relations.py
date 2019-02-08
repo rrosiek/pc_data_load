@@ -237,7 +237,6 @@ class RelationsProcessor:
 
 def process_relations(batch_file_name):
     load_config = get_load_config()
-    load_config.data_source_name = DATA_SOURCE_NAME
 
     relations_processor = RelationsProcessor(load_config, batch_file_name, session)
     relations_processor.process_irdb_relations()
@@ -268,7 +267,6 @@ class BatchRelationsProcessor:
 
 def run():
     load_config = get_load_config()
-    load_config.data_source_name = DS_EXTENDED_RELATIONS
 
     filter_and_split_ids_into_batches(load_config)
 
