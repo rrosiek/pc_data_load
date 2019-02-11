@@ -268,7 +268,7 @@ class BatchRelationsProcessor:
 def run():
     load_config = get_load_config()
 
-    filter_and_split_ids_into_batches(load_config)
+    # filter_and_split_ids_into_batches(load_config)
 
     batch_relations_processor = BatchRelationsProcessor(load_config)
     batch_relations_processor.start()
