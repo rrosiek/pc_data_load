@@ -147,6 +147,8 @@ class BatchRelationsLoader:
     def start(self):
         generated_files_directory = self.load_config.data_source_directory()
 
+        print 'Searching for batch files in', generated_files_directory
+
         batch_file_names = []
         for batch_file_name in os.listdir(generated_files_directory):
             file_path = os.path.join(generated_files_directory, batch_file_name)
