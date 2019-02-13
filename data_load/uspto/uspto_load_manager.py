@@ -94,8 +94,8 @@ class USPTOLoadManager(LoadManager):
         #         self.files_to_process.append(file_path)
         load_config = self.get_load_config()
 
-        self.files_to_process = file_manager.get_files_to_process(load_config)
-        # self.files_to_process = file_manager.download_files(load_config, '2019')
+        # self.files_to_process = file_manager.get_files_to_process(load_config)
+        self.files_to_process = file_manager.download_files(load_config)
         print self.files_to_process
 
     def process(self, data_source_file):

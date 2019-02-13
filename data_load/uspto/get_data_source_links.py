@@ -67,10 +67,14 @@ def run():
     years = FILES_PER_YEAR.keys()
     years.sort()
 
-    for year in years:
-        print year, len(FILES_PER_YEAR[year]), 'files'
+    filtered_files_per_year = {}
 
-    return FILES_PER_YEAR
+    for year in years:
+        if int(year) >= 2001:  
+            print year, len(FILES_PER_YEAR[year]), 'files'
+            filtered_files_per_year[year] = FILES_PER_YEAR[year]
+            
+    return filtered_files_per_year
 
 # run()
 
