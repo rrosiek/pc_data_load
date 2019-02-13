@@ -6,6 +6,8 @@ DATA_SOURCE_URL = DATA_SOURCE_DOMAIN + 'pgrbft.php'
 
 URL_PATTERN = r'downloads\/[A-Z]\w+\/([0-9]{4})\/([a-z, 0-9,.]+)'
 
+FILE_NAME_PATTERN = r'i?pg([0-9]{6}).zip'
+
 html = """
 <div class="bulkyear" id="2019">2019 [<a href="#top">Top</a>]</div>
 <table class="bulktable"><tbody><tr><td width="200"><b>File Name</b></td><td width="200"><b>File Size (bytes)</b></td><td width="200"><b>Posting Date</b></td></tr>
@@ -37,13 +39,13 @@ def sort_files():
         if result is not None:
             year = result.group(1)
             file_name = result.group(2)
+            if re.match(FILE_NAME_PATTERN, file_name):
+                print year, file_name
 
-            # print year, file_name
+                if year not in FILES_PER_YEAR:
+                    FILES_PER_YEAR[year] = []
 
-            if year not in FILES_PER_YEAR:
-                FILES_PER_YEAR[year] = []
-
-            FILES_PER_YEAR[year].append(file_url)
+                FILES_PER_YEAR[year].append(file_url)
 
 
 def run():
