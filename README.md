@@ -34,7 +34,7 @@
 
 ### USPTO
 
-```python -m data_load.uspto.uspto_load_manager -auto```
+```python -m data_load.uspto.uspto_load_manager -auto``` - Downloads and starts loading files from 2001 onwards.
 
 **Specific year**
 
