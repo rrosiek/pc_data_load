@@ -31,3 +31,12 @@
 ### Clinical Trials
 
 ```python -m data_load.clinical_trials.ct_load_manager -auto```
+
+### USPTO
+
+```python -m data_load.uspto.uspto_load_manager -auto```
+
+**Specific year**
+
+```python -m data_load.uspto.uspto_load_manager -auto 2019```
+
