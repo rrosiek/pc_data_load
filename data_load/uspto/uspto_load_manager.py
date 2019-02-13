@@ -75,8 +75,8 @@ class USPTOLoadManager(LoadManager):
             mapping = data_loader_utils.load_mapping_from_file(mapping_file_path)
             data_loader_utils.create_index_from_mapping(mapping)
     
-    # def should_download_data(self):
-    #     return True
+    def should_download_data(self):
+        return True
 
     def tasks_completed(self):
         self.delete_task_list()
@@ -90,7 +90,9 @@ class USPTOLoadManager(LoadManager):
         if self.year is not None:
             self.files_to_process = file_manager.download_files(load_config, year=self.year)
         else:
-            self.files_to_process = file_manager.get_files_to_process(load_config)
+            # self.files_to_process = file_manager.get_files_to_process(load_config)
+
+            # print 'Files to process', json.dumps(self.files_to_process)
             if len(self.files_to_process) == 0:
                 year = file_manager.get_next_year(load_config)
                 self.files_to_process = file_manager.download_files(load_config, year=year)

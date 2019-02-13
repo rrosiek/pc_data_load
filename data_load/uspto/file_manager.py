@@ -19,7 +19,7 @@ def get_available_files_to_download(year=None):
     else:
         urls = []
         years = files_per_year.keys()
-        years.sort()
+        years.sort(reverse=False)
 
         for year in years:
             urls.extend(files_per_year[year])
@@ -32,7 +32,7 @@ def get_next_year(load_config):
     downloaded_files = get_downloaded_files(load_config)
 
     years = files_per_year.keys()
-    years.sort(reverse=True)
+    years.sort(reverse=False)
     for year in years:
         files_to_download = files_per_year[year]
 
@@ -81,7 +81,7 @@ def get_files_to_process(load_config):
         if available_file not in processed_files:
             filtered_files.append(available_file)
 
-    filtered_files.sort()
+    filtered_files.sort(reverse=False)
     return filtered_files
 
 def get_files_to_download(load_config, available_files):
@@ -93,7 +93,7 @@ def get_files_to_download(load_config, available_files):
         if available_file not in downloaded_files:
             filtered_files.append(available_file)
 
-    filtered_files.sort()
+    filtered_files.sort(reverse=False)
     return filtered_files
 
 

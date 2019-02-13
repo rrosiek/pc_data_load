@@ -138,14 +138,14 @@ class IRDBLoadManager(LoadManager):
             })
 
         # Clear and load pubmed relations
-        # tasks_list.append({
-        #         'name': 'clear_pubmed_relations',
-        #         'status': ''
-        #     })
-        # tasks_list.append({
-        #         'name': 'load_spires_pubmed_relations',
-        #         'status': ''
-        #     })
+        tasks_list.append({
+                'name': 'clear_pubmed_relations',
+                'status': ''
+            })
+        tasks_list.append({
+                'name': 'load_spires_pubmed_relations',
+                'status': ''
+            })
 
         return tasks_list
 
