@@ -40,36 +40,42 @@ def sort_files():
             year = result.group(1)
             file_name = result.group(2)
             if re.match(FILE_NAME_PATTERN, file_name):
-                print year, file_name
+                # print year, file_name
 
                 if year not in FILES_PER_YEAR:
                     FILES_PER_YEAR[year] = []
 
                 FILES_PER_YEAR[year].append(file_url)
 
+    for year in FILES_PER_YEAR:
+        files_per_year = FILES_PER_YEAR[year]
+        files_per_year.sort()
+        FILES_PER_YEAR[year] = files_per_year
 
 def run():
-    print 'Loading', DATA_SOURCE_URL
-    pq = PyQuery(url=DATA_SOURCE_URL)
-    # pq = PyQuery(html)
+    if len(FILES_PER_YEAR) == 0:
+        print 'Loading', DATA_SOURCE_URL
+        pq = PyQuery(url=DATA_SOURCE_URL)
+        # pq = PyQuery(html)
 
-    # year_divs = pq('div').filter('.bulkyear')
-    data_tables = pq('table').filter('.bulktable').find('a')
+        # year_divs = pq('div').filter('.bulkyear')
+        data_tables = pq('table').filter('.bulktable').find('a')
 
-    # print year_divs
-    # print 'Years'
-    # year_divs.each(process_year)
+        # print year_divs
+        # print 'Years'
+        # year_divs.each(process_year)
 
-    print 'Files'
-    data_tables.each(process_table)
+        print 'Files'
+        data_tables.each(process_table)
 
-    print 'Sorting files..'
-    sort_files()
+        print 'Sorting files..'
+        sort_files()
 
-    years = FILES_PER_YEAR.keys()
-    years.sort()
 
     filtered_files_per_year = {}
+     
+    years = FILES_PER_YEAR.keys()
+    years.sort()
 
     for year in years:
         if int(year) >= 2001:  
