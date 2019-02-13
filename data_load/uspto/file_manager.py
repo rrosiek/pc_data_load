@@ -27,6 +27,21 @@ def get_available_files_to_download(year=None):
     print urls
     return urls   
 
+def get_next_year(load_config):
+    files_per_year = get_data_source_links.run()
+    downloaded_files = get_downloaded_files(load_config)
+
+    years = files_per_year.keys()
+    years.sort(reverse=True)
+    for year in years:
+        files_to_download = files_per_year[year]
+
+        for file_url in files_to_download:
+            if file_url not in downloaded_files:
+                return year
+
+    return None
+
 def get_available_files_to_process(load_config):
     source_files_directory = load_config.source_files_directory()
 
@@ -69,8 +84,8 @@ def get_files_to_process(load_config):
     filtered_files.sort()
     return filtered_files
 
-def get_files_to_download(load_config, year=None):
-    available_files = get_available_files_to_download(year=year)
+def get_files_to_download(load_config, available_files):
+    # available_files = get_available_files_to_download(year=year)
     downloaded_files = get_downloaded_files(load_config)
 
     filtered_files = []
@@ -83,37 +98,42 @@ def get_files_to_download(load_config, year=None):
 
 
 def download_files(load_config, year=None):
-    files_to_download = get_files_to_download(load_config, year=year)
+    available_files_to_download = get_available_files_to_download(year=year)
+
+    files_to_download = get_files_to_download(load_config, available_files_to_download)
     source_files_directory = load_config.source_files_directory()
 
     downloaded_update_file_urls = get_downloaded_files(load_config)
     downloaded_update_file_paths = []
 
     print 'Downloading', len(files_to_download), 'files...'
-    for update_file_url in files_to_download:
+    for update_file_url in available_files_to_download:
         file_name = os.path.basename(update_file_url)
         update_file_path = os.path.join(source_files_directory, file_name)
         xml_file_path = os.path.join(source_files_directory, file_name.replace('.zip', '.xml'))
 
-        # Download update zip file
-        urllib.urlcleanup()
-        print 'Downloading file: ', update_file_url
-        urllib.urlretrieve(update_file_url, update_file_path)
-        print 'Saved', update_file_path
+        if update_file_url in files_to_download:
+            # Download update zip file
+            urllib.urlcleanup()
+            print 'Downloading file: ', update_file_url
+            urllib.urlretrieve(update_file_url, update_file_path)
+            print 'Saved', update_file_path
 
-        # TODO - Verify download with md5?
+            # TODO - Verify download with md5?
 
-        # Extract update zip file
+            # Extract update zip file
 
-        print 'Unzipping file', update_file_path
-        try:
-            with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
-                zip_ref.extractall(source_files_directory)
+            print 'Unzipping file', update_file_path
+            try:
+                with zipfile.ZipFile(update_file_path, 'r') as zip_ref:
+                    zip_ref.extractall(source_files_directory)
 
-            downloaded_update_file_urls.append(update_file_url)
+                downloaded_update_file_urls.append(update_file_url)
+                downloaded_update_file_paths.append(xml_file_path)
+            except Exception as e:
+                print e
+        else:
             downloaded_update_file_paths.append(xml_file_path)
-        except Exception as e:
-            print e
 
         # f = gzip.open(update_file_path, 'rb')
         # with open(xml_file_path, 'w') as xml_file:

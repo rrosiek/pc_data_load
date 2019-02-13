@@ -21,14 +21,12 @@ from data_load.base.constants import ID_USPTO
 # ID_GRANTS = "GRANTS"
 
 
-MODE_FILE = 'MODE_FILE'
-MODE_AUTO = 'MODE_AUTO'
-
 class USPTOLoadManager(LoadManager):
 
-    def __init__(self, file=None):
+    def __init__(self, year=None):
         super(USPTOLoadManager, self).__init__(ID_USPTO)
         self.files_to_process = []
+        self.year = year
 
     def get_root_directory(self, local_date):
         return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() 
@@ -77,8 +75,8 @@ class USPTOLoadManager(LoadManager):
             mapping = data_loader_utils.load_mapping_from_file(mapping_file_path)
             data_loader_utils.create_index_from_mapping(mapping)
     
-    def should_download_data(self):
-        return True
+    # def should_download_data(self):
+    #     return True
 
     def tasks_completed(self):
         self.delete_task_list()
@@ -86,16 +84,17 @@ class USPTOLoadManager(LoadManager):
         file_manager.set_processed_files(load_config, self.files_to_process)
 
     def download_data(self):
-        # data_directory = '/Users/robin/Desktop/uspto'
-        # for name in os.listdir(data_directory):
-        #     file_path = os.path.join(data_directory, name)
-        #     if os.path.isfile(file_path) and name.endswith('.xml'):
-        #         print 'Parsing file:', file_path
-        #         self.files_to_process.append(file_path)
         load_config = self.get_load_config()
 
         # self.files_to_process = file_manager.get_files_to_process(load_config)
-        self.files_to_process = file_manager.download_files(load_config)
+        if self.year is not None:
+            self.files_to_process = file_manager.download_files(load_config, year=self.year)
+        else:
+            self.files_to_process = file_manager.get_files_to_process(load_config)
+            if len(self.files_to_process) == 0:
+                year = file_manager.get_next_year(load_config)
+                self.files_to_process = file_manager.download_files(load_config, year=year)
+
         print self.files_to_process
 
     def process(self, data_source_file):
@@ -147,35 +146,31 @@ class USPTOLoadManager(LoadManager):
                 
 
 def process_file(data_source_file):
-    load_manager = USPTOLoadManager(MODE_FILE)
+    load_manager = USPTOLoadManager()
     load_manager.files_to_process.append(data_source_file)
     load_manager.del_config()
     load_manager.run()
 
-def process_auto():
-    load_manager = USPTOLoadManager(MODE_AUTO)
-    load_manager.del_config()
+def process_auto(year=None):
+    load_manager = USPTOLoadManager(year)
+    # load_manager.del_config()
     load_manager.run()
 
 
 def analyse():
-    load_manager = USPTOLoadManager(MODE_AUTO)
+    load_manager = USPTOLoadManager()
     load_manager.analyse_failed_docs()
 
 
 def run():
     arg_index = 0
     for arg in sys.argv:
-        if arg_index > 0:
-            if arg == '-path':
+        if arg_index > 0:    
+            if arg == '-auto':
+                year = None
                 if (arg_index + 1) < len(sys.argv):
-                    data_source_file = sys.argv[arg_index + 1]
-                    process_file(data_source_file)   
-                    return
-                else:
-                    print('Usage: uspto_load_manager -path <path to csv file>')     
-            elif arg == '-auto': 
-                process_auto()
+                    year = sys.argv[arg_index + 1]
+                process_auto(year)
             elif arg == '-analyse': 
                 analyse()
             else:
