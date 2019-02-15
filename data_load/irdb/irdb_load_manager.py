@@ -276,7 +276,8 @@ class IRDBLoadManager(LoadManager):
         if proceed.lower() in ['y', 'yes', '']:
             clear_spires_pubmed_relations.run()
         else:
-            exit()
+            # exit()
+            pass
 
     def load_pubmed_relations(self):
         proceed = raw_input('Load new relationships from PubMed to IRDB? (y/n): ')
