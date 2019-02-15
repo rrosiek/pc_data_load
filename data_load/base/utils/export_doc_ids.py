@@ -5,8 +5,22 @@ import file_utils
 def export_doc_ids(server, src_index, src_type):
     print __name__, 'Fetching doc ids for', server, src_index, src_type
     query = {
-            "match_all": {}
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "citations.index_id": "IRDB"
+                    }
+                },
+                {
+                    "match": {
+                        "citations.source": "irdb"
+                    }
+                }
+            ]
+        }
     }
+
     data_utils = DataUtils()
     ids = data_utils.batch_fetch_ids_for_query(base_url=server, index=src_index, type=src_type, query=query)
 
