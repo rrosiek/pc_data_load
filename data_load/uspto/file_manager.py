@@ -11,8 +11,9 @@ GRANTS_DOWNLOADED_FILES = 'USPTO_DOWNLOADED_FILES.json'
 
 # GrantsDBExtract20181203v2.zip
 
-def get_available_files_to_download(year=None):
-    files_per_year = get_data_source_links.run()
+def get_available_files_to_download(year=None, pre_2001=False):
+    files_per_year = get_data_source_links.get_files(pre_2001=pre_2001)
+
     print len(files_per_year)
     if year is not None:
         urls = files_per_year[year]
@@ -27,8 +28,9 @@ def get_available_files_to_download(year=None):
     print urls
     return urls   
 
-def get_next_year(load_config):
-    files_per_year = get_data_source_links.run()
+def get_next_year(load_config, pre_2001=False):
+    files_per_year = get_data_source_links.get_files(pre_2001=pre_2001)
+
     downloaded_files = get_downloaded_files(load_config)
 
     years = files_per_year.keys()
@@ -97,8 +99,8 @@ def get_files_to_download(load_config, available_files):
     return filtered_files
 
 
-def download_files(load_config, year=None):
-    available_files_to_download = get_available_files_to_download(year=year)
+def download_files(load_config, year=None, pre_2001=False):
+    available_files_to_download = get_available_files_to_download(year=year, pre_2001=pre_2001)
 
     files_to_download = get_files_to_download(load_config, available_files_to_download)
     source_files_directory = load_config.source_files_directory()

@@ -4,9 +4,10 @@ import re
 DATA_SOURCE_DOMAIN  = 'http://patents.reedtech.com/'
 DATA_SOURCE_URL = DATA_SOURCE_DOMAIN + 'pgrbft.php'
 
-URL_PATTERN = r'downloads\/[A-Z]\w+\/([0-9]{4})\/([a-z, 0-9,.]+)'
+URL_PATTERN = r'downloads\/[A-Z]\w+\/([0-9]{4})\/([a-z, 0-9,._]+)'
 
-FILE_NAME_PATTERN = r'i?pg([0-9]{6}).zip'
+POST_2001_FILE_NAME_PATTERN = r'i?pg([0-9]{6}).zip'
+PRE_2001_FILE_NAME_PATTERN = r'pftaps([0-9]{8})_(wk[0-9]{2}).zip'
 
 html = """
 <div class="bulkyear" id="2019">2019 [<a href="#top">Top</a>]</div>
@@ -34,25 +35,27 @@ def process_table(index, element):
 #     ALL_YEARS.append(year)
 
 def sort_files():
+    print 'Sorting files..'
+
     for file_url in ALL_FILE_URLS:
         result = re.search(URL_PATTERN, file_url)   
         if result is not None:
             year = result.group(1)
             file_name = result.group(2)
-            if re.match(FILE_NAME_PATTERN, file_name):
-                # print year, file_name
 
-                if year not in FILES_PER_YEAR:
-                    FILES_PER_YEAR[year] = []
+            print year, file_name
 
-                FILES_PER_YEAR[year].append(file_url)
+            if year not in FILES_PER_YEAR:
+                FILES_PER_YEAR[year] = []
+
+            FILES_PER_YEAR[year].append(file_url)
 
     for year in FILES_PER_YEAR:
         files_per_year = FILES_PER_YEAR[year]
         files_per_year.sort()
         FILES_PER_YEAR[year] = files_per_year
 
-def run():
+def generate_files_per_year():
     if len(FILES_PER_YEAR) == 0:
         print 'Loading', DATA_SOURCE_URL
         pq = PyQuery(url=DATA_SOURCE_URL)
@@ -68,9 +71,10 @@ def run():
         print 'Files'
         data_tables.each(process_table)
 
-        print 'Sorting files..'
         sort_files()
 
+def get_files(pre_2001=False):
+    generate_files_per_year()
 
     filtered_files_per_year = {}
      
@@ -78,10 +82,45 @@ def run():
     years.sort()
 
     for year in years:
-        if int(year) >= 2001:  
-            print year, len(FILES_PER_YEAR[year]), 'files'
-            filtered_files_per_year[year] = FILES_PER_YEAR[year]
-            
+        if pre_2001:
+            if int(year) < 2001:  
+                print year, len(FILES_PER_YEAR[year]), 'files'
+                filtered_files_per_year[year] = filter_file_names(FILES_PER_YEAR[year], pre_2001=pre_2001)
+        else:
+            if int(year) >= 2001:
+                print year, len(FILES_PER_YEAR[year]), 'files'
+                filtered_files_per_year[year] = filter_file_names(FILES_PER_YEAR[year], pre_2001=pre_2001)
+                
+    return filtered_files_per_year
+
+
+def filter_file_names(file_urls, pre_2001=False):
+    filtered_urls = []
+    for file_url in file_urls:
+        result = re.search(URL_PATTERN, file_url)   
+        if result is not None:
+            file_name = result.group(2)
+
+            pattern = POST_2001_FILE_NAME_PATTERN
+            if pre_2001:
+                pattern = PRE_2001_FILE_NAME_PATTERN
+            if re.match(pattern, file_name):
+                filtered_urls.append(file_url)
+
+    return filtered_urls
+
+def run():
+    generate_files_per_year()
+
+    filtered_files_per_year = {}
+     
+    years = FILES_PER_YEAR.keys()
+    years.sort()
+
+    for year in years:
+        print year, len(FILES_PER_YEAR[year]), 'files'
+        filtered_files_per_year[year] = FILES_PER_YEAR[year]
+        
     return filtered_files_per_year
 
 # run()
