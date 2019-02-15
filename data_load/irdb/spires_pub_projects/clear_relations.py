@@ -36,11 +36,29 @@ def run():
     pubmed_index = INDEX_MAPPING[ID_PUBMED]['index']
     pubmed_type = INDEX_MAPPING[ID_PUBMED]['type']
 
+
+    query = {
+        "bool": {
+                "must": [
+                    {
+                        "match": {
+                            "citations.index_id": "IRDB"
+                        }
+                    },
+                    {
+                        "match": {
+                            "citations.source": "irdb"
+                        }
+                    }
+                ]
+            }
+    }
+
     all_pubmed_ids = export_doc_ids.get_doc_ids(load_config.server,
                                                 pubmed_index,
                                                 pubmed_type,
                                                 other_files_directory,
-                                                'DOC_IDS_' + pubmed_index + '.json')
+                                                'DOC_IDS_' + pubmed_index + '.json', query=query)
     all_pubmed_ids = all_pubmed_ids.keys()
 
     print len(all_pubmed_ids), 'pubmed ids'

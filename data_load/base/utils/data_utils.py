@@ -235,7 +235,7 @@ class DataUtils(object):
 
         return []
 
-    def get_total_doc_count(self, base_url, index, type, username='', password=''):
+    def get_total_doc_count(self, base_url, index, type, username='', password='', query=None):
         url = base_url + '/' + index + '/' + type + "/_search?size=0"
         # print url
 

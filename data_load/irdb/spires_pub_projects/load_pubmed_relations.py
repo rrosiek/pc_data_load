@@ -66,6 +66,14 @@ class LoadRelationships(object):
                 batch_ids = {}
                 batch_index += 1 
 
+        if len(batch_ids) > 0:
+            print 'Writing batch:', batch_index
+            batch_file_name = 'batch_' + str(batch_index) + '.json'
+            batch_file_names.append(batch_file_name)
+            file_utils.save_file(generated_files_directory, batch_file_name, batch_ids)
+
+            batch_index += 1
+
         return batch_file_names
 
     def run(self):
