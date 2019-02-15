@@ -43,6 +43,9 @@ class CopyGrants(object):
         if len(batch_file_names) == 0:
             batch_file_names = self.split_to_batches()
 
+        print len(batch_file_names)
+        raw_input('Continue?')
+
         processed_batches = file_utils.load_file(TEMP_DIR, 'processed_pubmed2018_docs_with_grants_batches.json')
         for batch_file_name in batch_file_names:
             if batch_file_name not in processed_batches:
