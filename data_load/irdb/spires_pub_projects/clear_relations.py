@@ -45,6 +45,8 @@ def run():
 
     print len(all_pubmed_ids), 'pubmed ids'
 
+    raw_input('Continue?')
+
     source = 'irdb'
     clear_relationships.batch_clear_relations_for_ids(server=load_config.server,
                                                       _ids=all_pubmed_ids,
