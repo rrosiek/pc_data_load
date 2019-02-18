@@ -101,7 +101,7 @@ class ClearPubmedRelations(object):
         all_pubmed_ids = all_pubmed_ids.keys()
         all_pubmed_ids.sort()
 
-        max_batch_count = 10000
+        max_batch_count = 8000
         
         batch_file_names = []
         batch_index = 0
