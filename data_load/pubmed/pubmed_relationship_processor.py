@@ -142,14 +142,14 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     pubmed_cited_bys_pubmed[citation].append(_id)
 
             # Get existing cited bys (citations from other existing docs) for the new doc
-            if new_doc:
-                existing_cited_bys = self.get_existing_cited_bys(_id)
+            # if new_doc:
+            #     existing_cited_bys = self.get_existing_cited_bys(_id)
 
-                for cited_by in existing_cited_bys:
-                    if _id not in pubmed_cited_bys_pubmed:
-                        pubmed_cited_bys_pubmed[_id] = []
-                    if cited_by not in pubmed_cited_bys_pubmed[_id]:
-                        pubmed_cited_bys_pubmed[_id].append(cited_by)
+            #     for cited_by in existing_cited_bys:
+            #         if _id not in pubmed_cited_bys_pubmed:
+            #             pubmed_cited_bys_pubmed[_id] = []
+            #         if cited_by not in pubmed_cited_bys_pubmed[_id]:
+            #             pubmed_cited_bys_pubmed[_id].append(cited_by)
 
             # Removed citations and cited bys
             for removed_citation in removed_citations:

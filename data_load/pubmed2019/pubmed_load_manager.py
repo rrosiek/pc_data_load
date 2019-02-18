@@ -176,7 +176,7 @@ class PubmedLoadManager(LoadManager):
         elif '_data' in task:
             task = task.replace('_data', '')
             pubmed_data_file = self.file_path_lookup[task]
-            self.pubmed_updater.process_file(pubmed_data_file)
+            # self.pubmed_updater.process_file(pubmed_data_file)
         elif task == 'save_update_record':
             self.save_update_record()
         elif task == 'get_existing_pmids':
