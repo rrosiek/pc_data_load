@@ -191,6 +191,27 @@ class IRDBLoadManager(LoadManager):
     # def should_download_data(self):
     #     return True
 
+    def copy_tags_and_annotations(self):
+        print 'Copying tags and annotations'
+        load_config = self.get_load_config()
+        server = load_config.server
+
+        # index_item = self.get_info_for_index_id(self.index_id)
+        src_index = 'irdb_v3'
+        src_type = 'grant'
+
+        reports_directory = load_config.data_source_directory('copy_tags_and_annotations')
+
+        copier = CopyTagsAndAnnotations(reports_directory=reports_directory,
+                                        src_server=server,
+                                        src_index=src_index,
+                                        src_type=src_type,
+                                        dest_server=server,
+                                        dest_index=load_config.index,
+                                        dest_type=load_config.type)
+
+        copier.run()
+
     def download_data(self):
         load_config = self.get_load_config()
         source_files_directory = load_config.source_files_directory()
