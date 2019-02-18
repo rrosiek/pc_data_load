@@ -191,5 +191,5 @@ class GetDoc(object):
             print len(xml_zip_files), 'files'
             return xml_zip_files
 
-get_doc = GetDoc(['30345029'], ['pubmed19n0975'], 'data/data_loading/pubmed_2019/pubmed2019_updates/source_files')
+get_doc = GetDoc(['30345029'], ['pubmed19n0975'], '/data/data_loading/pubmed_2019/pubmed2019_updates/source_files')
 get_doc.run()
