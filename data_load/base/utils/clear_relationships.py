@@ -154,7 +154,7 @@ def chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i + n]
 
-def batch_clear_relations_for_ids(server, _ids, src_index, src_type, source, dest_index_ids, relationship_types, batch_size=1000, process_count=16):
+def batch_clear_relations_for_ids(server, _ids, src_index, src_type, source, dest_index_ids, relationship_types, batch_size=1000, process_count=8):
     print 'Clearing', relationship_types, 'to', dest_index_ids, 'for', len(_ids), 'docs in index', src_index, '/', src_type
     session = requests.Session()
 

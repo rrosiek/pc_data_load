@@ -60,7 +60,6 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
         self.docs_citations_history[_id]['existing_citations'].extend(existing_citations)
 
-
     def process_relationships(self, extracted_ids):
         # all_indexed_ids = {}
         # if 'indexed_ids' in self.data_source_summary:
@@ -69,6 +68,9 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         all_updated_ids = {}
         if 'updated_ids' in self.data_source_summary:
             all_updated_ids = self.data_source_summary['updated_ids']
+
+        print 'all_updated_ids', len(all_updated_ids)
+        print 'extracted_ids', len(extracted_ids)
 
         # Fetch existing (updated) docs
         self.load_config.log(LOG_LEVEL_DEBUG, 'Fetching docs', self.load_config.server, self.load_config.index, self.load_config.type)
@@ -82,6 +84,9 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                                                 self.load_config.doc_fetch_batch_size,
                                                 self.load_config.server_username,
                                                 self.load_config.server_password)
+
+        print 'existing_docs', len(self.existing_docs)
+
 
         pubmed_citations_pubmed = {}
         pubmed_cited_bys_pubmed = {} 
@@ -164,7 +169,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
             if len(added_citations) > 0:
                 if _id not in self.docs_with_new_citations:
                     self.docs_with_new_citations[_id]= []
-            self.docs_with_new_citations[_id].extend(added_citations)
+                self.docs_with_new_citations[_id].extend(added_citations)
 
             if count % 1000 == 0:
                 print 'Processed', count, 'docs'
@@ -182,8 +187,12 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                                                         relationship_type=RELATIONSHIP_TYPE_CITED_BYS,
                                                         removed_ids=cited_bys_to_remove)
 
-        print 'pubmed_cited_bys_pubmed', len(pubmed_cited_bys_pubmed)
         print 'pubmed_citations_pubmed', len(pubmed_citations_pubmed)
+        print 'pubmed_cited_bys_pubmed', len(pubmed_cited_bys_pubmed)
+        
+        print 'citations_to_remove', len(citations_to_remove)
+        print 'cited_bys_to_remove', len(cited_bys_to_remove)
+
         print 'reformatted pubmed_ids', len(pubmed_ids)
 
         relationships = dict()

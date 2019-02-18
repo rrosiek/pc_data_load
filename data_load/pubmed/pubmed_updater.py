@@ -96,7 +96,7 @@ class PubmedUpdater(object):
         load_config.data_source_name = file_name.split('.')[0] + '_relations'
         load_config.process_count = 4
 
-        load_config.append_relations = False
+        load_config.append_relations = True
         load_config.source = ''
         
         # print 'Processing relationships......'

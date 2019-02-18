@@ -29,6 +29,10 @@ class RelationshipLoader(DataLoader):
         self.data_loader_utils = None
         self.data_utils = None
 
+        self.data_source_name = self.load_config.data_source_name
+        now = datetime.datetime.now()
+        self.updated_date = now.isoformat()
+
     def get_es_id(self, doc_id):
         return doc_id
 
@@ -64,7 +68,8 @@ class RelationshipLoader(DataLoader):
             existing_doc = self.existing_docs[_id]
 
             doc = {}
-
+            updates = []
+            
             # Update relations
             for relation in relations:
                 dest_index_id = relation['index_id']
@@ -75,7 +80,7 @@ class RelationshipLoader(DataLoader):
                     ids_to_remove = relation['ids_to_remove']
 
                 self.load_config.log(LOG_LEVEL_TRACE, self.index, relationship_type,  dest_index_id, len(dest_ids))
-                
+
                 existing_doc = self.load_config.data_mapper.update_relations_for_doc(_id,
                                                                                     existing_doc,
                                                                                     dest_ids,
@@ -85,6 +90,27 @@ class RelationshipLoader(DataLoader):
                                                                                     append=self.append,
                                                                                     ids_to_remove=ids_to_remove)
                 doc[relationship_type] = existing_doc[relationship_type]
+
+                updates.append({
+                    'index_id': dest_index_id,
+                    'source': self.source,
+                    'added_ids': dest_ids,
+                    'removed_ids': ids_to_remove,
+                    'relation_type': relationship_type
+                })
+
+            update_history = []
+            if 'update_history' in existing_doc:
+                update_history = existing_doc['update_history']
+
+            update_history_item = {
+                'update_source': self.data_source_name,
+                'update_date': self.updated_date,
+                'relations_updates': updates
+            }
+            update_history.append(update_history_item)
+
+            doc['update_history'] = update_history
 
             if self.load_config.test_mode and count % 2500 == 0:
                 # print 'Existing doc id', _id

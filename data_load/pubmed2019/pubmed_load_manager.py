@@ -23,6 +23,8 @@ from data_load.pubmed.pubmed_updater import DIR_PROSPECTS
 
 import data_load.pubmed.file_manager as file_manager
 
+from data_load.pubmed.clear_pubmed_relations import ClearPubmedRelations
+
 import os
 import sys
 import time
@@ -34,6 +36,7 @@ MODE_FILE = 'MODE_FILE'
 MODE_BASELINE = 'MODE_BASELINE'
 MODE_UPDATE = 'MODE_UPDATE'
 MODE_COPY_USER_DATA = 'MODE_COPY_USER_DATA'
+MODE_CLEAR_RELATIONS = 'MODE_CLEAR_RELATIONS'
 
 ID_PUBMED_2019 = 'PUBMED_2019'
 
@@ -61,8 +64,10 @@ class PubmedLoadManager(LoadManager):
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019_updates'
         elif self.mode == MODE_BASELINE:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'pubmed2019'
-        else:
+        elif self.mode == MODE_COPY_USER_DATA:
             return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'copy_user_data'
+        elif self.mode == MODE_CLEAR_RELATIONS:
+            return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() + '/' + 'clear_relations'
 
     # Methods to override
     def should_reload(self):
@@ -153,6 +158,11 @@ class PubmedLoadManager(LoadManager):
                 'name': 'copy_user_data',
                 'status': ''
             })
+        elif self.mode == MODE_CLEAR_RELATIONS:
+            tasks_list.append({
+                'name': 'clear_rels',
+                'status': ''
+            })
         
         return tasks_list
 
@@ -172,12 +182,21 @@ class PubmedLoadManager(LoadManager):
         elif task == 'get_existing_pmids':
             self.pubmed_updater.get_existing_pmids()
         elif task == 'find_prospective_citations':
-            self.find_prospective_citations()
+            # self.find_prospective_citations()
+            pass
         elif task == 'send_update_notifications':
-            self.send_update_notifications()
+            # self.send_update_notifications()
+            pass
         elif task == 'save_new_pmids':
             self.save_new_pmids()
+        elif task == 'clear_rels':
+            self.clear_relations()
      
+    def clear_relations(self):
+        load_config =self.get_load_config()
+        clear_pubmed_relations = ClearPubmedRelations(load_config)
+        clear_pubmed_relations.run()
+
     def tasks_completed(self):
         self.delete_task_list()
 
@@ -372,12 +391,18 @@ def process_baseline():
 def process_updates():
     load_manager = PubmedLoadManager(MODE_UPDATE, 0)
     load_manager.mode = MODE_UPDATE
-    load_manager.no_of_files = 4
+    load_manager.no_of_files = 1
     load_manager.del_config()
     load_manager.run()
 
 def copy_user_data():
     load_manager = PubmedLoadManager(MODE_COPY_USER_DATA, 0)
+    load_manager.del_config()
+    load_manager.run()
+
+
+def clear_relations():
+    load_manager = PubmedLoadManager(MODE_CLEAR_RELATIONS, 0)
     load_manager.del_config()
     load_manager.run()
 
@@ -407,6 +432,8 @@ def run():
                 process_updates()
             elif arg == '-copy':
                 copy_user_data()
+            elif arg == '-clear':
+                clear_relations()
             else: 
                 print('Usage: pubmed_load_manager -n <number of files to process>')     
         arg_index += 1
