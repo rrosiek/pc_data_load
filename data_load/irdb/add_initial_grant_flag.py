@@ -111,7 +111,7 @@ class AddInitialGrantFlag(object):
                                 src_index=self.load_config.index,
                                 src_type=self.load_config.type,
                                 dest_dir=self.load_config.other_files_directory(),
-                                dest_file_name="ALL_IRDB_IDS.json")
+                                dest_file_name="INITIAL_GRANT_ALL_IRDB_IDS.json")
 
         doc_ids = doc_ids.keys()
 
