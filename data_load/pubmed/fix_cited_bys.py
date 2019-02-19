@@ -36,7 +36,7 @@ class FixCitations(BatchProcessor):
     #                 }
     #             }
 
-    def process_docs_batch(self, batch):
+    def process_docs_batch(self, batch, batch_name):
         print 'Processing docs', len(batch)
         pubmed_cited_bys_pubmed = {}
         for _id in batch:
