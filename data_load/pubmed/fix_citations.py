@@ -17,6 +17,9 @@ class FixCitations(BatchProcessor):
         self.load_config = load_config
         self.data_utils = DataUtils()
 
+    def get_batch_docs_directory(self):
+        return self.load_config.root_directory()
+
     def process_docs_batch(self, batch):
         print 'Fetching docs'
         self.data_utils.batch_fetch_docs_for_ids(base_url=self.load_config.server,
