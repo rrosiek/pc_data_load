@@ -21,12 +21,12 @@ class FixCitations(BatchProcessor):
         self.citation_errors = {}
 
     def process_completed(self):
-        if len(self.citation_errors) == 0:
-            self.citation_errors = file_utils.load_file(self.batch_docs_directory(), 'citation_errors.json')
+        # if len(self.citation_errors) == 0:
+        #     self.citation_errors = file_utils.load_file(self.batch_docs_directory(), 'citation_errors.json')
 
         print len(self.citation_errors), 'citation errors'
         print self.citation_errors.keys()
-        # file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
+        file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
 
         raw_input('Load Citations?')
 
@@ -78,10 +78,10 @@ class FixCitations(BatchProcessor):
             # print 'Processing doc', _id
             doc = docs[_id]
 
-            citations_from_update_history = []
-            if 'update_history' in doc:
-                update_history = doc['update_history']
-                citations_from_update_history = self.get_citations_from_update_history(update_history)
+            citations_from_update_history = self.get_citations_from_data(doc)
+            # if 'update_history' in doc:
+            #     update_history = doc['update_history']
+            #     citations_from_update_history = self.get_citations_from_update_history(update_history)
 
             current_citations = self.get_citations(doc)
 
@@ -114,6 +114,34 @@ class FixCitations(BatchProcessor):
                     citations = list(set(citations) - set(removed_citations))
         
         return citations
+
+    def get_citations_from_data(self, doc):
+        citations = []
+        if 'PubmedData' in doc:
+            if 'ReferenceList' in doc['PubmedData']:
+                if 'Reference' in doc['PubmedData']['ReferenceList']:
+                    reference_list = doc['PubmedData']['ReferenceList']['Reference']
+
+                    if not isinstance(reference_list, list):
+                        reference_list = [reference_list]
+
+                    for reference in reference_list:
+                        if 'ArticleIdList' in reference:
+                            article_id_list = reference['ArticleIdList']
+                            if 'ArticleId' in article_id_list:
+                                article_ids = article_id_list['ArticleId']
+                                if not isinstance(article_ids, list):
+                                    article_ids = [article_ids]
+
+                                for article_id in article_ids:
+                                    if 'IdType' in article_id:
+                                        article_id_type = article_id['IdType']
+                                        if article_id_type == 'pubmed':
+                                            pmid = article_id['content']
+                                            citations.append(pmid)
+
+        return citations
+
 
     def get_citations(self, doc):
         citations = []
