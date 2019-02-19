@@ -45,7 +45,7 @@ class FixCitations(BatchProcessor):
             if len(cited_bys) > 0:
                 pubmed_cited_bys_pubmed[_id] = cited_bys
 
-            print _id, len(cited_bys)
+            # print _id, len(cited_bys)
 
         pubmed_ids = {}
         pubmed_ids = self.load_config.data_mapper.reformat(reformatted_array=pubmed_ids,
@@ -54,6 +54,8 @@ class FixCitations(BatchProcessor):
                                                             relationship_type=RELATIONSHIP_TYPE_CITED_BYS,
                                                             removed_ids=[])
 
+        
+        print batch_name, len(pubmed_ids), 'ids to update'
         relationship_loader = RelationshipLoader(self.load_config, pubmed_ids, self.load_config.index, self.load_config.type, 'ds_batch_fix_cited_bys')
         relationship_loader.run()
 
