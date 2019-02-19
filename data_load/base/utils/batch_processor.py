@@ -91,7 +91,7 @@ class BatchProcessor(object):
         for batch_file_name in batch_file_names:
             if batch_file_name not in processed_batches:
                 print 'Loading batch', batch_file_name
-                batch = file_utils.load_file(TEMP_DIR, batch_file_name)
+                batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
                 self.process_docs_batch(batch)
                 processed_batches[batch_file_name] = 0
                 file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
