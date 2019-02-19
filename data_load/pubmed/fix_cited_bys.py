@@ -41,7 +41,8 @@ class FixCitations(BatchProcessor):
         pubmed_cited_bys_pubmed = {}
         for _id in batch:
             cited_bys = self.get_cited_bys(_id)
-            pubmed_cited_bys_pubmed[_id] = cited_bys
+            if len(cited_bys) > 0:
+                pubmed_cited_bys_pubmed[_id] = cited_bys
 
             print _id, len(cited_bys)
 
