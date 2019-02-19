@@ -96,12 +96,26 @@ class PubmedDataMapper(DataMapper):
         new_doc = PubmedDataMapper.create_doc(_id, data_source_name, data)
 
         update_doc = {}
+        
+        existing_citations_history = []
+        if 'citations_history' in existing_doc:
+            existing_citations_history = existing_doc['citations_history']
+        
+        new_citations_history = []
+        if 'citations_history' in new_doc:
+            new_citations_history = new_doc['citations_history']
+
+        for item in new_citations_history:
+            existing_citations_history.append(item)
+
+        if len(existing_citations_history) > 0:
+            update_doc['citations_history'] = existing_citations_history
+
         for key in new_doc:
-            new_value = new_doc[key]
-            if new_value is not None and len(new_value) > 0:
-                update_doc[key] = new_value
-
-
+            if key != 'citations_history':
+                new_value = new_doc[key]
+                if new_value is not None and len(new_value) > 0:
+                    update_doc[key] = new_value
 
         return update_doc
 
