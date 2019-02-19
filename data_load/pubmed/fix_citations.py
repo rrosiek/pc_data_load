@@ -4,6 +4,7 @@ from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 
 from data_load.base.utils.batch_processor import BatchProcessor
 from data_load.base.utils.data_utils  import DataUtils
+from data_load.base.utils import file_utils
 
 from data_load.base.load_config import LoadConfig
 from data_load.base.constants import ID_PUBMED
@@ -17,6 +18,10 @@ class FixCitations(BatchProcessor):
         self.load_config = load_config
         self.data_utils = DataUtils()
         self.citation_errors = {}
+
+    def process_completed(self):
+        print len(self.citation_errors), 'citation errors'
+        file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
 
     def get_batch_docs_directory(self):
         return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'

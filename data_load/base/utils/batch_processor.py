@@ -18,6 +18,10 @@ class BatchProcessor(object):
 
     def run(self):
         self.process_batches()
+        self.process_completed()
+
+    def process_completed(self):
+        pass
 
     def get_query(self):
         query = {
