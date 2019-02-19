@@ -11,7 +11,7 @@ from data_load.base.constants import ID_PUBMED, RELATIONSHIP_TYPE_CITATIONS
 from data_load.base.relationship_loader import RelationshipLoader
 
 import psutil
-
+import os
 
 class ProcessBatch(object):
 
@@ -118,6 +118,22 @@ class FixCitations(BatchProcessor):
         # print len(self.citation_errors), 'citation errors'
         # print self.citation_errors.keys()
         # file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
+
+        batch_file_names = []
+        for batch_file_name in os.listdir(self.batch_docs_directory()):
+            file_path = os.path.join(self.batch_docs_directory(), batch_file_name)
+            if os.path.isfile(file_path) and batch_file_name.startswith('citation_errors_batch_'):
+                batch_file_names.append(batch_file_name)
+
+        citation_errors = {}
+        for batch_file_name in batch_file_names:
+            print 'Loading batch', batch_file_name
+            batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
+            for _id in batch:
+                citation_errors[_id] = batch[_id]
+
+            
+        print len(citation_errors), 'citation errors'
 
         raw_input('Load Citations?')
 
