@@ -21,9 +21,12 @@ class FixCitations(BatchProcessor):
         self.citation_errors = {}
 
     def process_completed(self):
+        if len(self.citation_errors) == 0:
+            self.citation_errors = file_utils.load_file(self.batch_docs_directory(), 'citation_errors.json')
+
         print len(self.citation_errors), 'citation errors'
         print self.citation_errors.keys()
-        file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
+        # file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
 
         raw_input('Load Citations?')
 
