@@ -269,11 +269,8 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         """
         Search elasticsearch for any docs citing the given id
         """
-
-        url = self.load_config.server + '/' + self.load_config.index + '/' + self.load_config.type + '/_search'
         query = {
-            "query": {
-                "bool": {
+            "bool": {
                 "must": [
                     {
                     "match": {
@@ -291,26 +288,15 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
                     }
                     }
                 ]
-                }
-            },
-            "_source": [
-                "_id"
-            ]
+            }
         }
 
-        response = self.data_utils.fetch_docs_for_query(url, query, self.load_config.server_username, self.load_config.server_password)
-        if response is not None:
-            hits = response['hits']
-            hits = hits['hits']
+        ids = self.data_utils.batch_fetch_ids_for_query(base_url=self.load_config.server, 
+                                                query=query, 
+                                                index=self.load_config.index, 
+                                                type=self.load_config.type)
 
-            ids = []
-            for doc in hits:
-                _id = doc['_id']
-                ids.append(_id)
-
-            return ids
-
-        return []         
+        return ids        
 
     def update_doc(self, _id, existing_doc, original_citations, removed_citations, added_citations):
         if len(removed_citations) > 0  or len(added_citations) > 0:
