@@ -66,7 +66,7 @@ class FixCitations(BatchProcessor):
             if len(current_citations) != len(citations_from_update_history):
                 self.citation_errors[_id] = 0
 
-            print _id, 'current citations:', len(current_citations), 'citations from update history:', len(citations_from_update_history)
+                print _id, 'current citations:', len(current_citations), 'citations from update history:', len(citations_from_update_history)
 
     def get_citations_from_update_history(self, update_history):
         citations = []
