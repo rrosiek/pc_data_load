@@ -54,6 +54,8 @@ class BatchProcessor(object):
                                             query=query)
         all_ids = all_ids.keys()
         all_ids.sort()
+
+        print 'all_ids', len(all_ids)
         
         batch_file_names = []
         batch_index = 0
@@ -100,14 +102,14 @@ class BatchProcessor(object):
             if batch_file_name not in processed_batches:
                 print 'Loading batch', batch_file_name
                 batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
-                self.start_process_doc_batch(batch)
+                self.start_process_doc_batch(batch, batch_file_name.split('.')[0])
                 processed_batches[batch_file_name] = 0
                 file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
 
 
-    def start_process_doc_batch(self, batch):
+    def start_process_doc_batch(self, batch, batch_name):
         if self.multiprocess:
-            process = Process(target=self.process_docs_batch, args=(batch,))
+            process = Process(target=self.process_docs_batch, args=(batch, batch_name,))
             process.start()
 
             self.processes.append(process)
@@ -117,7 +119,7 @@ class BatchProcessor(object):
 
             time.sleep(self.load_config.process_spawn_delay)
         else:
-            self.process_docs_batch(batch)
+            self.process_docs_batch(batch, batch_name)
 
-    def process_docs_batch(self, batch):
-        print 'Processing batch with', len(batch), 'docs'
+    def process_docs_batch(self, batch, batch_name):
+        print 'Processing', batch_name, 'with', len(batch), 'docs'
