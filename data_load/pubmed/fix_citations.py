@@ -47,6 +47,8 @@ class FixCitations(BatchProcessor):
                 existing_doc = doc['_source']
                 docs_to_process[_id] = existing_doc
 
+        self.process_docs(docs_to_process)
+
     def process_docs(self, docs):
         for _id in docs:
             doc = docs[_id]
