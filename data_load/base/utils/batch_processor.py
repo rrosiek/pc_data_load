@@ -106,9 +106,6 @@ class BatchProcessor(object):
                 processed_batches[batch_file_name] = 0
                 file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
 
-                break
-
-
     def start_process_doc_batch(self, batch, batch_name):
         if self.multiprocess:
             process = Process(target=self.process_docs_batch, args=(batch, batch_name,))
