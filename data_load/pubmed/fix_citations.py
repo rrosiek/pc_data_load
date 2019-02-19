@@ -18,7 +18,7 @@ class FixCitations(BatchProcessor):
         self.data_utils = DataUtils()
 
     def get_batch_docs_directory(self):
-        return self.load_config.root_directory()
+        return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
 
     def process_docs_batch(self, batch):
         print 'Fetching docs'
