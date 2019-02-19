@@ -21,11 +21,11 @@ class FixCitations(BatchProcessor):
         return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
 
     def get_query(self):
-        {
-            "exists": {
-                "field": "update_history"
-            }
-        }
+        return {
+                    "exists": {
+                        "field": "update_history"
+                    }
+                }
 
     def process_docs_batch(self, batch):
         print 'Fetching docs'
