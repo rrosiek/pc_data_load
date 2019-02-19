@@ -109,5 +109,7 @@ load_config.process_count = 8
 load_config.source = ""
 load_config.append_relations = False
 
+load_config.data_source_name = 'FixCitedBys'
+
 fix_citations = FixCitations(load_config)
 fix_citations.run()
