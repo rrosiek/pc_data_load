@@ -47,15 +47,15 @@ class FixCitations(BatchProcessor):
 
             print _id, len(cited_bys)
 
-        # pubmed_ids = {}
-        # pubmed_ids = self.load_config.data_mapper.reformat(reformatted_array=pubmed_ids,
-        #                                                     relations_array=pubmed_cited_bys_pubmed,
-        #                                                     dest_index_id=ID_PUBMED,
-        #                                                     relationship_type=RELATIONSHIP_TYPE_CITED_BYS,
-        #                                                     removed_ids=[])
+        pubmed_ids = {}
+        pubmed_ids = self.load_config.data_mapper.reformat(reformatted_array=pubmed_ids,
+                                                            relations_array=pubmed_cited_bys_pubmed,
+                                                            dest_index_id=ID_PUBMED,
+                                                            relationship_type=RELATIONSHIP_TYPE_CITED_BYS,
+                                                            removed_ids=[])
 
-        # relationship_loader = RelationshipLoader(self.load_config, pubmed_ids, self.load_config.index, self.load_config.type, 'ds_batch_fix_cited_bys')
-        # relationship_loader.run()
+        relationship_loader = RelationshipLoader(self.load_config, pubmed_ids, self.load_config.index, self.load_config.type, 'ds_batch_fix_cited_bys')
+        relationship_loader.run()
 
     def get_cited_bys(self, _id):
         """
