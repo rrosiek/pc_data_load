@@ -28,7 +28,7 @@ class FixCitations(BatchProcessor):
                 }
 
     def process_docs_batch(self, batch):
-        print 'Fetching docs'
+        print 'Fetching docs', len(batch)
         self.data_utils.batch_fetch_docs_for_ids(base_url=self.load_config.server,
                                                 ids=batch,
                                                 index=self.load_config.index,
@@ -50,6 +50,7 @@ class FixCitations(BatchProcessor):
         self.process_docs(docs_to_process)
 
     def process_docs(self, docs):
+        print 'Processing docs', len(docs)
         for _id in docs:
             print 'Processing doc', _id
             doc = docs[_id]
