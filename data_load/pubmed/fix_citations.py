@@ -134,6 +134,7 @@ class FixCitations(BatchProcessor):
 
             
         print len(citation_errors), 'citation errors'
+        print citation_errors.keys
 
         raw_input('Load Citations?')
 
