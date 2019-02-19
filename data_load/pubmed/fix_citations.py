@@ -20,6 +20,13 @@ class FixCitations(BatchProcessor):
     def get_batch_docs_directory(self):
         return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
 
+    def get_query(self):
+        {
+            "exists": {
+                "field": "update_history"
+            }
+        }
+
     def process_docs_batch(self, batch):
         print 'Fetching docs'
         self.data_utils.batch_fetch_docs_for_ids(base_url=self.load_config.server,
