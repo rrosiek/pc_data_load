@@ -51,6 +51,7 @@ class FixCitations(BatchProcessor):
 
     def process_docs(self, docs):
         for _id in docs:
+            print 'Processing doc', _id
             doc = docs[_id]
 
             citations_from_update_history = []
