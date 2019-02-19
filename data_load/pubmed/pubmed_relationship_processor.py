@@ -100,6 +100,9 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
             data = extracted_ids[_id]
 
+            if len(data) == 0:
+                print 'No data for', _id
+
             new_doc = False
             existing_citations = []
             new_citations = self.load_config.data_mapper.get_citations(data)
