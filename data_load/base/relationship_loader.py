@@ -99,18 +99,19 @@ class RelationshipLoader(DataLoader):
                     'relation_type': relationship_type
                 })
 
-            update_history = []
-            if 'update_history' in existing_doc:
-                update_history = existing_doc['update_history']
+            # Relations updates
+            relations_updates = []
+            if 'relations_updates' in existing_doc:
+                relations_updates = existing_doc['relations_updates']
 
-            update_history_item = {
+            update_item = {
                 'update_source': self.data_source_name,
                 'update_date': self.updated_date,
-                'relations_updates': updates
+                'updates': updates
             }
-            update_history.append(update_history_item)
+            relations_updates.append(update_item)
+            doc['relations_updates'] = relations_updates
 
-            doc['update_history'] = update_history
 
             if self.load_config.test_mode and count % 2500 == 0:
                 # print 'Existing doc id', _id

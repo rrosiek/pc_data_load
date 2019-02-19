@@ -96,32 +96,12 @@ class PubmedDataMapper(DataMapper):
         new_doc = PubmedDataMapper.create_doc(_id, data_source_name, data)
 
         update_doc = {}
-        if 'startJournalDate' in new_doc:
-            existing_value = new_doc['startJournalDate']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['startJournalDate'] = existing_value
+        for key in new_doc:
+            new_value = new_doc[key]
+            if new_value is not None and len(new_value) > 0:
+                update_doc[key] = new_value
 
-        if 'startDateYear' in new_doc:
-            existing_value = new_doc['startDateYear']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['startDateYear'] = existing_value
 
-        if 'MedlineCitation' in new_doc:
-            existing_value = new_doc['MedlineCitation']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['MedlineCitation'] = existing_value
-
-        if 'PubmedData' in new_doc:
-            existing_value = new_doc['PubmedData']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['PubmedData'] = existing_value
-            else:
-                print 'PubmedData missing', _id
-
-        if 'Author_Details' in new_doc:
-            existing_value = new_doc['Author_Details']
-            if existing_value is not None and len(existing_value) > 0:
-                update_doc['Author_Details'] = existing_value
 
         return update_doc
 
@@ -146,6 +126,17 @@ class PubmedDataMapper(DataMapper):
 
             # Authors
             doc['Author_Details'] = PubmedDataMapper.extract_authors_list(data)
+
+            now = datetime.datetime.now()
+            updated_date = now.isoformat()
+
+            citations = PubmedDataMapper.get_citations([data])
+            citations_history_item = {
+                'citations': citations,
+                'data_source': data_source_name,
+                'updated_date': updated_date
+            }
+            doc['citations_history'] = [citations_history_item]
         except Exception as e:
             print 'Create doc:', e
 
