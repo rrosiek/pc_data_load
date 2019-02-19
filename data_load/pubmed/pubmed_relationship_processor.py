@@ -270,8 +270,24 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
         url = self.load_config.server + '/' + self.load_config.index + '/' + self.load_config.type + '/_search'
         query = {
             "query": {
-                "match": {
-                    "citations.ids": _id
+                "bool": {
+                "must": [
+                    {
+                    "match": {
+                        "citations.ids": _id
+                    }
+                    },
+                    {
+                    "match": {
+                        "citations.source": ""
+                    }
+                    },
+                    {
+                    "match": {
+                        "citations.index_id": ID_PUBMED
+                    }
+                    }
+                ]
                 }
             },
             "_source": [
@@ -291,7 +307,7 @@ class PubmedRelationshipProcessor(DataSourceProcessor):
 
             return ids
 
-        return []        
+        return []         
 
     def update_doc(self, _id, existing_doc, original_citations, removed_citations, added_citations):
         if len(removed_citations) > 0  or len(added_citations) > 0:

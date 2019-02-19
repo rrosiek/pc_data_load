@@ -1,5 +1,7 @@
 import os
 import json
+from multiprocessing import Process
+import time
 
 from data_load.base.utils import file_utils
 from data_load.base.utils import export_doc_ids
@@ -12,9 +14,11 @@ ALL_IDS_FILE = 'all_ids.json'
 
 class BatchProcessor(object):
 
-    def __init__(self, load_config, batch_doc_count=BATCH_DOC_COUNT):
+    def __init__(self, load_config, batch_doc_count=BATCH_DOC_COUNT, multiprocess=False):
         self.load_config = load_config
         self.batch_doc_count = batch_doc_count
+        self.multiprocess = multiprocess
+        self.processes = []
 
     def run(self):
         self.process_batches()
@@ -96,9 +100,24 @@ class BatchProcessor(object):
             if batch_file_name not in processed_batches:
                 print 'Loading batch', batch_file_name
                 batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
-                self.process_docs_batch(batch)
+                self.start_process_doc_batch(batch)
                 processed_batches[batch_file_name] = 0
                 file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
+
+
+    def start_process_doc_batch(self, batch):
+        if self.multiprocess:
+            process = Process(target=self.process_docs_batch, args=(batch,))
+            process.start()
+
+            self.processes.append(process)
+            if len(self.processes) >= self.load_config.process_count:
+                old_process = self.processes.pop(0)
+                old_process.join()
+
+            time.sleep(self.load_config.process_spawn_delay)
+        else:
+            self.process_docs_batch(batch)
 
     def process_docs_batch(self, batch):
         print 'Processing batch with', len(batch), 'docs'

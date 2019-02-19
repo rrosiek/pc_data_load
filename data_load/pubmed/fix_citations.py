@@ -7,7 +7,8 @@ from data_load.base.utils.data_utils  import DataUtils
 from data_load.base.utils import file_utils
 
 from data_load.base.load_config import LoadConfig
-from data_load.base.constants import ID_PUBMED
+from data_load.base.constants import ID_PUBMED, RELATIONSHIP_TYPE_CITATIONS
+from data_load.base.relationship_loader import RelationshipLoader
 
 import psutil
 
@@ -21,7 +22,20 @@ class FixCitations(BatchProcessor):
 
     def process_completed(self):
         print len(self.citation_errors), 'citation errors'
+        print self.citation_errors.keys()
         file_utils.save_file(self.batch_docs_directory(), 'citation_errors.json', self.citation_errors)
+
+        raw_input('Load Citations?')
+
+        pubmed_ids = {}
+        pubmed_ids = self.load_config.data_mapper.reformat(reformatted_array=pubmed_ids,
+                                                        relations_array=self.citation_errors,
+                                                        dest_index_id=ID_PUBMED,
+                                                        relationship_type=RELATIONSHIP_TYPE_CITATIONS,
+                                                        removed_ids=[])
+
+        relationship_loader = RelationshipLoader(self.load_config, pubmed_ids, self.load_config.index, self.load_config.type, 'ds_batch_fix_citations')
+        relationship_loader.run()                          
 
     def get_batch_docs_directory(self):
         return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
@@ -69,7 +83,7 @@ class FixCitations(BatchProcessor):
             current_citations = self.get_citations(doc)
 
             if len(current_citations) != len(citations_from_update_history):
-                self.citation_errors[_id] = 0
+                self.citation_errors[_id] = citations_from_update_history
 
                 print _id, 'current citations:', len(current_citations), 'citations from update history:', len(citations_from_update_history)
 
@@ -126,6 +140,9 @@ load_config.type = "article"
 load_config.data_mapper =  PubmedDataMapper()
 load_config.data_extractor = PubmedDataExtractor()
 load_config.max_memory_percent = 75
+
+load_config.source = ""
+load_config.append_relations = False
 
 fix_citations = FixCitations(load_config)
 fix_citations.run()
