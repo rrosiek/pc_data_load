@@ -16,6 +16,7 @@ class FixCitations(BatchProcessor):
         super(FixCitations, self).__init__(load_config)
         self.load_config = load_config
         self.data_utils = DataUtils()
+        self.citation_errors = {}
 
     def get_batch_docs_directory(self):
         return '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
@@ -61,6 +62,9 @@ class FixCitations(BatchProcessor):
                 citations_from_update_history = self.get_citations_from_update_history(update_history)
 
             current_citations = self.get_citations(doc)
+
+            if len(current_citations) != len(citations_from_update_history):
+                self.citation_errors[_id] = 0
 
             print _id, 'current citations:', len(current_citations), 'citations from update history:', len(citations_from_update_history)
 
