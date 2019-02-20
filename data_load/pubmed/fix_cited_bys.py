@@ -112,7 +112,7 @@ load_config.data_mapper =  PubmedDataMapper()
 load_config.data_extractor = PubmedDataExtractor()
 load_config.max_memory_percent = 75
 
-load_config.process_count = 2
+load_config.process_count = 8
 
 load_config.source = ""
 load_config.append_relations = False
