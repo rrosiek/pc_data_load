@@ -2,7 +2,7 @@
 from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 
-from data_load.base.utils.batch_processor import BatchProcessor, PROCESSED_BATCHES_FILE
+from data_load.base.utils.batch_processor import BatchProcessor, PROCESSED_BATCHES_FILE, RESULTS_FILE_PREFIX
 from data_load.base.utils.data_utils  import DataUtils
 from data_load.base.utils import file_utils
 
@@ -26,7 +26,7 @@ class FixCitations(BatchProcessor):
     def create_processed_files(self):
         processed_batches = file_utils.load_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE)
         for batch_file_name in processed_batches:
-            file_utils.save_file(self.batch_docs_directory(), 'results_' + batch_file_name, {})
+            file_utils.save_file(self.batch_docs_directory(), RESULTS_FILE_PREFIX + batch_file_name, {})
 
     def process_completed(self):
         pass
