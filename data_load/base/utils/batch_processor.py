@@ -11,6 +11,7 @@ TEMP_DIR = ''
 
 PROCESSED_BATCHES_FILE = 'processed_batches.json'
 ALL_IDS_FILE = 'all_ids.json'
+RESULTS_FILE_PREFIX = 'results_'
 
 class BatchProcessor(object):
 
@@ -82,6 +83,15 @@ class BatchProcessor(object):
 
         return batch_file_names
 
+    def get_processed_batches(self):
+        batch_file_names = []
+        for batch_file_name in os.listdir(self.batch_docs_directory()):
+            file_path = os.path.join(self.batch_docs_directory(), batch_file_name)
+            if os.path.isfile(file_path) and batch_file_name.startswith(RESULTS_FILE_PREFIX):
+                batch_file_names.append(batch_file_name.replace(RESULTS_FILE_PREFIX, ''))
+
+        return dict.fromkeys(batch_file_names)
+
     def process_batches(self):
         batch_file_names = []
         for batch_file_name in os.listdir(self.batch_docs_directory()):
@@ -94,7 +104,7 @@ class BatchProcessor(object):
         
         batch_file_names.sort()
         print len(batch_file_names), 'total batches'
-        processed_batches = file_utils.load_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE)
+        processed_batches = self.get_processed_batches()
         print len(processed_batches), 'processed batches'
 
         raw_input('Continue?')
@@ -103,22 +113,30 @@ class BatchProcessor(object):
                 print 'Loading batch', batch_file_name
                 batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
                 self.start_process_doc_batch(batch, batch_file_name.split('.')[0])
-                processed_batches[batch_file_name] = 0
-                file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
 
-    def start_process_doc_batch(self, batch, batch_name):
-        if self.multiprocess:
-            process = Process(target=self.process_docs_batch, args=(batch, batch_name,))
-            process.start()
+                if self.multiprocess:
+                    process = Process(target=self.start_process_doc_batch, args=(batch, batch_file_name,))
+                    process.start()
 
-            self.processes.append(process)
-            if len(self.processes) >= self.load_config.process_count:
-                old_process = self.processes.pop(0)
-                old_process.join()
+                    self.processes.append(process)
+                    if len(self.processes) >= self.load_config.process_count:
+                        old_process = self.processes.pop(0)
+                        old_process.join()
 
-            time.sleep(self.load_config.process_spawn_delay)
-        else:
-            self.process_docs_batch(batch, batch_name)
+                    time.sleep(self.load_config.process_spawn_delay)
+                else:
+                    self.start_process_doc_batch(batch, batch_file_name)
+
+                # processed_batches[batch_file_name] = 0
+                # file_utils.save_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE, processed_batches)
+
+    def start_process_doc_batch(self, batch, batch_file_name):
+        batch_name = batch_file_name.split('.')[0]
+        results = self.process_docs_batch(batch, batch_name)
+        file_utils.save_file(self.batch_docs_directory(), RESULTS_FILE_PREFIX + batch_file_name, results)
 
     def process_docs_batch(self, batch, batch_name):
         print 'Processing', batch_name, 'with', len(batch), 'docs'
+        return {}
+
+

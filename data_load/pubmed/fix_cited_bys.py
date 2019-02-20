@@ -2,7 +2,7 @@
 from data_load.pubmed2019.pubmed_data_extractor import PubmedDataExtractor
 from data_load.pubmed2019.pubmed_data_mapper import PubmedDataMapper
 
-from data_load.base.utils.batch_processor import BatchProcessor
+from data_load.base.utils.batch_processor import BatchProcessor, PROCESSED_BATCHES_FILE
 from data_load.base.utils.data_utils  import DataUtils
 from data_load.base.utils import file_utils
 
@@ -23,6 +23,11 @@ class FixCitations(BatchProcessor):
         self.load_config = load_config
         self.data_utils = DataUtils()
 
+    def create_processed_files(self):
+        processed_batches = file_utils.load_file(self.batch_docs_directory(), PROCESSED_BATCHES_FILE)
+        for batch_file_name in processed_batches:
+            file_utils.save_file(self.batch_docs_directory(), 'results_' + batch_file_name, {})
+
     def process_completed(self):
         pass
 
@@ -41,7 +46,6 @@ class FixCitations(BatchProcessor):
         pubmed_cited_bys_pubmed = {}
         for _id in batch:
             cited_bys = self.get_cited_bys(_id)
-
             if len(cited_bys) > 0:
                 pubmed_cited_bys_pubmed[_id] = cited_bys
 
@@ -58,6 +62,8 @@ class FixCitations(BatchProcessor):
         print batch_name, len(pubmed_ids), 'ids to update'
         relationship_loader = RelationshipLoader(self.load_config, pubmed_ids, self.load_config.index, self.load_config.type, 'ds_batch_fix_cited_bys')
         relationship_loader.run()
+
+        return {}
 
     def get_cited_bys(self, _id):
         """
@@ -114,4 +120,5 @@ load_config.append_relations = False
 load_config.data_source_name = 'FixCitedBys'
 
 fix_citations = FixCitations(load_config)
-fix_citations.run()
+# fix_citations.run()
+fix_citations.create_processed_files()
