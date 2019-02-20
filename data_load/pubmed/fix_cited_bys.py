@@ -120,5 +120,5 @@ load_config.append_relations = False
 load_config.data_source_name = 'FixCitedBys'
 
 fix_citations = FixCitations(load_config)
-# fix_citations.run()
-fix_citations.create_processed_files()
+fix_citations.run()
+# fix_citations.create_processed_files()
