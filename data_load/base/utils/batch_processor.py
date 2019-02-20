@@ -116,11 +116,8 @@ class BatchProcessor(object):
 
         raw_input('Continue?')
         for batch_file_name in filtered_batch_file_names:
-            print 'Loading batch', batch_file_name
-            batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
-
             if self.multiprocess:
-                process = Process(target=self.start_process_doc_batch, args=(batch, batch_file_name,))
+                process = Process(target=self.start_process_doc_batch, args=(batch_file_name,))
                 process.start()
 
                 self.processes.append(process)
@@ -130,9 +127,11 @@ class BatchProcessor(object):
 
                 time.sleep(self.load_config.process_spawn_delay)
             else:
-                self.start_process_doc_batch(batch, batch_file_name)
+                self.start_process_doc_batch(batch_file_name)
 
-    def start_process_doc_batch(self, batch, batch_file_name):
+    def start_process_doc_batch(self, batch_file_name):
+        print 'Loading batch', batch_file_name
+        batch = file_utils.load_file(self.batch_docs_directory(), batch_file_name)
         batch_name = batch_file_name.split('.')[0]
         results = self.process_docs_batch(batch, batch_name)
         file_utils.save_file(self.batch_docs_directory(), RESULTS_FILE_PREFIX + batch_file_name, results)
