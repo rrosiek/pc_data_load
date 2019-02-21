@@ -19,7 +19,7 @@ DIR = '/data/data_loading/pubmed_2019/pubmed2019/fix_cited_bys'
 class FixCitations(BatchProcessor):
 
     def __init__(self, load_config):
-        super(FixCitations, self).__init__(load_config, batch_doc_count=5000, multiprocess=True)
+        super(FixCitations, self).__init__(load_config, batch_doc_count=5000, multiprocess=False)
         self.load_config = load_config
         self.data_utils = DataUtils()
 

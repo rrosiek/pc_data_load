@@ -22,7 +22,8 @@ class GrantsDataMapper(DataMapper):
 
     @staticmethod
     def pad_zeros(number, count):
-        while len(number) < count:
+        number_str = str(number)
+        while len(number_str) < count:
             number_str = '0' + number_str
 
         return number_str
