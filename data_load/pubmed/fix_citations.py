@@ -207,7 +207,7 @@ load_config.max_memory_percent = 75
 load_config.source = ""
 load_config.append_relations = False
 
-load_config.process_count = 32
+load_config.process_count = 4
 
 fix_citations = FixCitations(load_config)
 fix_citations.run()
