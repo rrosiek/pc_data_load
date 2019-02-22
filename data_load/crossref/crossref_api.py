@@ -22,31 +22,44 @@ class CrossRefAPI(object):
 
         self.cursor = '*'
 
-        self.request_queue = []
-        self.result_items = []
-
+        # self.request_queue = []
         self.no_of_rows = 100
 
     def get_all_members(self):
+        result_items = []
+
         url = 'members'
         self.cursor = None
-        self.create_request(url)
-        print 'Total members', len(self.result_items)
-        file_utils.save_file('/data_loading', 'crossref_members.json', self.result_items)
-        return self.result_items
+        request = self.create_request(url)
+        result_items = self.perform_request(request)
+
+        print 'Total members', len(result_items)
+        file_utils.save_file('/data_loading', 'crossref_members.json', result_items)
+        return result_items
 
     def get_works_for_member_id(self, member_id):
         #https://api.crossref.org/members/5403/works
+
         self.cursor = '*'
         url = 'members/' + member_id + '/works'
-        self.create_request(url)
-        self.start_queue()
-        return self.result_items
 
-    def start_queue(self):
-        threading.Timer(0, self.start_request_queue_processing).start()
-        while len(self.request_queue) > 0:
-            time.sleep(1)
+        # self.start_queue()
+        return self.get_data_for_url(url)
+
+    def get_data_for_url(self, url):
+        result_items = []
+
+        request = self.create_request(url)
+        results = self.perform_request(request)
+        result_items.extend(results)
+        print 'Total results:', len(result_items)
+        while self.cursor is not None and len(results) == self.no_of_rows:
+            request = self.create_request(url)
+            results = self.perform_request(request)
+            result_items.extend(results)
+            print 'Total results:', len(result_items)
+
+        return result_items
 
     def create_request(self, url, data=None):
         request = {}
@@ -63,26 +76,21 @@ class CrossRefAPI(object):
         request['params'] = params
         request['data'] = data
 
-        self.queue_request(request)
+        return request
 
-    def queue_request(self, request):
-        self.request_queue.append(request)
-
-    def start_request_queue_processing(self):
-        while len(self.request_queue) > 0:
-            self.process_request_queue()
-            time.sleep(1)
-
-    def process_request_queue(self):
+    def get_delay(self):
         time_since_last_request = self.time_since_last_request()
         required_delay = self.required_delay_between_requests()
 
-        if time_since_last_request >= required_delay:
-            if len(self.request_queue) > 0:
-                request = self.request_queue[0]
-                self.perform_request(request)
-        else:
+        delay = 0
+        if time_since_last_request < required_delay:
             delay = required_delay - time_since_last_request
+
+        return delay
+
+    def delay_request(self):
+        delay = self.get_delay()
+        while delay > 0:
             time.sleep(delay)
 
     def required_delay_between_requests(self):
@@ -100,6 +108,8 @@ class CrossRefAPI(object):
         return delay
 
     def perform_request(self, request):
+        self.delay_request()
+
         url = request['url']
         params = request['params']
         data = request['data']
@@ -107,24 +117,24 @@ class CrossRefAPI(object):
         params_string = urllib.urlencode(params)
         request_url = self.base_url + url + '?' + params_string
 
+        results = []
         print 'Perfoming request:', request_url
         response = self.session.get(request_url)
         if response.status_code == 200:
-            self.request_queue.pop(0)
             self.process_response(url, data, response)
+            results = self.get_result_items_from_response(response)
+        else:
+            print response.status_code, response.text
+
+        return results
 
     def process_response(self, url, data, response):
         self.get_x_rate_limits_from_response(response)
         self.get_next_cursor_from_response(response)
-        results = self.get_result_items_from_response(response)
-        if len(results) == self.no_of_rows:
-            self.create_request(url, data)
-        self.result_items.extend(results)
-        print 'Total results:', len(self.result_items)
-
+        
     def get_x_rate_limits_from_response(self, response):
         headers = response.headers
-        print headers
+        # print headers
         if 'X-Rate-Limit-Interval' in headers:
            self.x_rate_limit_interval = headers['X-Rate-Limit-Interval']
            self.x_rate_limit_interval = self.x_rate_limit_interval.replace('s', '')
