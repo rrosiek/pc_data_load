@@ -22,3 +22,4 @@ Pygments==2.2.0
 PyXB==1.2.5
 simplejson==3.10.0
 Werkzeug>=0.14
+pyquery==1.4.0
