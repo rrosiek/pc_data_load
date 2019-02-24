@@ -90,7 +90,7 @@ class USPTOLoadManager(LoadManager):
         if self.year is not None:
             self.files_to_process = file_manager.download_files(load_config, year=self.year)
         else:
-            # self.files_to_process = file_manager.get_files_to_process(load_config)
+            self.files_to_process = file_manager.get_files_to_process(load_config)
 
             # print 'Files to process', json.dumps(self.files_to_process)
             if len(self.files_to_process) == 0:
