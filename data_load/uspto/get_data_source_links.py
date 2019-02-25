@@ -83,11 +83,11 @@ def get_files(pre_2001=False):
 
     for year in years:
         if pre_2001:
-            if int(year) < 2001:  
+            if int(year) < 2005:  
                 print year, len(FILES_PER_YEAR[year]), 'files'
                 filtered_files_per_year[year] = filter_file_names(FILES_PER_YEAR[year], pre_2001=pre_2001)
         else:
-            if int(year) >= 2001:
+            if int(year) >= 2005:
                 print year, len(FILES_PER_YEAR[year]), 'files'
                 filtered_files_per_year[year] = filter_file_names(FILES_PER_YEAR[year], pre_2001=pre_2001)
                 

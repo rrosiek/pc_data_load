@@ -192,7 +192,7 @@ class FixCitations(BatchProcessor):
 
 load_config = LoadConfig()
 load_config.root_directory = '/data/data_loading/pubmed_2019/pubmed2019/fix_citations'
-load_config.process_count = psutil.cpu_count()
+# load_config.process_count = psutil.cpu_count()
 
 load_config.server = 'http://localhost:9200'
 load_config.server_username = ''
