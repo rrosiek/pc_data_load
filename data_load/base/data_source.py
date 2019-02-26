@@ -11,7 +11,10 @@ class DataSource(object):
 
         self.process_row_method = None
 
-        file_name = os.path.basename(data_source_file_path)
+        file_name = 'data_source'
+        if data_source_file_path is not None:
+            file_name = os.path.basename(data_source_file_path)
+
         self.logger = Logger(file_name)
 
     def initialize(self):

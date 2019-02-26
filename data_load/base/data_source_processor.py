@@ -234,20 +234,8 @@ class DataSourceProcessor(object):
                 self.load_config.data_source_name, row, current_index)
             if _id is not None:
                 self.total_ids += 1
-                # Check and split batch
-                if self.should_split_batch(current_index, _id, self.previous_id):
-                    self.process_batch()
-                    time.sleep(5)
-                    collected = gc.collect()
-                    self.load_config.log(LOG_LEVEL_DEBUG, 'Waiting...')
-
-                    self.start_index = current_index
-                    self.load_config.log(
-                        LOG_LEVEL_INFO, 'Processing from', current_index)
-
-                self.load_config.log(
-                    LOG_LEVEL_DEBUG, 'Processed rows', current_index)
-
+               
+            
                 if self.mode == self.MODE_NORMAL_LOAD and current_index in self.processed_indices:
                     return True
 
@@ -269,6 +257,20 @@ class DataSourceProcessor(object):
                 else:
                     self.load_config.log(
                         LOG_LEVEL_DEBUG, 'Null doc', current_index, _id)
+
+                # Check and split batch
+                if self.should_split_batch(current_index, _id, self.previous_id):
+                    self.process_batch()
+                    time.sleep(5)
+                    collected = gc.collect()
+                    self.load_config.log(LOG_LEVEL_DEBUG, 'Waiting...')
+
+                    self.start_index = current_index
+                    self.load_config.log(
+                        LOG_LEVEL_INFO, 'Processing from', current_index)
+                        
+                self.load_config.log(
+                    LOG_LEVEL_DEBUG, 'Processed rows', current_index)
 
                 self.previous_id = _id
 

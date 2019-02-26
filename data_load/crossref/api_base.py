@@ -1,11 +1,12 @@
 
 import requests
 import time
+import json
 import threading
 import urllib
 from data_load.base.utils import file_utils
 
-class CrossRefAPI(object):
+class APIBase(object):
 
     def __init__(self, session=None):
         self.base_url = 'https://api.crossref.org/'
@@ -21,32 +22,10 @@ class CrossRefAPI(object):
         self.session = session
 
         self.cursor = '*'
-
-        # self.request_queue = []
         self.no_of_rows = 100
 
-    def get_all_members(self):
-        result_items = []
 
-        url = 'members'
-        self.cursor = None
-        request = self.create_request(url)
-        result_items = self.perform_request(request)
-
-        print 'Total members', len(result_items)
-        file_utils.save_file('/data_loading', 'crossref_members.json', result_items)
-        return result_items
-
-    def get_works_for_member_id(self, member_id):
-        #https://api.crossref.org/members/5403/works
-
-        self.cursor = '*'
-        url = 'members/' + member_id + '/works'
-
-        # self.start_queue()
-        return self.get_data_for_url(url)
-
-    def get_data_for_url(self, url):
+    def get_data_for_url(self, url, params):
         result_items = []
 
         request = self.create_request(url)
@@ -55,20 +34,21 @@ class CrossRefAPI(object):
         print 'Total results:', len(result_items)
         while self.cursor is not None and len(results) == self.no_of_rows:
             request = self.create_request(url)
-            results = self.perform_request(request)
+            response = self.perform_request(request)
+            results = self.get_result_items_from_response(response)
             result_items.extend(results)
             print 'Total results:', len(result_items)
 
         return result_items
 
-    def create_request(self, url, data=None):
+    def create_request(self, url, params=None, data=None):
         request = {}
         print '-----------------------------------------------------------------------------------------------'
         print 'Creating request', url
 
-        params  = {}
+        if params is None:
+            params = {}
         params['mailto'] = self.email
-        params['rows'] = self.no_of_rows
         if self.cursor is not None:
             params['cursor'] = self.cursor
 
@@ -117,16 +97,16 @@ class CrossRefAPI(object):
         params_string = urllib.urlencode(params)
         request_url = self.base_url + url + '?' + params_string
 
-        results = []
+        response_json = {}
         print 'Perfoming request:', request_url
         response = self.session.get(request_url)
         if response.status_code == 200:
             self.process_response(url, data, response)
-            results = self.get_result_items_from_response(response)
+            response_json = response.json()
         else:
             print response.status_code, response.text
 
-        return results
+        return response_json
 
     def process_response(self, url, data, response):
         self.get_x_rate_limits_from_response(response)
@@ -153,19 +133,10 @@ class CrossRefAPI(object):
                 self.cursor = response_body['message']['next-cursor']
 
         print 'Next cursor:', self.cursor
-
-    def get_result_items_from_response(self, response):
-        items = []
-        response_body = response.json()
-        if 'message' in response_body:
-            if 'items' in response_body['message']:
-                items = response_body['message']['items']
-                print 'Result items:', len(items)
-
-        return items
         
+    def get_message_from_response(self, response):
+        message = []
+        if 'message' in response:
+            message = response['message']
 
-# crossref_api = CrossRefAPI()
-# results = crossref_api.get_works_for_member_id('5403')
-# # crossref_api.get_all_members()
-# print '*****************************************************************************************Total results:', len(results)
+        return message
