@@ -16,10 +16,10 @@ import psutil
 
 DIR = '/data/data_loading/pubmed_2019/pubmed2019/fix_cited_bys'
 
-class FixCitations(BatchProcessor):
+class FixCitedBys(BatchProcessor):
 
     def __init__(self, load_config):
-        super(FixCitations, self).__init__(load_config, batch_doc_count=5000, multiprocess=True)
+        super(FixCitedBys, self).__init__(load_config, batch_doc_count=5000, multiprocess=True)
         self.load_config = load_config
         self.data_utils = DataUtils()
 
@@ -120,6 +120,6 @@ load_config.append_relations = False
 
 load_config.data_source_name = 'FixCitedBys'
 
-fix_citations = FixCitations(load_config)
-fix_citations.run()
+fix_cited_bys = FixCitedBys(load_config)
+fix_cited_bys.run()
 # fix_citations.create_processed_files()
