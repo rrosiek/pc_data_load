@@ -119,7 +119,7 @@ class EmailClient(object):
 
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "OCAT Update Notification " + str(local_date)
+        msg['Subject'] = "OCAT PubMed Update Notification " + str(local_date)
         msg['From'] = "OCAT NIAID <" + from_address + ">"
         msg['To'] = to_address
 
