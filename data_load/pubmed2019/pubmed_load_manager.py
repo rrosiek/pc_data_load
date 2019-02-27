@@ -176,17 +176,17 @@ class PubmedLoadManager(LoadManager):
         elif '_data' in task:
             task = task.replace('_data', '')
             pubmed_data_file = self.file_path_lookup[task]
-            # self.pubmed_updater.process_file(pubmed_data_file)
+            self.pubmed_updater.process_file(pubmed_data_file)
         elif task == 'save_update_record':
             self.save_update_record()
         elif task == 'get_existing_pmids':
             self.pubmed_updater.get_existing_pmids()
         elif task == 'find_prospective_citations':
-            # self.find_prospective_citations()
-            pass
+            self.find_prospective_citations()
+            # pass
         elif task == 'send_update_notifications':
-            # self.send_update_notifications()
-            pass
+            self.send_update_notifications()
+            # pass
         elif task == 'save_new_pmids':
             self.save_new_pmids()
         elif task == 'clear_rels':
@@ -257,7 +257,46 @@ class PubmedLoadManager(LoadManager):
         file_utils.save_file(self.pubmed_updater.get_update_records_directory(), update_records_name, update_records)   
 
         # Save processed files list
-        file_manager.update_processed_files(self.get_load_config(), self.files_to_process)    
+        file_manager.update_processed_files(self.get_load_config(), self.files_to_process)   
+
+    def load_update_records(self): 
+        update_records_name = 'pubmed_update_records.json'
+
+        update_records = file_utils.load_file(self.pubmed_updater.get_update_records_directory(), update_records_name)
+        
+        if len(update_records) == 0:
+            print('0 update records, exiting')
+            return
+
+        print('Update records')
+        print('--------------')
+        index = 0
+        for update_record in update_records:
+            index += 1
+            print(str(index) + ': ' + update_record)
+        
+        record_index = raw_input('Choose a record to retry' + '(' + str(1) + '-' + str(index) + ') ')
+        try:
+            record_index = int(record_index)
+            if record_index >= 1 and record_index <= index:
+                update_record = update_records[record_index - 1]
+                process = raw_input('Process ' + str(update_record) + '? (y/n)')
+                if process.lower() in ['y', 'yes']:
+                    self.process_update_record(update_record)
+            else:
+                print('Wrong index, try again')
+        except Exception as e:
+            print(str(e))
+
+    def process_update_record(self, update_record):
+        date = update_record['date']
+        update_files = update_record['update_files']
+
+        self.local_date_time = date
+        self.files_to_process = update_files
+
+        self.find_prospective_citations()
+        self.send_update_notifications()
     
     def find_prospective_citations(self):
         docs_with_new_citations = self.pubmed_updater.get_docs_with_new_citations(self.files_to_process)
@@ -400,11 +439,15 @@ def copy_user_data():
     load_manager.del_config()
     load_manager.run()
 
-
 def clear_relations():
     load_manager = PubmedLoadManager(MODE_CLEAR_RELATIONS, 0)
     load_manager.del_config()
     load_manager.run()
+
+def retry_update_record():
+    load_manager = PubmedLoadManager(MODE_UPDATE, 0)
+    load_manager.del_config()
+    load_manager.load_update_records()
 
 def resume():
     load_manager = PubmedLoadManager(0)
@@ -434,6 +477,8 @@ def run():
                 copy_user_data()
             elif arg == '-clear':
                 clear_relations()
+            elif arg == '-retry':
+                retry_update_record()
             else: 
                 print('Usage: pubmed_load_manager -n <number of files to process>')     
         arg_index += 1
