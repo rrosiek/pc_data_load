@@ -12,7 +12,7 @@ from data_load.base.utils import file_utils
 import os
 import sys
 
-from data_load.crossref.crossref_api import CrossRefAPI
+from data_load.crossref.api_crossref import CrossRefAPI
 
 ID_CROSSREF = "CROSSREF"
 
@@ -30,7 +30,7 @@ class CrossrefLoadManager(LoadManager):
         self.member_ids = []
 
     def get_root_directory(self, local_date):
-        return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower() 
+        return DATA_LOADING_DIRECTORY + '/' + self.index_id.lower()
 
     # Methods to override
     def should_reload(self):
@@ -56,21 +56,21 @@ class CrossrefLoadManager(LoadManager):
 
     def get_tasks_list(self):
         tasks_list = []
-        
+
         for member_id in self.member_ids:
             tasks_list.append({
                 'name': str(member_id),
                 'status': ''
             })
-            
+
         return tasks_list
 
     def run_task(self, task):
         self.process(task)
-            
+
     def download_data(self):
         load_config = self.get_load_config()
-        
+
         # member_ids = []
 
         if self.mode == MODE_AUTO:
@@ -90,7 +90,7 @@ class CrossrefLoadManager(LoadManager):
         #     results = file_utils.load_file(load_config.other_files_directory(), file_name)
         #     if len(results) == 0:
         #         results = crossref_api.get_works_for_member_id(member_id)
-            
+
         #     data_file = load_config.other_files_directory() + '/' + file_name
 
         #     print 'Saving', len(results), 'works to', data_file
@@ -130,14 +130,14 @@ def run():
             if arg == '-member':
                 if (arg_index + 1) < len(sys.argv):
                     member_id = sys.argv[arg_index + 1]
-                    process_member(member_id)   
+                    process_member(member_id)
                     return
                 else:
-                    print('Usage: crossref_load_manager -member <member_id>')     
-            elif arg == '-auto': 
+                    print('Usage: crossref_load_manager -member <member_id>')
+            elif arg == '-auto':
                 process_auto()
             else:
-                print('Usage: crossref_load_manager -auto')     
+                print('Usage: crossref_load_manager -auto')
         arg_index += 1
 
 if __name__ == '__main__':
