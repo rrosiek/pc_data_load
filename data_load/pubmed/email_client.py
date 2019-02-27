@@ -37,19 +37,22 @@ class EmailClient(object):
         return title
 
 
-    def send_notification_for_prospect(self, prospect):
+    def send_notification_for_prospect(self, prospect, local_date=None):
         # Recipient's email address
         to_address = prospect['email']
 
         if to_address == 'admin@altum.com':
             to_address = 'robint@qburst.com'
 
+        to_address = 'robint@qburst.com'
+
         docs_with_matching_citations = prospect['docs_with_matching_citations']
 
         print 'Sending mail for prospect', to_address, 'docs_with_matching_citations',  len(docs_with_matching_citations)
 
-        now = datetime.datetime.now()
-        local_date = now.strftime("%m-%d-%Y")
+        if local_date is None:
+            now = datetime.datetime.now()
+            local_date = now.strftime("%m-%d-%Y")
 
         html = """\
                 <head>

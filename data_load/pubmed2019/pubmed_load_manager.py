@@ -28,6 +28,7 @@ from data_load.pubmed.clear_pubmed_relations import ClearPubmedRelations
 import os
 import sys
 import time
+import json
 
 TASK_NAME = 'load_pubmed2018'
 
@@ -260,9 +261,13 @@ class PubmedLoadManager(LoadManager):
         file_manager.update_processed_files(self.get_load_config(), self.files_to_process)   
 
     def load_update_records(self): 
-        update_records_name = 'pubmed_update_records.json'
+        self.get_config()
 
-        update_records = file_utils.load_file(self.pubmed_updater.get_update_records_directory(), update_records_name)
+        update_records_name = 'pubmed_update_records.json'
+        update_records_directory = self.pubmed_updater.get_update_records_directory()
+
+        print 'Loading update records from:', update_records_directory
+        update_records = file_utils.load_file(update_records_directory, update_records_name)
         
         if len(update_records) == 0:
             print('0 update records, exiting')
@@ -273,14 +278,16 @@ class PubmedLoadManager(LoadManager):
         index = 0
         for update_record in update_records:
             index += 1
-            print(str(index) + ': ' + update_record)
+            date = update_record['date']
+            print(str(index) + ': ' + date)
         
         record_index = raw_input('Choose a record to retry' + '(' + str(1) + '-' + str(index) + ') ')
         try:
             record_index = int(record_index)
             if record_index >= 1 and record_index <= index:
                 update_record = update_records[record_index - 1]
-                process = raw_input('Process ' + str(update_record) + '? (y/n)')
+                date = update_record['date']
+                process = raw_input('Process update record for ' + date + '? (y/n)')
                 if process.lower() in ['y', 'yes']:
                     self.process_update_record(update_record)
             else:
@@ -292,10 +299,20 @@ class PubmedLoadManager(LoadManager):
         date = update_record['date']
         update_files = update_record['update_files']
 
-        self.local_date_time = date
-        self.files_to_process = update_files
+        print 'Processing update:', date
+        print json.dumps(update_files, indent=4, sort_keys=True)
 
-        self.find_prospective_citations()
+        files_to_process = []
+        for update_file in update_files:
+            files_to_process.append(update_file['file_path'])
+
+        self.local_date_time = date
+        self.files_to_process = files_to_process
+
+        # self.del_config()
+        # self.get_config()
+
+        # self.find_prospective_citations()
         self.send_update_notifications()
     
     def find_prospective_citations(self):
@@ -330,6 +347,8 @@ class PubmedLoadManager(LoadManager):
     def load_prospects(self):
         prospects_file_name = self.get_prospects_file_name()
         update_records_directory = self.pubmed_updater.get_update_records_directory(DIR_PROSPECTS)
+        
+        self.get_logger().info('Loading prospects...' + update_records_directory +  ' ' + prospects_file_name)
 
         update_record = file_utils.load_file(update_records_directory, prospects_file_name)
         if 'prospects' in update_record:
@@ -343,12 +362,17 @@ class PubmedLoadManager(LoadManager):
         docs_with_new_citations =  self.pubmed_updater.get_docs_with_new_citations(self.files_to_process)
         all_prospects = self.load_prospects()
 
+        if all_prospects is not None:
+            self.get_logger().info(str(len(all_prospects)) + ' prospects loaded' )
+
         if all_prospects is None:
+            self.get_logger().info('Prospects missing, finding again...')
             find_prospective_citations = FindProspectiveCitations(self.get_logger(), docs_with_new_citations)
             all_prospects = find_prospective_citations.run()
+            self.save_prospects(all_prospects)
 
         self.get_logger().info('Sending prospective notifications...')
-        # self.send_notifications(all_prospects)
+        self.send_notifications(all_prospects)
         
         self.get_logger().info('Sending update status mail...')
         EmailClient.send_update_notifications(self.local_date_time, update_data, all_prospects)
@@ -357,12 +381,14 @@ class PubmedLoadManager(LoadManager):
         load_config = self.get_load_config()
         email_client = EmailClient(load_config)
         # print 'Prospects', all_prospects
-        self.get_logger().info('Prospects ' + str(prospects))
+        # self.get_logger().info('Prospects ' + str(prospects))
         failed_prospects = []
+
+        local_date = self.local_date_time.split(' ')[0]
 
         # Send email notifications
         for prospect in prospects:
-            problems = email_client.send_notification_for_prospect(prospect)
+            problems = email_client.send_notification_for_prospect(prospect, local_date)
             if len(problems) > 0:
                 failed_prospects.append({
                     'problems': problems,
