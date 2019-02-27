@@ -4,6 +4,8 @@ from data_load.base.data_source_xml_2 import XMLDataDirectorySource
 # from json_schema.json_differ import diff_jsons
 from data_load.xsdtojson.lib import xsd_to_json_schema
 
+from data_load.base.utils import file_utils
+
 # from jsonmerge import Merger
 
 import xmltodict
@@ -12,6 +14,9 @@ import time
 import os
 
 from jsonschema import validate
+
+
+doc_json_str = '{"clinical_results":{"participant_flow":{"recruitment_details":"","group_list":{"group":{"@group_id":"P1","title":"Antineoplaston Therapy","description":""}},"period_list":{"period":{"title":"Overall Study","milestone_list":{"milestone":[{"title":"STARTED","participants_list":{"participants":{"@group_id":"P1","@count":"9"}}}]},"drop_withdraw_reason_list":{"drop_withdraw_reason":{"title":"Not evaluable","participants_list":{"participants":{"@group_id":"P1","@count":"3"}}}}}}},"baseline":{"group_list":{"group":{"@group_id":"B1","title":"Antineoplaston Therapy","description":""}},"analyzed_list":{"analyzed":{"units":"Participants","scope":"Overall","count_list":{"count":{"@group_id":"B1","@value":"9"}}}},"measure_list":{"measure":[{"title":"Sex: Female, Male","units":"Participants","param":"Count of Participants","class_list":{"class":{"category_list":{"category":[{"title":"Female","measurement_list":{"measurement":{"@group_id":"B1","@value":"5"}}}]}}}}]}},"outcome_list":{"outcome":[{"type":"Primary","title":"Number of Participants With Objective Response","description":"","group_list":{"group":{"@group_id":"O1","title":"Antineoplaston Therapy","description":""}},"measure":{"title":"Number of Participants With Objective Response","description":"","units":"Participants","param":"Number","analyzed_list":{"analyzed":{"units":"Participants","scope":"Measure","count_list":{"count":{"@group_id":"O1","@value":"6"}}}},"class_list":{"class":[{"title":"Progressive Disease","category_list":{"category":{"measurement_list":{"measurement":{"@group_id":"O1","@value":"3"}}}}}]}}},{"type":"Secondary","title":"Percentage of Participants Who Survived","description":"6 months, 12 months, 24 months, 36 months, 48 months, 60 months overall survival","time_frame":"6 months, 12 months, 24 months, 36 months, 48 months, 60 months","population":"All study subjects receiving any Antineoplaston therapy","group_list":{"group":{"@group_id":"O1","title":"Antineoplaston Therapy","description":""}},"measure":{"title":"Percentage of Participants Who Survived","description":"6 months, 12 months, 24 months, 36 months, 48 months, 60 months overall survival","population":"All study subjects receiving any Antineoplaston therapy","units":"Percentage of Participants","param":"Number","analyzed_list":{"analyzed":{"units":"Participants","scope":"Measure","count_list":{"count":{"@group_id":"O1","@value":"9"}}}},"class_list":{"class":[{"title":"60 months overall survival","category_list":{"category":{"measurement_list":{"measurement":{"@group_id":"O1","@value":"11.1"}}}}}]}}}]},"reported_events":{"time_frame":"4 years, 2 months","desc":"","group_list":{"group":{"@group_id":"E1","title":"Antineoplaston Therapy","description":""}},"serious_events":{"default_vocab":"CTCAE (3.0)","default_assessment":"Systematic Assessment","category_list":{"category":[{"title":"Total","event_list":{"event":{"sub_title":{"#text":"Total, serious adverse events"},"counts":{"@group_id":"E1","@subjects_affected":"5","@subjects_at_risk":"9"}}}},{"title":"Blood and lymphatic system disorders","event_list":{"event":{"sub_title":{"@vocab":"CTCAE (Version 3","#text":"Hemoglobin"},"description":"The Hemoglobin was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}},{"title":"Gastrointestinal disorders","event_list":{"event":[{"sub_title":{"#text":"Pancreatitis"},"description":"The Pancreatitis was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":{"#text":"Pain: Stomach"},"description":"The Pain: Stomach was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Infections and infestations","event_list":{"event":[{"sub_title":{"@vocab":"Institutional","#text":"Central venous catheter infection"},"description":"The Central venous catheter infection was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":{"#text":"Infection (documented clinically): Blood"},"description":"The Infection (documented clinically): Blood was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Investigations","event_list":{"event":{"sub_title":{"#text":"Hypokalemia"},"description":"The Hypokalemia was possibly related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}},{"title":"Musculoskeletal and connective tissue disorders","event_list":{"event":{"sub_title":{"#text":"Pain: Joint"},"description":"The Pain: Joint was possibly related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}},{"title":"Nervous system disorders","event_list":{"event":[{"sub_title":{"#text":"Confusion"},"description":"The Confusion was possibly related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":{"#text":"Seizure"},"description":"The Seizure was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":{"#text":"Somnolence/depressed level of consciousness"},"description":"The Somnolence/depressed level of consciousness was not related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Skin and subcutaneous tissue disorders","event_list":{"event":{"sub_title":{"#text":"Rash: erythema multiforme"},"description":"The Rash: erythema multiforme was possibly related to Antineoplaston therapy.","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}}]}},"other_events":{"frequency_threshold":"5","default_vocab":"CTCAE (3.0)","default_assessment":"Systematic Assessment","category_list":{"category":[{"title":"Total","event_list":{"event":{"sub_title":"Total, other adverse events","counts":{"@group_id":"E1","@subjects_affected":"9","@subjects_at_risk":"9"}}}},{"title":"Blood and lymphatic system disorders","event_list":{"event":[{"sub_title":"Hemoglobin","counts":{"@group_id":"E1","@subjects_affected":"5","@subjects_at_risk":"9"}},{"sub_title":"Leukocytes (total WBC)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Lymphopenia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Neutrophils/granulocytes (ANC/AGC)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Gastrointestinal disorders","event_list":{"event":[{"sub_title":"Diarrhea","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Nausea","counts":{"@group_id":"E1","@subjects_affected":"5","@subjects_at_risk":"9"}},{"sub_title":"Vomiting","counts":{"@group_id":"E1","@subjects_affected":"4","@subjects_at_risk":"9"}},{"sub_title":"Pancreatitis","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Pain: Dental/teeth/peridontal","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Pain: Stomach","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"General disorders","event_list":{"event":[{"sub_title":{"@vocab":"Institutional","#text":"Non-functional central venous catheter"},"counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Fatigue (asthenia, lethargy, malaise)","counts":{"@group_id":"E1","@subjects_affected":"4","@subjects_at_risk":"9"}},{"sub_title":"Fever","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}},{"sub_title":"Insomnia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Rigors/chills","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Weight gain","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Pruritus/itching","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":{"@vocab":"Institutional","#text":"Edema/Fluid retention"},"counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Immune system disorders","event_list":{"event":{"sub_title":"Allergic reaction/hypersensitivity (including drug fever)","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}}}},{"title":"Infections and infestations","event_list":{"event":[{"sub_title":{"@vocab":"Institutional","#text":"Central venous catheter infection"},"counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Bladder (urinary)","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Blood","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Mucosa","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Pharynx","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Sinus","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Soft tissue NOS","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Infection (documented clinically): Urinary tract NOS","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Middle ear (otitis media)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Skin","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Upper airway","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}]}},{"title":"Investigations","event_list":{"event":[{"sub_title":"Hyperglycemia","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}},{"sub_title":"Hypernatremia","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Hyperuricemia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Hypocalcemia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Hypochloremia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Hypoglycemia","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Hypokalemia","counts":{"@group_id":"E1","@subjects_affected":"7","@subjects_at_risk":"9"}},{"sub_title":"Metabolic/Laboratory - Other","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Proteinuria","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"SGOT","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"SGPT","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}}]}},{"title":"Musculoskeletal and connective tissue disorders","event_list":{"event":{"sub_title":"Pain: Joint","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}}}},{"title":"Nervous system disorders","event_list":{"event":[{"sub_title":"Apnea","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Ataxia (incoordination)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Confusion","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Dizziness","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}},{"sub_title":"Neuropathy: cranial: CN VIII Hearing and balance","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Neuropathy: sensory","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Seizure","counts":{"@group_id":"E1","@subjects_affected":"3","@subjects_at_risk":"9"}},{"sub_title":"Somnolence/depressed level of consciousness","counts":{"@group_id":"E1","@subjects_affected":"5","@subjects_at_risk":"9"}},{"sub_title":"Speech impairment","counts":{"@group_id":"E1","@subjects_affected":"2","@subjects_at_risk":"9"}},{"sub_title":"Syncope (fainting)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}},{"sub_title":"Pain: Head/headache","counts":{"@group_id":"E1","@subjects_affected":"4","@subjects_at_risk":"9"}}]}},{"title":"Renal and urinary disorders","event_list":{"event":{"sub_title":"Hemorrhage, GU: Bladder","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}},{"title":"Respiratory, thoracic and mediastinal disorders","event_list":{"event":{"sub_title":"Dyspnea (shortness of breath)","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}},{"title":"Skin and subcutaneous tissue disorders","event_list":{"event":{"sub_title":"Rash: erythema multiforme","counts":{"@group_id":"E1","@subjects_affected":"1","@subjects_at_risk":"9"}}}}]}}},"certain_agreements":{"pi_employee":"Principal Investigators are NOT employed by the organization sponsoring the study.","restrictive_agreement":""},"point_of_contact":{"name_or_title":"S. R. Burzynski, MD, PhD","organization":"Burzynski Research Institute, Inc.","phone":"713-335-5664","email":"srb@burzynskiclinic.com"}}}'
 
 class ValidateSchema(object):
 
@@ -22,6 +27,83 @@ class ValidateSchema(object):
         self.index = 0
         self.exisiting_format = {}
 
+        self.format = {}
+
+    def clean_value_for_path(self, path, data):
+        key = path[0]
+        print key
+
+        if isinstance(data, dict):
+            if key in data:
+                key = path.pop(0)
+                value = data[key]
+
+                if len(path) == 0:
+                    print '               ', value
+
+                    if not isinstance(value, dict):
+                        value = {
+                            "#text": value
+                        }
+                    
+                    data[key] = value
+                else:
+                    cleaned_value = self.clean_value_for_path(path, value)
+                    if cleaned_value is not None:
+                        data[key] = cleaned_value
+        elif isinstance(data, list):
+            # print data
+            cleaned_data = []
+            for item in data:
+                path_copy = path[:]
+                cleaned_item = self.clean_value_for_path(path_copy, item)
+                cleaned_data.append(cleaned_item)
+                            
+            data = cleaned_data
+
+        return data
+
+    def test(self):
+        doc_json = json.loads(doc_json_str)
+        doc_json = self.clean_value_for_path(["clinical_results","reported_events","serious_events","category_list","category","event_list","event","sub_title"], doc_json)
+        print json.dumps(doc_json)
+
+    def create_mapping(self, data_directory, format):
+        mapping = {}
+        for signature in format:
+            format_item = format[signature]
+            parents = format_item['parents']
+
+            mapping = self.add_mapping(parents, mapping)
+
+        file_utils.save_file(data_directory, 'mapping.json', mapping)
+
+
+    def add_mapping(self, parents, mapping):
+        child_mapping = {}
+        if len(parents) == 1:
+            child_mapping = {
+                "type": "text"
+            }
+            key = parents.pop()
+            mapping[key] = child_mapping
+            return mapping
+        else: 
+            key = parents.pop(0)
+            # key = parents[0]
+            # parents = parents[:-1]
+            print key
+            properties = {}
+            if key in mapping:
+                if 'properties' in mapping[key]:
+                    properties = mapping[key]['properties']
+                # properties = mapping[key]['properties']
+            child_mapping = {
+                "properties" : self.add_mapping(parents, properties)
+            }
+            mapping[key] = child_mapping
+            return mapping  
+
     def process(self, data_directory):
         for name in os.listdir(data_directory):
             file_path = os.path.join(data_directory, name)
@@ -29,20 +111,55 @@ class ValidateSchema(object):
                 print 'Parsing file:', file_path
                 xmltodict.parse(open(file_path), item_depth=1, item_callback=self.handle_row)
 
+
+        file_utils.save_file(data_directory, 'schema.json', self.format)
+
+        # ft = {
+        #     "test": {
+        #         "data": ["test"],
+        #         "parents": [ "clinical_results", "outcome_list", "outcome", "analysis_list", "analysis", "param_type" ]
+        #     }
+        # }
+
+        self.create_mapping(data_directory, self.format)
+        
+
+    def append_format(self, parents, data, format):      
+        if isinstance(data, dict):
+            for key in data:
+                data_item = data[key]
+
+                parents_copy = parents[:]
+                parents_copy.append(key)
+
+                self.append_format(parents_copy, data_item, format)
+        elif isinstance(data, list):
+            for item in data:
+                self.append_format(parents, item, format)
+        else:
+            signature = '_'.join(parents)
+            if signature not in format:
+                format[signature] = {
+                    "parents": parents,
+                    "data": [data]
+                }
+            # elif data is not None:
+            #     datas = format[signature]['data']
+            #     if datas is None:
+            #         datas = [data]
+            #     else:
+            #         datas = datas.append(data)
+            #     format[signature]['data'] = datas
+                
+
+        # print len(format), 'keys in format'
+            
+
     def handle_row(self, _, row):
-        root_schema = xsd_to_json_schema('data_load/clinical_trials/clinical_trials_public.xsd')
-        schema = json.loads(root_schema)
-        self.existing_format = self.validate_json(self.exisiting_format, row)
-        try:
-            validate(row, schema)
-        except Exception as e:
-            print e.message
-            print e.args
-            print type(e)
-            self.schema_errors += 1
+        self.append_format([], row, self.format)
 
         self.index += 1
-        print 'Docs processed:', self.index , 'Schemas:', len(self.schemas), 'Schema errors:', self.schema_errors
+        print 'Docs processed:', self.index , 'Keys in format:', len(self.format), 'Schema errors:', self.schema_errors
         return True
 
     def combine_items(self, old_item, new_item):
@@ -256,5 +373,7 @@ class ValidateSchema(object):
 
 
 validate_schema = ValidateSchema()
-validate_schema.process('/Users/robin/Desktop/AllPublicXML/NCT0000xxxx')
+# validate_schema.process('/Users/robin/Desktop/AllPublicXML/NCT0000xxxx')
+
+validate_schema.test()
 

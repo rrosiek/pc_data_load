@@ -1,12 +1,11 @@
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
-import data_load.base.utils.data_utils as data_utils
+from data_load.base.utils.data_utils  import DataUtils
 from data_load.base.utils.batch_doc_processor import BatchDocProcessor
 
 import requests
 import json
 import data_load.base.utils.file_utils
 from data_load.migrate_indices import migrate_index
-import data_utils
 
 
 class CopyDocs(object):
@@ -18,8 +17,10 @@ class CopyDocs(object):
         self.processed_doc_count = 0
         self.total_doc_count = 0
 
+        self.data_utils = DataUtils()
+
     def get_total_doc_count(self):
-        return data_utils.get_total_doc_count(base_url=self.src_data_loader_utils.server,
+        return self.data_utils.get_total_doc_count(base_url=self.src_data_loader_utils.server,
                                             index=self.src_data_loader_utils.index,
                                             type=self.src_data_loader_utils.type)
 
@@ -48,7 +49,7 @@ class CopyDocs(object):
         query = {
             "match_all": {}
         }
-        data_utils.batch_fetch_ids_for_query(base_url=server, index=src_index, type=src_type, query=query, ids_fetched=self.ids_fetched)
+        self.data_utils.batch_fetch_ids_for_query(base_url=server, index=src_index, type=src_type, query=query, ids_fetched=self.ids_fetched)
 
         # print 'Done, fetched', len(documents_ids), 'doc ids'
 
@@ -92,7 +93,7 @@ class CopyDocs(object):
         batch_doc_processor.run()
 
     def copy_docs_batch(self, doc_ids):
-        data_utils.batch_fetch_docs_for_ids(base_url=self.src_data_loader_utils.server,
+        self.data_utils.batch_fetch_docs_for_ids(base_url=self.src_data_loader_utils.server,
                                             ids=doc_ids,
                                             index=self.src_data_loader_utils.index,
                                             type=self.src_data_loader_utils.type,
@@ -132,3 +133,27 @@ class CopyDocs(object):
             # print 'Done loading bulk data, saving response'
         else:
             print 'Bulk data load failed'
+
+
+
+# src_server = 'http://localhost:9200'
+# src_index = 'irdb_v3'
+# src_type = 'grant'
+
+# dest_server = 'http://localhost:9200'
+# dest_index = 'irdb_v4'
+# dest_type = 'grant'
+
+# copy_docs = CopyDocs(src_server=src_server, 
+#                             dest_server=dest_server, 
+#                             src_index=src_index, 
+#                             src_type=src_type, 
+#                             dst_index=dest_index, 
+#                             dst_type=dest_type)
+
+# copy_docs.copy_docs()
+# copy_relations.relations_to_exclude.append({
+#     "source": "",
+#     "index_id": ID_PUBMED
+# })
+# copy_relations.run()

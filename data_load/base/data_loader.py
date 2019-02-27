@@ -1,5 +1,5 @@
 import json
-from utils import data_utils
+from utils.data_utils import DataUtils
 from utils import file_utils
 from load_config import *
 
@@ -34,6 +34,7 @@ class DataLoader(object):
         self.create_only = self.load_config.data_mapper.create_only(self.load_config.data_source_name)
 
         self.data_loader_utils = None
+        self.data_utils = None
 
     def get_es_id(self, doc_id):
         return self.load_config.data_mapper.get_es_id(doc_id)
@@ -56,6 +57,8 @@ class DataLoader(object):
                                                  self.load_config.server_username,
                                                  self.load_config.server_password)
 
+        self.data_utils = DataUtils()
+
         count = 0
         bulk_data = ''
 
@@ -71,7 +74,7 @@ class DataLoader(object):
             # Fetch ids
             self.load_config.log(LOG_LEVEL_TRACE, 'Fetching docs', self.load_config.server, self.index, self.type)
 
-            data_utils.batch_fetch_docs_for_ids(self.load_config.server,
+            self.data_utils.batch_fetch_docs_for_ids(self.load_config.server,
                                                 ids_to_fetch,
                                                 self.index,
                                                 self.type,
@@ -223,8 +226,8 @@ class DataLoader(object):
         self.load_config.log(LOG_LEVEL_INFO,
                         self.load_config.server,
                         self.load_config.server_username,
-                        self.load_config.index,
-                        self.load_config.type,
+                        self.index,
+                        self.type,
                         ' Updated docs:',
                         len(self.updated_ids) + len(self.indexed_ids),
                         ', Failed docs:', len(self.failed_docs))

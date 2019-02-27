@@ -126,95 +126,95 @@ class DataMapper(object):
         return cleaned_relations
 
 
-    @staticmethod
-    def update_citations_for_doc(_id, doc, dest_ids, source, index_id, append=True):
-        citations_for_index = {
-            'index_id': index_id,
-            'source': source,
-            'ids': dest_ids
-        }
+    # @staticmethod
+    # def update_citations_for_doc(_id, doc, dest_ids, source, index_id, append=True):
+    #     citations_for_index = {
+    #         'index_id': index_id,
+    #         'source': source,
+    #         'ids': dest_ids
+    #     }
 
-        citations = None
-        if 'citations' in doc:
-            citations = doc['citations']
-            citations = DataMapper.clean_up_relations(citations)
+    #     citations = None
+    #     if 'citations' in doc:
+    #         citations = doc['citations']
+    #         citations = DataMapper.clean_up_relations(citations)
         
-        try:
-            if citations is not None and len(citations) > 0:
-                # Iterate and find citations
-                citations_for_index_found = False
-                for citation in citations:
-                    if citation['index_id'] == index_id and citation['source'] == source:
-                        if append:
-                            citation_ids = citation['ids']
-                            for citation_id in citation_ids:
-                                citation_id = str(citation_id)
-                                if citation_id not in dest_ids:
-                                    dest_ids.append(citation_id)
+    #     try:
+    #         if citations is not None and len(citations) > 0:
+    #             # Iterate and find citations
+    #             citations_for_index_found = False
+    #             for citation in citations:
+    #                 if citation['index_id'] == index_id and citation['source'] == source:
+    #                     if append:
+    #                         citation_ids = citation['ids']
+    #                         for citation_id in citation_ids:
+    #                             citation_id = str(citation_id)
+    #                             if citation_id not in dest_ids:
+    #                                 dest_ids.append(citation_id)
 
-                        citation['ids'] = dest_ids
-                        citations_for_index_found = True
-                        break
-                if not citations_for_index_found:
-                    citations.append(citations_for_index)
-            else:
-                citations = [citations_for_index]
+    #                     citation['ids'] = dest_ids
+    #                     citations_for_index_found = True
+    #                     break
+    #             if not citations_for_index_found:
+    #                 citations.append(citations_for_index)
+    #         else:
+    #             citations = [citations_for_index]
 
-            doc['citations'] = citations
-        except Exception as e:
-            print e
-            print doc
-            print citations
-            # time.sleep(100)
+    #         doc['citations'] = citations
+    #     except Exception as e:
+    #         print e
+    #         print doc
+    #         print citations
+    #         # time.sleep(100)
 
-        return doc
+    #     return doc
+
+    # @staticmethod
+    # def update_cited_bys_for_doc(_id, doc, dest_ids, source, index_id, append=True):
+
+    #     cited_bys_for_index = {
+    #         'index_id': index_id,
+    #         'source': source,
+    #         'ids': dest_ids
+    #     }
+
+    #     cited_bys = None
+    #     if 'cited_bys' in doc:
+    #         cited_bys = doc['cited_bys']
+    #         cited_bys = DataMapper.clean_up_relations(cited_bys)
+
+    #     try:
+    #         if cited_bys is not None and len(cited_bys) > 0:
+    #             # Iterate and find citations
+    #             cited_bys_for_index_found = False
+    #             for cited_by in cited_bys:
+    #                 if cited_by['index_id'] == index_id and cited_by['source'] == source:
+    #                     if append:
+    #                         cited_by_ids = cited_by['ids']
+    #                         for cited_by_id in cited_by_ids:
+    #                             cited_by_id = str(cited_by_id)
+    #                             if cited_by_id not in dest_ids:
+    #                                 dest_ids.append(cited_by_id)
+
+    #                     cited_by['ids'] = dest_ids
+    #                     cited_bys_for_index_found = True
+    #                     break
+    #             if not cited_bys_for_index_found:
+    #                 cited_bys.append(cited_bys_for_index)
+    #         else:
+    #             cited_bys = [cited_bys_for_index]
+
+    #         doc['cited_bys'] = cited_bys
+    #     except Exception as e:
+    #         print e
+    #         print doc
+    #         print cited_bys
+    #         # time.sleep(100)
+
+    #     return doc
 
     @staticmethod
-    def update_cited_bys_for_doc(_id, doc, dest_ids, source, index_id, append=True):
-
-        cited_bys_for_index = {
-            'index_id': index_id,
-            'source': source,
-            'ids': dest_ids
-        }
-
-        cited_bys = None
-        if 'cited_bys' in doc:
-            cited_bys = doc['cited_bys']
-            cited_bys = DataMapper.clean_up_relations(cited_bys)
-
-        try:
-            if cited_bys is not None and len(cited_bys) > 0:
-                # Iterate and find citations
-                cited_bys_for_index_found = False
-                for cited_by in cited_bys:
-                    if cited_by['index_id'] == index_id and cited_by['source'] == source:
-                        if append:
-                            cited_by_ids = cited_by['ids']
-                            for cited_by_id in cited_by_ids:
-                                cited_by_id = str(cited_by_id)
-                                if cited_by_id not in dest_ids:
-                                    dest_ids.append(cited_by_id)
-
-                        cited_by['ids'] = dest_ids
-                        cited_bys_for_index_found = True
-                        break
-                if not cited_bys_for_index_found:
-                    cited_bys.append(cited_bys_for_index)
-            else:
-                cited_bys = [cited_bys_for_index]
-
-            doc['cited_bys'] = cited_bys
-        except Exception as e:
-            print e
-            print doc
-            print cited_bys
-            # time.sleep(100)
-
-        return doc
-
-    @staticmethod
-    def update_relations_for_doc(_id, doc, dest_ids, source, index_id, append=True):
+    def update_relations_for_doc(_id, doc, dest_ids, source, index_id, relation_type, append=True, ids_to_remove=[]):
         relations_for_index = {
             'index_id': index_id,
             'source': source,
@@ -222,9 +222,8 @@ class DataMapper(object):
         }
 
         relations = None
-        if 'relations' in doc:
-            relations = doc['relations']
-
+        if relation_type in doc:
+            relations = doc[relation_type]
             relations = DataMapper.clean_up_relations(relations)
 
         if relations is not None and len(relations) > 0:
@@ -232,12 +231,18 @@ class DataMapper(object):
             relations_for_index_found = False
             for relation in relations:
                 if relation['index_id'] == index_id and relation['source'] == source:
+                    # Append ids
                     if append:
                         relation_ids = relation['ids']
                         for relation_id in relation_ids:
                             relation_id = str(relation_id)
                             if relation_id not in dest_ids:
                                 dest_ids.append(relation_id)
+
+                    # Remove ids
+                    for id_to_remove in ids_to_remove:
+                        if id_to_remove in dest_ids:
+                            dest_ids.remove(id_to_remove)
 
                     relation['ids'] = dest_ids
                     relations_for_index_found = True
@@ -247,7 +252,7 @@ class DataMapper(object):
         else:
             relations = [relations_for_index]
 
-        doc['relations'] = relations
+        doc[relation_type] = relations
 
         return doc
 
@@ -308,15 +313,37 @@ class DataMapper(object):
 
 
     @staticmethod
-    def reformat(reformatted_array, relations_array, dest_index_id, relationship_type):
+    def reformat(reformatted_array, relations_array, dest_index_id, relationship_type, removed_ids={}):
+        # Added ids
         for _id in relations_array:
             if _id not in reformatted_array:
                 reformatted_array[_id] = []
 
+            ids_to_remove = []
+            if _id in removed_ids:
+                ids_to_remove = removed_ids[_id]
+
             relationship = {
                 'index_id': dest_index_id,
                 'ids': relations_array[_id],
-                'type': relationship_type
+                'type': relationship_type,
+                'ids_to_remove': ids_to_remove
+            }
+
+            reformatted_array[_id].append(relationship)
+
+        # Removed ids
+        for _id in removed_ids:
+            if _id not in reformatted_array:
+                reformatted_array[_id] = []
+
+            ids_to_remove = removed_ids[_id] 
+
+            relationship = {
+                'index_id': dest_index_id,
+                'ids': [],
+                'type': relationship_type,
+                'ids_to_remove': ids_to_remove
             }
 
             reformatted_array[_id].append(relationship)

@@ -22,6 +22,8 @@ from constants import PROCESS_SPAWN_DELAY
 from constants import PROCESS_COUNT
 from constants import MAX_RETRIES
 
+from constants import DATA_SOURCE_BATCHES_FILE
+
 from utils import file_utils
 # from utils.logger import LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_FATAL, LOG_LEVEL_INFO, LOG_LEVEL_TRACE, LOG_LEVEL_WARNING
 import utils.log_utils as log_utils
@@ -30,6 +32,7 @@ from utils.log_utils import *
 import logging
 import datetime
 import time
+import os 
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
@@ -152,34 +155,75 @@ class LoadConfig(object):
         file_utils.make_directory(data_source_directory)
         return data_source_directory
 
-    def data_source_batch_directory(self, data_source_batch_name):
-        data_source_batch_directory = self.data_source_directory()
+    def data_source_batch_directory(self, data_source_batch_name, data_source_name=None):
+        data_source_batch_directory = self.data_source_directory(data_source_name)
         if data_source_batch_name is not None:
             data_source_batch_directory = data_source_batch_directory + '/' + data_source_batch_name
 
         file_utils.make_directory(data_source_batch_directory)
         return data_source_batch_directory
 
-    def failed_docs_directory(self, data_source_batch_name):
-        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name)
+    def failed_docs_directory(self, data_source_batch_name, data_source_name=None):
+        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name, data_source_name)
         failed_docs_directory = data_source_batch_directory + '/' + FAILED_DOCS_DIRECTORY
 
         file_utils.make_directory(failed_docs_directory)
         return failed_docs_directory
 
-    def loaded_docs_directory(self, data_source_batch_name):
-        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name)
+    def loaded_docs_directory(self, data_source_batch_name, data_source_name=None):
+        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name, data_source_name)
         loaded_docs_directory = data_source_batch_directory + '/' + LOADED_DOCS_DIRECTORY
 
         file_utils.make_directory(loaded_docs_directory)
         return loaded_docs_directory
 
-    def bulk_update_response_directory(self, data_source_batch_name):
-        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name)
+    def bulk_update_response_directory(self, data_source_batch_name, data_source_name=None):
+        data_source_batch_directory = self.data_source_batch_directory(data_source_batch_name, data_source_name)
         bulk_update_response_directory = data_source_batch_directory + '/' + BULK_UPDATE_RESPONSE_DIRECTORY
 
         file_utils.make_directory(bulk_update_response_directory)
         return bulk_update_response_directory
+
+    def get_failed_docs_files(self, data_source_name=None):
+        data_source_batches = {}
+        if data_source_name is not None:
+            data_source_directory = self.data_source_directory(data_source_name=data_source_name)
+            dsb = file_utils.load_file(data_source_directory, DATA_SOURCE_BATCHES_FILE)
+            if data_source_name not in data_source_batches:
+                data_source_batches[data_source_name] = []
+
+            for data_source_batch in dsb:
+                data_source_batches[data_source_name].append(data_source_batch)
+        else:
+            generated_files_directory = self.generated_files_directory()
+            print 'generated_files_directory', generated_files_directory
+            for name in os.listdir(generated_files_directory):
+                print 'data_source_name', name
+                path = os.path.join(generated_files_directory, name)
+                if os.path.isdir(path):
+                    data_source_directory = self.data_source_directory(data_source_name=name)
+                    print 'data_source_directory', data_source_directory
+                    dsb = file_utils.load_file(data_source_directory, DATA_SOURCE_BATCHES_FILE)
+                    if name not in data_source_batches:
+                        data_source_batches[name] = []
+
+                    for data_source_batch in dsb:
+                        data_source_batches[name].append(data_source_batch)
+
+        failed_docs_files = []
+        for data_source_name in data_source_batches:
+            print 'data_source_name', data_source_name
+            for data_source_batch in data_source_batches[data_source_name]:
+                failed_docs_directory = self.failed_docs_directory(data_source_batch_name=data_source_batch, data_source_name=data_source_name)
+                print 'failed_docs_directory', failed_docs_directory
+                for name in os.listdir(failed_docs_directory):
+                    # print 'failed_doc_file', name
+                    path = os.path.join(failed_docs_directory, name)
+                    print 'failed_doc_file', path
+                    if os.path.isfile(path) and name.endswith('.json'):
+                        failed_docs_files.append(path)
+
+        return failed_docs_files
 
     @staticmethod
     def index_for_index_id(index_id):

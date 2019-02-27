@@ -27,6 +27,7 @@ class LoadManager(object):
         self.root_directory = None
         self.src_data_directory = None
         self.src_data_exists = False
+        self.local_date_time = None
         self.config_file = self.index_id + '_CONFIG.json'
 
         # self.get_config()
@@ -72,8 +73,8 @@ class LoadManager(object):
 
     def create_config(self):
         now = datetime.datetime.now()
-        local_date = now.strftime("%m-%d-%Y_%H:%M")
-        self.root_directory = self.get_root_directory(local_date)
+        self.local_date_time = now.strftime("%m-%d-%Y %H:%M:%S")
+        self.root_directory = self.get_root_directory(self.local_date_time)
         file_utils.make_directory(self.root_directory)
 
         index_item = self.get_info_for_index_id(self.index_id)
@@ -83,6 +84,7 @@ class LoadManager(object):
         if self.should_reload():
             self.index = self.get_next_index_version(self.index)
 
+        print 'local date:', self.local_date_time
         print 'root directory:', self.root_directory
         print 'index_id:', self.index_id
         print 'server:', self.server
@@ -116,6 +118,8 @@ class LoadManager(object):
         self.src_data_exists = config['src_data_exists']
         if 'src_data_directory' in config:
             self.src_data_directory = config['src_data_directory']
+        if 'local_date_time' in config:
+            self.local_date_time = config['local_date_time']
 
         return config
 
@@ -130,7 +134,7 @@ class LoadManager(object):
         config['type'] = self.type
         config['src_data_exists'] = self.src_data_exists
         config['src_data_directory'] = self.src_data_directory
-
+        config['local_date_time'] = self.local_date_time
         file_utils.save_file(DATA_LOADING_DIRECTORY, self.config_file, config)
         return config
 
@@ -157,7 +161,7 @@ class LoadManager(object):
 
     def mapping_file_path(self):
         return None
-
+   
     def get_data_mapper(self):
         return None
 
@@ -166,6 +170,9 @@ class LoadManager(object):
 
     def get_max_memory_percent(self):
         return 75
+
+    def should_download_data(self):
+        return not self.src_data_exists
 
     def download_data(self):
         pass
@@ -184,15 +191,15 @@ class LoadManager(object):
         self.check_and_create_index()
 
         # Download data
-        if not self.src_data_exists:
+        if self.should_download_data():
             # print 'Downloading data...'
-
             self.download_data()
             self.src_data_exists = True
             self.set_config()
 
         tasks_list = self.create_tasks_list()
         self.check_and_start_tasks(tasks_list)
+        self.tasks_completed()
 
     def start_task(self, task):
         task_name = task['name']
@@ -215,11 +222,15 @@ class LoadManager(object):
                 # TODO skip
                 print task['name'], 'completed'
 
+    def tasks_completed(self):
+        pass
+
     def check_and_create_index(self):
         data_loader_utils = DataLoaderUtils(self.server, self.index, self.type, self.server_username, self.server_password)
         mapping_file_path = self.mapping_file_path()
         print 'Checking index...'
         if not data_loader_utils.index_exists() and mapping_file_path is not None:
+            
             data_loader_utils.create_index(mapping_file_path)
 
     def delete_index(self, _server, _index, _type):
@@ -263,7 +274,6 @@ class LoadManager(object):
         tasks_list = self.load_tasks_list()
         if len(tasks_list) == 0:
             tasks_list = []
-
         new_tasks_list = self.get_tasks_list()
         for task in new_tasks_list:
             self.set_status(task, TASK_STATUS_NOT_STARTED)
@@ -296,7 +306,13 @@ class LoadManager(object):
     def load_tasks_list(self):
         # print 'Loading tasks list', self.root_directory
         tasks_list = file_utils.load_file(self.root_directory, 'tasks_list.json')
+        if len(tasks_list) == 0:
+            tasks_list = []
         return tasks_list
+
+    def delete_task_list(self):
+        file_utils.save_file(self.root_directory, 'tasks_list.json', [])
+
 
     def set_status(self, task, status):
         task['status'] = status
@@ -336,3 +352,29 @@ class LoadManager(object):
                                         dest_type=load_config.type)
 
         copier.run()
+
+    def analyse_failed_docs(self):
+        self.get_config()
+
+        print 'Analysing failed docs'
+        load_config = self.get_load_config()
+        failed_docs_files = load_config.get_failed_docs_files()
+        print len(failed_docs_files), 'failed doc files'
+        for failed_docs_file in failed_docs_files:
+            print 'Loading file:', failed_docs_file
+            failed_docs = file_utils.load_file_path(failed_docs_file)
+            for failed_doc in failed_docs:
+                reason = failed_docs[failed_doc]['reason']
+                print failed_doc
+                if isinstance(reason, dict):
+                    if 'index' in reason:
+                        index = reason['index']
+                        if 'error' in index:
+                            error = index['error']
+                            if 'reason' in error:
+                                error_reason = error['reason']
+                                print error_reason
+                else:
+                    print reason
+
+                raw_input('Continue?')

@@ -2,7 +2,7 @@ from data_load.clinical_trials.ct_data_extractor import CTDataExtractor
 from data_load.clinical_trials.ct_data_mapper import CTDataMapper
 from data_load.base.load_manager import LoadManager
 
-from data_load.base.utils.download_data import CSVDownloader
+# from data_load.base.utils.download_data import CSVDownloader
 from data_load.base.utils.data_loader_utils import DataLoaderUtils
 from data_load.base.data_source_processor import DataSourceProcessor
 from data_load.base.data_source_xml_2 import XMLDataDirectorySource
@@ -16,18 +16,32 @@ import data_load.base.utils.es_utils as es_utils
 
 from config import *
 import sys
+import os
 import psutil
+import urllib
+import zipfile
+
 from data_load.base.utils.log_utils import *
 
 class CTLoadManager(LoadManager):
 
-    def __init__(self, data_directory):
+    def __init__(self, data_directory=None):
         super(CTLoadManager, self).__init__(ID_CLINICAL_TRIALS)
-        self.data_directory = data_directory
+        # self.data_directory = data_directory
+        if data_directory is not None:
+            self.data_directories = [data_directory]
+        else:
+            self.data_directories = []
 
     # Methods to override
     def should_reload(self):
-        return True
+        return False
+
+    def get_info_for_index_id(self, index_id):
+        return {
+            "index": "clinical_trials",
+            "index_type": "study"
+        }
 
     def mapping_file_path(self):
         return 'data_load/clinical_trials/mapping.json'
@@ -43,11 +57,12 @@ class CTLoadManager(LoadManager):
 
     def get_tasks_list(self):
         tasks_list = []
-
-        tasks_list.append({
-            'name': 'process_data_directory',
-            'status': ''
-        })
+        self.data_directories.sort()
+        for data_directory in self.data_directories:
+            tasks_list.append({
+                'name': data_directory,
+                'status': ''
+            })
 
         # for data_source in DATA_SOURCES:
         #     tasks_list.append({
@@ -68,8 +83,8 @@ class CTLoadManager(LoadManager):
         return tasks_list
 
     def run_task(self, task):
-        if task == 'process_data_directory':
-            self.process_data_directory(self.data_directory)
+        # if task == 'process_data_directory':
+        self.process_data_directory(task)
         # if task == 'copy_tags_and_annotations':
         #     self.copy_tags_and_annotations()
         # if task == 'clear_pubmed_relationships':
@@ -94,7 +109,41 @@ class CTLoadManager(LoadManager):
             exit()
             
     def download_data(self):
-        pass
+        all_public_xml_url = 'https://clinicaltrials.gov/AllPublicXML.zip'
+        load_config = self.get_load_config()
+
+        source_files_directory = load_config.source_files_directory()
+
+        file_name = os.path.basename(all_public_xml_url)
+        file_path = os.path.join(source_files_directory, file_name)
+
+        # Download update zip file
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                print file_name, 'exists'
+        except Exception as e:
+            urllib.urlcleanup()
+            print 'Downloading file: ', all_public_xml_url
+            urllib.urlretrieve(all_public_xml_url, file_path)
+            print 'Saved', file_path
+
+        # TODO - Verify download with md5?
+
+        # Extract update zip file
+
+        print 'Unzipping file', file_path
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                zip_ref.extractall(source_files_directory)
+
+            for sub_dir_name in os.listdir(source_files_directory):
+                if sub_dir_name.startswith('NCT'):
+                    sub_dir_path = os.path.join(source_files_directory, sub_dir_name)
+                    self.data_directories.append(sub_dir_path)
+
+            self.data_directories.sort()
+        except Exception as e:
+            print e
 
     def process_data_directory(self, data_directory):
         print 'processing', data_directory
@@ -140,6 +189,11 @@ def start(data_directory):
     load_manager.del_config()
     load_manager.run()
 
+def download_and_start():
+    load_manager = CTLoadManager()
+    # load_manager.del_config()
+    load_manager.run()
+
 def resume():
     load_manager = CTLoadManager()
     load_manager.run()
@@ -155,7 +209,10 @@ def run():
                     start(data_directory)
                     return
                 else:
-                    print('Usage: ct_load_manager -path <data_directory>')     
+                    print('Usage: ct_load_manager -path <data_directory>')    
+            elif arg == '-auto':
+                download_and_start()
+                return
             else: 
                 print('Usage: ct_load_manager -path <data_directory>')     
         arg_index += 1

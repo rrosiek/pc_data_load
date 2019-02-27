@@ -5,7 +5,7 @@ from constants import RELATIONSHIP_TYPE_RELATIONS
 from constants import RELATIONSHIP_TYPE_CITATIONS
 from constants import RELATIONSHIP_TYPE_CITED_BYS
 
-from utils import data_utils
+from utils.data_utils import DataUtils
 from utils import file_utils
 from utils.data_loader_utils import DataLoaderUtils
 
@@ -27,6 +27,11 @@ class RelationshipLoader(DataLoader):
         # file_utils.make_directory(self.data_source_batch_directory)
 
         self.data_loader_utils = None
+        self.data_utils = None
+
+        self.data_source_name = self.load_config.data_source_name
+        now = datetime.datetime.now()
+        self.updated_date = now.isoformat()
 
     def get_es_id(self, doc_id):
         return doc_id
@@ -41,13 +46,15 @@ class RelationshipLoader(DataLoader):
                                                  self.load_config.server_username,
                                                  self.load_config.server_password)
 
+        self.data_utils = DataUtils()
+
         count = 0
         bulk_data = ''
 
         ids_to_fetch = self.data_loader_batch.keys()
         self.load_config.log(LOG_LEVEL_TRACE, 'Fetching docs', self.load_config.server, self.index, self.type)
 
-        data_utils.batch_fetch_docs_for_ids(self.load_config.server,
+        self.data_utils.batch_fetch_docs_for_ids(self.load_config.server,
                                             ids_to_fetch,
                                             self.index,
                                             self.type,
@@ -61,39 +68,50 @@ class RelationshipLoader(DataLoader):
             existing_doc = self.existing_docs[_id]
 
             doc = {}
-
+            updates = []
+            
             # Update relations
             for relation in relations:
                 dest_index_id = relation['index_id']
                 dest_ids = relation['ids']
                 relationship_type = relation['type']
+                ids_to_remove = []
+                if 'ids_to_remove' in relation:
+                    ids_to_remove = relation['ids_to_remove']
 
                 self.load_config.log(LOG_LEVEL_TRACE, self.index, relationship_type,  dest_index_id, len(dest_ids))
 
-                if relationship_type == RELATIONSHIP_TYPE_CITATIONS:
-                    existing_doc = self.load_config.data_mapper.update_citations_for_doc(_id,
-                                                                                         existing_doc,
-                                                                                         dest_ids,
-                                                                                         self.source,
-                                                                                         dest_index_id,
-                                                                                         append=self.append)
-                    doc[RELATIONSHIP_TYPE_CITATIONS] = existing_doc[RELATIONSHIP_TYPE_CITATIONS]
-                elif relationship_type == RELATIONSHIP_TYPE_CITED_BYS:
-                    existing_doc = self.load_config.data_mapper.update_cited_bys_for_doc(_id,
-                                                                                         existing_doc,
-                                                                                         dest_ids,
-                                                                                         self.source,
-                                                                                         dest_index_id,
-                                                                                         append=self.append)
-                    doc[RELATIONSHIP_TYPE_CITED_BYS] = existing_doc[RELATIONSHIP_TYPE_CITED_BYS]
-                elif relationship_type == RELATIONSHIP_TYPE_RELATIONS:
-                    existing_doc = self.load_config.data_mapper.update_relations_for_doc(_id,
-                                                                                         existing_doc,
-                                                                                         dest_ids,
-                                                                                         self.source,
-                                                                                         dest_index_id,
-                                                                                         append=self.append)
-                    doc[RELATIONSHIP_TYPE_RELATIONS] = existing_doc[RELATIONSHIP_TYPE_RELATIONS]
+                existing_doc = self.load_config.data_mapper.update_relations_for_doc(_id,
+                                                                                    existing_doc,
+                                                                                    dest_ids,
+                                                                                    self.source,
+                                                                                    dest_index_id,
+                                                                                    relation_type=relationship_type,
+                                                                                    append=self.append,
+                                                                                    ids_to_remove=ids_to_remove)
+                doc[relationship_type] = existing_doc[relationship_type]
+
+                updates.append({
+                    'index_id': dest_index_id,
+                    'source': self.source,
+                    'added_ids': dest_ids,
+                    'removed_ids': ids_to_remove,
+                    'relation_type': relationship_type
+                })
+
+            # Relations updates
+            relations_updates = []
+            if 'relations_updates' in existing_doc:
+                relations_updates = existing_doc['relations_updates']
+
+            update_item = {
+                'update_source': self.data_source_name,
+                'update_date': self.updated_date,
+                'updates': updates
+            }
+            relations_updates.append(update_item)
+            doc['relations_updates'] = relations_updates
+
 
             if self.load_config.test_mode and count % 2500 == 0:
                 # print 'Existing doc id', _id

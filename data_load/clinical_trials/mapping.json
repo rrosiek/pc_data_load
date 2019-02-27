@@ -2,6 +2,1254 @@
   "mappings": {
     "study": {
       "properties": {
+        "study_docs": {
+          "properties": {
+            "study_doc": {
+              "properties": {
+                "doc_type": {
+                  "type": "text"
+                },
+                "doc_url": {
+                  "type": "text"
+                },
+                "doc_id": {
+                  "type": "text"
+                },
+                "doc_comment": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "reference": {
+          "properties": {
+            "PMID": {
+              "type": "text"
+            },
+            "citation": {
+              "type": "text"
+            }
+          }
+        },
+        "disposition_first_submitted": {
+          "type": "text"
+        },
+        "overall_contact_backup": {
+          "properties": {
+            "phone": {
+              "type": "text"
+            },
+            "last_name": {
+              "type": "text"
+            },
+            "email": {
+              "type": "text"
+            }
+          }
+        },
+        "last_update_submitted": {
+          "type": "text"
+        },
+        "phase": {
+          "type": "text"
+        },
+        "removed_countries": {
+          "properties": {
+            "country": {
+              "type": "text"
+            }
+          }
+        },
+        "responsible_party": {
+          "properties": {
+            "investigator_title": {
+              "type": "text"
+            },
+            "name_title": {
+              "type": "text"
+            },
+            "investigator_affiliation": {
+              "type": "text"
+            },
+            "investigator_full_name": {
+              "type": "text"
+            },
+            "organization": {
+              "type": "text"
+            },
+            "responsible_party_type": {
+              "type": "text"
+            }
+          }
+        },
+        "detailed_description": {
+          "properties": {
+            "textblock": {
+              "type": "text"
+            }
+          }
+        },
+        "link": {
+          "properties": {
+            "url": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            }
+          }
+        },
+        "has_expanded_access": {
+          "type": "text"
+        },
+        "condition_browse": {
+          "properties": {
+            "mesh_term": {
+              "type": "text"
+            }
+          }
+        },
+        "intervention": {
+          "properties": {
+            "intervention_name": {
+              "type": "text"
+            },
+            "arm_group_label": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "other_name": {
+              "type": "text"
+            },
+            "intervention_type": {
+              "type": "text"
+            }
+          }
+        },
+        "number_of_groups": {
+          "type": "text"
+        },
+        "study_first_posted": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "biospec_descr": {
+          "properties": {
+            "textblock": {
+              "type": "text"
+            }
+          }
+        },
+        "study_design_info": {
+          "properties": {
+            "intervention_model_description": {
+              "type": "text"
+            },
+            "primary_purpose": {
+              "type": "text"
+            },
+            "observational_model": {
+              "type": "text"
+            },
+            "intervention_model": {
+              "type": "text"
+            },
+            "masking_description": {
+              "type": "text"
+            },
+            "time_perspective": {
+              "type": "text"
+            },
+            "allocation": {
+              "type": "text"
+            },
+            "masking": {
+              "type": "text"
+            }
+          }
+        },
+        "primary_completion_date": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "overall_contact": {
+          "properties": {
+            "phone": {
+              "type": "text"
+            },
+            "last_name": {
+              "type": "text"
+            },
+            "email": {
+              "type": "text"
+            }
+          }
+        },
+        "official_title": {
+          "type": "text"
+        },
+        "location_countries": {
+          "properties": {
+            "country": {
+              "type": "text"
+            }
+          }
+        },
+        "source": {
+          "type": "text"
+        },
+        "location": {
+          "properties": {
+            "facility": {
+              "properties": {
+                "name": {
+                  "type": "text"
+                },
+                "address": {
+                  "properties": {
+                    "city": {
+                      "type": "text"
+                    },
+                    "state": {
+                      "type": "text"
+                    },
+                    "zip": {
+                      "type": "text"
+                    },
+                    "country": {
+                      "type": "text"
+                    }
+                  }
+                }
+              }
+            },
+            "status": {
+              "type": "text"
+            },
+            "investigator": {
+              "properties": {
+                "last_name": {
+                  "type": "text"
+                },
+                "role": {
+                  "type": "text"
+                }
+              }
+            },
+            "contact": {
+              "properties": {
+                "phone_ext": {
+                  "type": "text"
+                },
+                "last_name": {
+                  "type": "text"
+                },
+                "email": {
+                  "type": "text"
+                },
+                "phone": {
+                  "type": "text"
+                }
+              }
+            },
+            "contact_backup": {
+              "properties": {
+                "phone": {
+                  "type": "text"
+                },
+                "last_name": {
+                  "type": "text"
+                },
+                "email": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "study_type": {
+          "type": "text"
+        },
+        "number_of_arms": {
+          "type": "text"
+        },
+        "last_update_posted": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "start_date": {
+          "properties": {
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "target_duration": {
+          "type": "text"
+        },
+        "id_info": {
+          "properties": {
+            "org_study_id": {
+              "type": "text"
+            },
+            "secondary_id": {
+              "type": "text"
+            },
+            "nct_alias": {
+              "type": "text"
+            },
+            "nct_id": {
+              "type": "text"
+            }
+          }
+        },
+        "eligibility": {
+          "properties": {
+            "sampling_method": {
+              "type": "text"
+            },
+            "gender": {
+              "type": "text"
+            },
+            "maximum_age": {
+              "type": "text"
+            },
+            "study_pop": {
+              "properties": {
+                "textblock": {
+                  "type": "text"
+                }
+              }
+            },
+            "minimum_age": {
+              "type": "text"
+            },
+            "healthy_volunteers": {
+              "type": "text"
+            },
+            "criteria": {
+              "properties": {
+                "textblock": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "patient_data": {
+          "properties": {
+            "ipd_info_type": {
+              "type": "text"
+            },
+            "ipd_access_criteria": {
+              "type": "text"
+            },
+            "sharing_ipd": {
+              "type": "text"
+            },
+            "ipd_description": {
+              "type": "text"
+            },
+            "ipd_url": {
+              "type": "text"
+            },
+            "ipd_time_frame": {
+              "type": "text"
+            }
+          }
+        },
+        "arm_group": {
+          "properties": {
+            "description": {
+              "type": "text"
+            },
+            "arm_group_label": {
+              "type": "text"
+            },
+            "arm_group_type": {
+              "type": "text"
+            }
+          }
+        },
+        "results_first_submitted_qc": {
+          "type": "text"
+        },
+        "sponsors": {
+          "properties": {
+            "collaborator": {
+              "properties": {
+                "agency": {
+                  "type": "text"
+                },
+                "agency_class": {
+                  "type": "text"
+                }
+              }
+            },
+            "lead_sponsor": {
+              "properties": {
+                "agency": {
+                  "type": "text"
+                },
+                "agency_class": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "secondary_outcome": {
+          "properties": {
+            "time_frame": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "measure": {
+              "type": "text"
+            }
+          }
+        },
+        "disposition_first_submitted_qc": {
+          "type": "text"
+        },
+        "clinical_results": {
+          "properties": {
+            "limitations_and_caveats": {
+              "type": "text"
+            },
+            "baseline": {
+              "properties": {
+                "population": {
+                  "type": "text"
+                },
+                "group_list": {
+                  "properties": {
+                    "group": {
+                      "properties": {
+                        "@group_id": {
+                          "type": "text"
+                        },
+                        "description": {
+                          "type": "text"
+                        },
+                        "title": {
+                          "type": "text"
+                        }
+                      }
+                    }
+                  }
+                },
+                "analyzed_list": {
+                  "properties": {
+                    "analyzed": {
+                      "properties": {
+                        "units": {
+                          "type": "text"
+                        },
+                        "scope": {
+                          "type": "text"
+                        },
+                        "count_list": {
+                          "properties": {
+                            "count": {
+                              "properties": {
+                                "@group_id": {
+                                  "type": "text"
+                                },
+                                "@value": {
+                                  "type": "text"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "measure_list": {
+                  "properties": {
+                    "measure": {
+                      "properties": {
+                        "description": {
+                          "type": "text"
+                        },
+                        "title": {
+                          "type": "text"
+                        },
+                        "param": {
+                          "type": "text"
+                        },
+                        "dispersion": {
+                          "type": "text"
+                        },
+                        "class_list": {
+                          "properties": {
+                            "class": {
+                              "properties": {
+                                "category_list": {
+                                  "properties": {
+                                    "category": {
+                                      "properties": {
+                                        "title": {
+                                          "type": "text"
+                                        },
+                                        "measurement_list": {
+                                          "properties": {
+                                            "measurement": {
+                                              "properties": {
+                                                "@spread": {
+                                                  "type": "text"
+                                                },
+                                                "@lower_limit": {
+                                                  "type": "text"
+                                                },
+                                                "@upper_limit": {
+                                                  "type": "text"
+                                                },
+                                                "@value": {
+                                                  "type": "text"
+                                                },
+                                                "@group_id": {
+                                                  "type": "text"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "title": {
+                                  "type": "text"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "units": {
+                          "type": "text"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "point_of_contact": {
+              "properties": {
+                "phone": {
+                  "type": "text"
+                },
+                "name_or_title": {
+                  "type": "text"
+                },
+                "email": {
+                  "type": "text"
+                },
+                "organization": {
+                  "type": "text"
+                }
+              }
+            },
+            "reported_events": {
+              "properties": {
+                "serious_events": {
+                  "properties": {
+                    "default_assessment": {
+                      "type": "text"
+                    },
+                    "category_list": {
+                      "properties": {
+                        "category": {
+                          "properties": {
+                            "event_list": {
+                              "properties": {
+                                "event": {
+                                  "properties": {
+                                    "assessment": {
+                                      "type": "text"
+                                    },
+                                    "counts": {
+                                      "properties": {
+                                        "@subjects_at_risk": {
+                                          "type": "text"
+                                        },
+                                        "@events": {
+                                          "type": "text"
+                                        },
+                                        "@group_id": {
+                                          "type": "text"
+                                        },
+                                        "@subjects_affected": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    },
+                                    "sub_title": {
+                                      "properties": {
+                                        "#text": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    },
+                                    "description": {
+                                      "type": "text"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "title": {
+                              "type": "text"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "default_vocab": {
+                      "type": "text"
+                    }
+                  }
+                },
+                "other_events": {
+                  "properties": {
+                    "frequency_threshold": {
+                      "type": "text"
+                    },
+                    "default_assessment": {
+                      "type": "text"
+                    },
+                    "category_list": {
+                      "properties": {
+                        "category": {
+                          "properties": {
+                            "event_list": {
+                              "properties": {
+                                "event": {
+                                  "properties": {
+                                    "sub_title": {
+                                      "properties": {
+                                        "#text": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    },
+                                    "counts": {
+                                      "properties": {
+                                        "@subjects_at_risk": {
+                                          "type": "text"
+                                        },
+                                        "@subjects_affected": {
+                                          "type": "text"
+                                        },
+                                        "@group_id": {
+                                          "type": "text"
+                                        },
+                                        "@events": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    },
+                                    "assessment": {
+                                      "type": "text"
+                                    },
+                                    "description": {
+                                      "type": "text"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "title": {
+                              "type": "text"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "default_vocab": {
+                      "type": "text"
+                    }
+                  }
+                },
+                "time_frame": {
+                  "type": "text"
+                },
+                "group_list": {
+                  "properties": {
+                    "group": {
+                      "properties": {
+                        "@group_id": {
+                          "type": "text"
+                        },
+                        "description": {
+                          "type": "text"
+                        },
+                        "title": {
+                          "type": "text"
+                        }
+                      }
+                    }
+                  }
+                },
+                "desc": {
+                  "type": "text"
+                }
+              }
+            },
+            "certain_agreements": {
+              "properties": {
+                "restrictive_agreement": {
+                  "type": "text"
+                },
+                "pi_employee": {
+                  "type": "text"
+                }
+              }
+            },
+            "outcome_list": {
+              "properties": {
+                "outcome": {
+                  "properties": {
+                    "description": {
+                      "type": "text"
+                    },
+                    "title": {
+                      "type": "text"
+                    },
+                    "time_frame": {
+                      "type": "text"
+                    },
+                    "group_list": {
+                      "properties": {
+                        "group": {
+                          "properties": {
+                            "@group_id": {
+                              "type": "text"
+                            },
+                            "description": {
+                              "type": "text"
+                            },
+                            "title": {
+                              "type": "text"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "measure": {
+                      "properties": {
+                        "description": {
+                          "type": "text"
+                        },
+                        "title": {
+                          "type": "text"
+                        },
+                        "param": {
+                          "type": "text"
+                        },
+                        "dispersion": {
+                          "type": "text"
+                        },
+                        "class_list": {
+                          "properties": {
+                            "class": {
+                              "properties": {
+                                "category_list": {
+                                  "properties": {
+                                    "category": {
+                                      "properties": {
+                                        "title": {
+                                          "type": "text"
+                                        },
+                                        "measurement_list": {
+                                          "properties": {
+                                            "measurement": {
+                                              "properties": {
+                                                "@value": {
+                                                  "type": "text"
+                                                },
+                                                "@spread": {
+                                                  "type": "text"
+                                                },
+                                                "@lower_limit": {
+                                                  "type": "text"
+                                                },
+                                                "@upper_limit": {
+                                                  "type": "text"
+                                                },
+                                                "@group_id": {
+                                                  "type": "text"
+                                                },
+                                                "#text": {
+                                                  "type": "text"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "analyzed_list": {
+                                  "properties": {
+                                    "analyzed": {
+                                      "properties": {
+                                        "units": {
+                                          "type": "text"
+                                        },
+                                        "scope": {
+                                          "type": "text"
+                                        },
+                                        "count_list": {
+                                          "properties": {
+                                            "count": {
+                                              "properties": {
+                                                "@group_id": {
+                                                  "type": "text"
+                                                },
+                                                "@value": {
+                                                  "type": "text"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "title": {
+                                  "type": "text"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "units_analyzed": {
+                          "type": "text"
+                        },
+                        "units": {
+                          "type": "text"
+                        },
+                        "analyzed_list": {
+                          "properties": {
+                            "analyzed": {
+                              "properties": {
+                                "units": {
+                                  "type": "text"
+                                },
+                                "scope": {
+                                  "type": "text"
+                                },
+                                "count_list": {
+                                  "properties": {
+                                    "count": {
+                                      "properties": {
+                                        "@group_id": {
+                                          "type": "text"
+                                        },
+                                        "@value": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "population": {
+                          "type": "text"
+                        }
+                      }
+                    },
+                    "analysis_list": {
+                      "properties": {
+                        "analysis": {
+                          "properties": {
+                            "dispersion_value": {
+                              "type": "text"
+                            },
+                            "p_value": {
+                              "type": "text"
+                            },
+                            "other_analysis_desc": {
+                              "type": "text"
+                            },
+                            "non_inferiority_desc": {
+                              "type": "text"
+                            },
+                            "group_id_list": {
+                              "properties": {
+                                "group_id": {
+                                  "type": "text"
+                                }
+                              }
+                            },
+                            "ci_lower_limit": {
+                              "type": "text"
+                            },
+                            "p_value_desc": {
+                              "type": "text"
+                            },
+                            "ci_percent": {
+                              "type": "text"
+                            },
+                            "ci_upper_limit": {
+                              "type": "text"
+                            },
+                            "method_desc": {
+                              "type": "text"
+                            },
+                            "groups_desc": {
+                              "type": "text"
+                            },
+                            "param_type": {
+                              "type": "text"
+                            },
+                            "non_inferiority_type": {
+                              "type": "text"
+                            },
+                            "dispersion_type": {
+                              "type": "text"
+                            },
+                            "ci_n_sides": {
+                              "type": "text"
+                            },
+                            "param_value": {
+                              "type": "text"
+                            },
+                            "method": {
+                              "type": "text"
+                            },
+                            "estimate_desc": {
+                              "type": "text"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "posting_date": {
+                      "type": "text"
+                    },
+                    "type": {
+                      "type": "text"
+                    },
+                    "population": {
+                      "type": "text"
+                    }
+                  }
+                }
+              }
+            },
+            "participant_flow": {
+              "properties": {
+                "period_list": {
+                  "properties": {
+                    "period": {
+                      "properties": {
+                        "milestone_list": {
+                          "properties": {
+                            "milestone": {
+                              "properties": {
+                                "participants_list": {
+                                  "properties": {
+                                    "participants": {
+                                      "properties": {
+                                        "#text": {
+                                          "type": "text"
+                                        },
+                                        "@group_id": {
+                                          "type": "text"
+                                        },
+                                        "@count": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "title": {
+                                  "type": "text"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "drop_withdraw_reason_list": {
+                          "properties": {
+                            "drop_withdraw_reason": {
+                              "properties": {
+                                "participants_list": {
+                                  "properties": {
+                                    "participants": {
+                                      "properties": {
+                                        "@group_id": {
+                                          "type": "text"
+                                        },
+                                        "@count": {
+                                          "type": "text"
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "title": {
+                                  "type": "text"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "text"
+                        }
+                      }
+                    }
+                  }
+                },
+                "recruitment_details": {
+                  "type": "text"
+                },
+                "pre_assignment_details": {
+                  "type": "text"
+                },
+                "group_list": {
+                  "properties": {
+                    "group": {
+                      "properties": {
+                        "@group_id": {
+                          "type": "text"
+                        },
+                        "description": {
+                          "type": "text"
+                        },
+                        "title": {
+                          "type": "text"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "biospec_retention": {
+          "type": "text"
+        },
+        "overall_status": {
+          "type": "text"
+        },
+        "primary_outcome": {
+          "properties": {
+            "time_frame": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "measure": {
+              "type": "text"
+            }
+          }
+        },
+        "verification_date": {
+          "type": "text"
+        },
+        "results_first_submitted": {
+          "type": "text"
+        },
+        "pending_results": {
+          "properties": {
+            "returned": {
+              "type": "text"
+            },
+            "submitted": {
+              "type": "text"
+            }
+          }
+        },
+        "condition": {
+          "type": "text"
+        },
+        "disposition_first_posted": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "keyword": {
+          "type": "text"
+        },
+        "results_reference": {
+          "properties": {
+            "PMID": {
+              "type": "text"
+            },
+            "citation": {
+              "type": "text"
+            }
+          }
+        },
+        "oversight_info": {
+          "properties": {
+            "is_unapproved_device": {
+              "type": "text"
+            },
+            "is_ppsd": {
+              "type": "text"
+            },
+            "is_us_export": {
+              "type": "text"
+            },
+            "has_dmc": {
+              "type": "text"
+            },
+            "is_fda_regulated_drug": {
+              "type": "text"
+            },
+            "is_fda_regulated_device": {
+              "type": "text"
+            }
+          }
+        },
+        "study_first_submitted_qc": {
+          "type": "text"
+        },
+        "acronym": {
+          "type": "text"
+        },
+        "completion_date": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "last_update_submitted_qc": {
+          "type": "text"
+        },
+        "last_known_status": {
+          "type": "text"
+        },
+        "other_outcome": {
+          "properties": {
+            "time_frame": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "measure": {
+              "type": "text"
+            }
+          }
+        },
+        "intervention_browse": {
+          "properties": {
+            "mesh_term": {
+              "type": "text"
+            }
+          }
+        },
+        "results_first_posted": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
+        "required_header": {
+          "properties": {
+            "url": {
+              "type": "text"
+            },
+            "link_text": {
+              "type": "text"
+            },
+            "download_date": {
+              "type": "text"
+            }
+          }
+        },
+        "study_first_submitted": {
+          "type": "text"
+        },
+        "brief_title": {
+          "type": "text"
+        },
+        "overall_official": {
+          "properties": {
+            "affiliation": {
+              "type": "text"
+            },
+            "last_name": {
+              "type": "text"
+            },
+            "role": {
+              "type": "text"
+            }
+          }
+        },
+        "why_stopped": {
+          "type": "text"
+        },
+        "brief_summary": {
+          "properties": {
+            "textblock": {
+              "type": "text"
+            }
+          }
+        },
+        "enrollment": {
+          "properties": {
+            "#text": {
+              "type": "text"
+            },
+            "@type": {
+              "type": "text"
+            }
+          }
+        },
         "citations": {
           "properties": {
             "ids": {

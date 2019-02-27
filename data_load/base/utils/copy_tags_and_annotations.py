@@ -1,4 +1,4 @@
-import data_utils
+from data_utils import DataUtils
 import file_utils
 import requests
 import time
@@ -38,8 +38,10 @@ class CopyTagsAndAnnotations(object):
         self.copy_tags = True
         self.copy_annotations = True
 
-        self.combine_tags = False   
-        self.combine_annotations = False
+        self.combine_tags = False # Combine not implemented, set to false  
+        self.combine_annotations = False # Combine not implemented, set to false 
+
+        self.data_utils = DataUtils()
 
     def run(self):
         docs_to_copy = self.fetch_ids()
@@ -102,24 +104,24 @@ class CopyTagsAndAnnotations(object):
 
         if self.copy_tags:
             print 'Fetching docs with tags', self.src_server, self.src_index, self.src_type
-            docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
-                                                                  query=tags_query,
-                                                                  index=self.src_index,
-                                                                  type=self.src_type,
-                                                                  ids_fetched=self.ids_fetched,
-                                                                  batch_size=1000)
+            docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+                                                                        query=tags_query,
+                                                                        index=self.src_index,
+                                                                        type=self.src_type,
+                                                                        ids_fetched=self.ids_fetched,
+                                                                        batch_size=1000)
             print len(docs_with_tags), 'docs_with_tags'
             for _id in docs_with_tags:
                 combined_docs[_id] = ''
 
         if self.copy_annotations:
             print 'Fetching docs with annotations', self.src_server, self.src_index, self.src_type
-            docs_with_annotations = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
-                                                                         query=annotations_query,
-                                                                         index=self.src_index,
-                                                                         type=self.src_type,
-                                                                         ids_fetched=self.ids_fetched,
-                                                                         batch_size=1000)
+            docs_with_annotations = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+                                                                                query=annotations_query,
+                                                                                index=self.src_index,
+                                                                                type=self.src_type,
+                                                                                ids_fetched=self.ids_fetched,
+                                                                                batch_size=1000)
 
             print len(docs_with_annotations), 'docs_with_annotations'
             for _id in docs_with_annotations:
@@ -173,11 +175,11 @@ class CopyTagsAndAnnotations(object):
         file_utils.make_directory(self.reports_directory)
         ids_array = ids.keys()
         # ids_array = [ids_array[0]]
-        data_utils.batch_fetch_docs_for_ids(base_url=self.src_server,
-                                            ids=ids_array,
-                                            index=self.src_index,
-                                            type=self.src_type,
-                                            docs_fetched=self.docs_fetched, batch_size=500)
+        self.data_utils.batch_fetch_docs_for_ids(base_url=self.src_server,
+                                                ids=ids_array,
+                                                index=self.src_index,
+                                                type=self.src_type,
+                                                docs_fetched=self.docs_fetched, batch_size=500)
 
     def load_bulk_data(self, bulk_data):
         print 'Bulk data size', len(bulk_data), 'loading...'
@@ -191,14 +193,14 @@ class CopyTagsAndAnnotations(object):
     def verify_tags(self):
         tags_query = self.tags_query()
 
-        src_docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+        src_docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
                                                                   query=tags_query,
                                                                   index=self.src_index,
                                                                   type=self.src_type,
                                                                   ids_fetched=self.ids_fetched,
                                                                   batch_size=1000)
 
-        dest_docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.dest_server,
+        dest_docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.dest_server,
                                                                    query=tags_query,
                                                                    index=self.dest_index,
                                                                    type=self.dest_type,
@@ -231,19 +233,19 @@ class CopyTagsAndAnnotations(object):
     def verify_annotations(self):
         annotations_query = self.annotations_query()
 
-        src_docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
-                                                                  query=annotations_query,
-                                                                  index=self.src_index,
-                                                                  type=self.src_type,
-                                                                  ids_fetched=self.ids_fetched,
-                                                                  batch_size=1000)
+        src_docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.src_server,
+                                                                        query=annotations_query,
+                                                                        index=self.src_index,
+                                                                        type=self.src_type,
+                                                                        ids_fetched=self.ids_fetched,
+                                                                        batch_size=1000)
 
-        dest_docs_with_tags = data_utils.batch_fetch_ids_for_query(base_url=self.dest_server,
-                                                                   query=annotations_query,
-                                                                   index=self.dest_index,
-                                                                   type=self.dest_type,
-                                                                   ids_fetched=self.ids_fetched,
-                                                                   batch_size=1000)
+        dest_docs_with_tags = self.data_utils.batch_fetch_ids_for_query(base_url=self.dest_server,
+                                                                        query=annotations_query,
+                                                                        index=self.dest_index,
+                                                                        type=self.dest_type,
+                                                                        ids_fetched=self.ids_fetched,
+                                                                        batch_size=1000)
 
         print len(src_docs_with_tags), 'src_docs_with_annotations'
         print len(dest_docs_with_tags), 'dest_docs_with_annotations'

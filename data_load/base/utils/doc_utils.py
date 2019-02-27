@@ -31,7 +31,8 @@ def get_string_representation(values, separator):
         value_string = value_string.encode('utf-8')
         value_string = value_string.strip()
     except Exception as e:
-        print(e.message)
+        pass
+        # print(e.message)
 
     return value_string
 

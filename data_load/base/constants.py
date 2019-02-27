@@ -76,7 +76,7 @@ DATA_SOURCE_BATCH_SIZE = 10000000
 
 DOC_FETCH_BATCH_SIZE = 250
 
-PROCESS_COUNT = 2
+PROCESS_COUNT = 8
 PROCESS_SPAWN_DELAY = 0.25  # seconds
 
 BULK_DATA_SIZE = 1500000
@@ -99,15 +99,15 @@ DATA_SOURCE_BATCHES_FILE = 'data_source_batches.json'
 INDEX_MAPPING = {}
 
 INDEX_MAPPING[ID_PUBMED] = {
-    'index': 'pubmed2018',
+    'index': 'pubmed2019',
     'type': 'article'
 }
 INDEX_MAPPING[ID_IRDB] = {
-    'index': 'irdb_v3',
+    'index': 'irdb_v4',
     'type': 'grant'
 }
 INDEX_MAPPING[ID_WEB_OF_SCIENCE] = {
-    'index': 'wos_v2',
+    'index': 'wos_v4',
     'type': 'article'
 }
 INDEX_MAPPING[ID_USPTO] = {

@@ -62,6 +62,17 @@ def load_file_path(file_path):
 
     return data
 
+def save_file_path(file_path, data):
+    try:
+        data_file = open(file_path, 'w')
+        data_file.write(json.dumps(data))
+        data_file.close()
+    except Exception as e:
+        # print 'error:', e.message
+        pass
+
+    return data
+
 
 def make_directory(directory):
     if not os.path.exists(directory):
