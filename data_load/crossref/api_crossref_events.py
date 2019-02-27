@@ -59,6 +59,7 @@ class CrossRefEventsAPI(APIBase):
                 events_fetched(self.cursor, results)
             print 'Total results:', total_results
 
+        print 'Streaming events end'
         return total_results
 
     def get_events(self, url, params):
@@ -90,6 +91,15 @@ class CrossRefEventsAPI(APIBase):
     def add_doi_prefix_to_results(self, results, doi_prefix):
         for result in results:
             result['doi_prefix'] = doi_prefix
+
+            if 'obj_id' in result:
+                obj_id = result['obj_id']
+
+                if 'https://doi.org/' in obj_id:
+                    doi = obj_id.replace('https://doi.org/', '')
+                    result['doi'] = doi
+                else:
+                    print 'DOI url error:', obj_id
 
         return results
 
