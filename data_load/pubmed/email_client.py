@@ -44,8 +44,6 @@ class EmailClient(object):
         if to_address == 'admin@altum.com':
             to_address = 'robint@qburst.com'
 
-        to_address = 'robint@qburst.com'
-
         docs_with_matching_citations = prospect['docs_with_matching_citations']
 
         print 'Sending mail for prospect', to_address, 'docs_with_matching_citations',  len(docs_with_matching_citations)

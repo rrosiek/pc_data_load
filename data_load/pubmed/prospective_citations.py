@@ -128,8 +128,8 @@ class FindProspectiveCitations(object):
 
                 all_prospects.append(new_prospect)
 
-            if email.startswith('zohas'):
-                break
+            # if email.startswith('zohas'):
+            #     break
                     
         return all_prospects
 
