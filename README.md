@@ -42,8 +42,10 @@
 
 ### Crossref
 
+**Works**
 ```python -m data_load.crossref.crossref_load_manager -auto``` - Loads Works for "Nature" & "ScienceOpen"
 
+**Events**
 ```python -m data_load.crossref.events_load_manager -auto``` - Loads Events for "Nature" & "ScienceOpen"
 
 
