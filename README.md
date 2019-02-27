@@ -40,3 +40,10 @@
 
 ```python -m data_load.uspto.uspto_load_manager -auto 2019```
 
+### Crossref
+
+```python -m data_load.crossref.crossref_load_manager -auto``` - Loads Works for "Nature" & "ScienceOpen"
+
+```python -m data_load.crossref.events_load_manager -auto``` - Loads Events for "Nature" & "ScienceOpen"
+
+
