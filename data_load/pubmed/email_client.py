@@ -43,7 +43,6 @@ class EmailClient(object):
 
         if to_address == 'admin@altum.com':
             to_address = 'robint@qburst.com'
-        to_address = 'robint@qburst.com'
 
         docs_with_matching_citations = prospect['docs_with_matching_citations']
 
