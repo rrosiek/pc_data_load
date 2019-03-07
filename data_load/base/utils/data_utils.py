@@ -9,7 +9,7 @@ class DataUtils(object):
     def __init__(self, session=None):
         if session is not None:
             self.session = session
-        else:   
+        else:
             self.session = requests.session()
 
     def docs_for_tag_query(self, tag, email, client_identifier):
@@ -116,7 +116,7 @@ class DataUtils(object):
         # print query
 
         results_fetched = 0
-        response = self.fetch_docs_for_query(url, query)
+        response = self.fetch_docs_for_query(url, query, username, password)
 
         all_ids = []
         if response is not None:
